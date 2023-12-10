@@ -1,10 +1,30 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
+import { Global } from "@emotion/react";
+import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
+import { GlobalStyles } from "./Global.styles";
+import { App } from "./App.jsx";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
+
+const root = document.getElementById("root");
+
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
-    <App />
+    <Global styles={GlobalStyles} />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
