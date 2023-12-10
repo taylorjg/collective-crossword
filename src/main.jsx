@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 
@@ -9,11 +9,11 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { HomePage, AdminPage } from "@app/pages";
+import { HomePage, AdminPage, NoMatchPage } from "@app/pages";
 
 import { GlobalStyles } from "./Global.styles";
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
@@ -21,6 +21,10 @@ const router = createHashRouter([
   {
     path: "/admin",
     element: <AdminPage />,
+  },
+  {
+    path: "*",
+    element: <NoMatchPage />,
   },
 ]);
 

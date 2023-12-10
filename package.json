@@ -9,7 +9,8 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx,cjs --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "open": "open https://collective-crossword.web.app"
+    "open": "open https://collective-crossword.web.app",
+    "deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
