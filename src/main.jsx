@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 
@@ -8,8 +9,20 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
+import { HomePage, AdminPage } from "@app/pages";
+
 import { GlobalStyles } from "./Global.styles";
-import { App } from "./App.jsx";
+
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <HomePage />,
+  },
+  {
+    path: "/admin",
+    element: <AdminPage />,
+  },
+]);
 
 const darkTheme = createTheme({
   palette: {
@@ -24,7 +37,7 @@ ReactDOM.createRoot(root).render(
     <Global styles={GlobalStyles} />
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <App />
+      <RouterProvider router={router} />
     </ThemeProvider>
   </React.StrictMode>
 );
