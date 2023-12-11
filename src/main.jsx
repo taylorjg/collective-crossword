@@ -12,6 +12,7 @@ import "@fontsource/roboto/700.css";
 import { HomePage, AdminPage, NoMatchPage } from "@app/pages";
 
 import { GlobalStyles } from "./Global.styles";
+import "./firebase";
 
 const router = createBrowserRouter([
   {
