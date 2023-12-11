@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -36,6 +37,8 @@ const darkTheme = createTheme({
   },
 });
 
+const queryClient = new QueryClient();
+
 const root = document.getElementById("root");
 
 ReactDOM.createRoot(root).render(
@@ -43,8 +46,10 @@ ReactDOM.createRoot(root).render(
     <Global styles={GlobalStyles} />
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <RouterProvider router={router} />
-      <Version />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Version />
+      </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

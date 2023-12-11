@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOV1FlYTXlvlsKFI5Pngq84bdUsvZPtE0",
@@ -16,3 +21,11 @@ const app = initializeApp(firebaseConfig);
 
 export const analytics = getAnalytics(app);
 export const db = getFirestore(app);
+
+export const addCrossword = async (crossword) => {
+  const docRef = await addDoc(collection(db, "crosswords"), {
+    timestamp: serverTimestamp(),
+    ...crossword,
+  });
+  console.log("Document written with ID: ", docRef.id);
+};
