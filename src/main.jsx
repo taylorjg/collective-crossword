@@ -12,6 +12,7 @@ import "@fontsource/roboto/700.css";
 import { HomePage, AdminPage, NoMatchPage } from "@app/pages";
 
 import { GlobalStyles } from "./Global.styles";
+import { Version } from "./Version";
 import "./firebase";
 
 const router = createBrowserRouter([
@@ -43,6 +44,7 @@ ReactDOM.createRoot(root).render(
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <RouterProvider router={router} />
+      <Version />
     </ThemeProvider>
   </React.StrictMode>
 );
