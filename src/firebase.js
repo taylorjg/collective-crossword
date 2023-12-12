@@ -6,6 +6,7 @@ import {
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOV1FlYTXlvlsKFI5Pngq84bdUsvZPtE0",
@@ -29,3 +30,12 @@ export const addCrossword = async (crossword) => {
   });
   console.log("Document written with ID: ", docRef.id);
 };
+
+const functions = getFunctions(app);
+
+export const getCrypticCrossword = httpsCallable(
+  functions,
+  "getCrypticCrossword"
+);
+
+export const getPrizeCryptic = httpsCallable(functions, "getPrizeCryptic");

@@ -1,12 +1,23 @@
 import { Button, Container } from "@mui/material";
 
 import { addCrossword } from "@app/firebase";
-import { usePrivateEye } from "@app/hooks";
+import {
+  usePrivateEye,
+  useTelegraphCrypticCrossword,
+  useTelegraphPrizeCryptic,
+} from "@app/hooks";
 
 import { StyledBox } from "./AdminPage.styles";
 
 export const AdminPage = () => {
   const { puzData, isLoading, isError, error } = usePrivateEye();
+
+  const crypticCrossword = useTelegraphCrypticCrossword(31769);
+  console.log({ crypticCrossword });
+
+  const prizeCryptic = useTelegraphPrizeCryptic(31711);
+  console.log({ prizeCryptic });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
