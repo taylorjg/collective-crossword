@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 
+import { transformPrivateEyeCrossword } from "@app/transforms";
+
 // TODO: move this into config of some sort ?
 const SERVERLESS_URL = "https://fr0r2wv048.execute-api.us-east-1.amazonaws.com";
 
@@ -44,6 +46,9 @@ export const usePrivateEye = () => {
   const isLoading = query1Response.isLoading || query2Response.isLoading;
   const error = query1Response.error ?? query2Response.error;
   const isError = Boolean(error);
+  const crossword = puzData
+    ? transformPrivateEyeCrossword(puzData, puzUrl)
+    : null;
 
-  return { puzData, isLoading, isError, error };
+  return { crossword, isLoading, isError, error };
 };

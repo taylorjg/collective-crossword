@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 
 import { getCrypticCrossword, getPrizeCryptic } from "@app/firebase";
+import { transformTelegraphCrossword } from "@app/transforms";
 
 export const useTelegraphCrypticCrossword = (id) => {
   const queryResponse = useQuery(
@@ -10,9 +11,12 @@ export const useTelegraphCrypticCrossword = (id) => {
   );
 
   const { isLoading, isError, error } = queryResponse;
-  const puzData = queryResponse.data?.data?.json ?? null;
+  const puzData = queryResponse.data?.data?.puzData?.json ?? null;
+  const puzUrl = queryResponse.data?.data?.puzUrl ?? null;
+  const crossword =
+    puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
 
-  return { puzData, isLoading, isError, error };
+  return { crossword, isLoading, isError, error };
 };
 
 export const useTelegraphPrizeCryptic = (id) => {
@@ -23,7 +27,10 @@ export const useTelegraphPrizeCryptic = (id) => {
   );
 
   const { isLoading, isError, error } = queryResponse;
-  const puzData = queryResponse.data?.data?.json ?? null;
+  const puzData = queryResponse.data?.data?.puzData?.json ?? null;
+  const puzUrl = queryResponse.data?.data?.puzUrl ?? null;
+  const crossword =
+    puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
 
-  return { puzData, isLoading, isError, error };
+  return { crossword, isLoading, isError, error };
 };

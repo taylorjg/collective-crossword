@@ -10,7 +10,7 @@ import {
 import { StyledBox } from "./AdminPage.styles";
 
 export const AdminPage = () => {
-  const { puzData, isLoading, isError, error } = usePrivateEye();
+  const { crossword, isLoading, isError, error } = usePrivateEye();
 
   const crypticCrossword = useTelegraphCrypticCrossword(31769);
   console.log({ crypticCrossword });
@@ -27,21 +27,13 @@ export const AdminPage = () => {
   }
 
   const onAddCrossword = () => {
-    addCrossword({
-      url: puzData.puzzleUrl,
-      publication: "Private Eye",
-      author: puzData.puzzle.author,
-      title: puzData.puzzle.title,
-      grid: puzData.grid,
-      acrossClues: puzData.acrossClues,
-      downClues: puzData.downClues,
-    });
+    addCrossword(crossword);
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <StyledBox>
-        <div>Puzzle Url: {puzData.puzzleUrl}</div>
+        <div>Puzzle Url: {crossword.url}</div>
         <Button variant="outlined" size="small" onClick={onAddCrossword}>
           Add Crossword
         </Button>
