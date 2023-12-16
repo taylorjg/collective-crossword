@@ -52,3 +52,29 @@ export const usePrivateEye = () => {
 
   return { crossword, isLoading, isError, error };
 };
+
+export const usePrivateEye2 = (id, enabled) => {
+  const puzUrl = `https://www.private-eye.co.uk/pictures/crossword/download/${id}.puz`;
+
+  const [puzData, setPuzData] = useState();
+
+  const query2Response = useQuery(
+    ["parsePuzzle", puzUrl],
+    () => parsePuzzle(puzUrl),
+    {
+      enabled: Boolean(puzUrl) && enabled,
+      onSuccess: (data) => {
+        setPuzData(data);
+      },
+    }
+  );
+
+  const isLoading = query2Response.isLoading;
+  const error = query2Response.error;
+  const isError = Boolean(error);
+  const crossword = puzData
+    ? transformPrivateEyeCrossword(puzData, puzUrl)
+    : null;
+
+  return { crossword, isLoading, isError, error };
+};

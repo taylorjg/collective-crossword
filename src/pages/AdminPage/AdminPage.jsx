@@ -1,30 +1,44 @@
-import { Button, Container } from "@mui/material";
+import { Button, Container, CircularProgress } from "@mui/material";
+import PropTypes from "prop-types";
 
 import { addCrossword } from "@app/firebase";
 import {
-  usePrivateEye,
+  usePrivateEye2,
   useTelegraphCrypticCrossword,
   useTelegraphPrizeCryptic,
 } from "@app/hooks";
 
-import { StyledBox } from "./AdminPage.styles";
+import {
+  StyledBox,
+  StyledBoxContent,
+  StyledLoading,
+  StyledError,
+} from "./AdminPage.styles";
+
+const Loading = () => {
+  return (
+    <StyledLoading>
+      <CircularProgress />
+    </StyledLoading>
+  );
+};
+
+const Error = ({ error }) => {
+  return <StyledError>Error: {error.message}</StyledError>;
+};
+
+Error.propTypes = {
+  error: PropTypes.shape({ message: PropTypes.string.isRequired }),
+};
 
 export const AdminPage = () => {
-  const { crossword, isLoading, isError, error } = usePrivateEye();
+  const { crossword, isLoading, isError, error } = usePrivateEye2(767);
 
   const crypticCrossword = useTelegraphCrypticCrossword(31769);
   console.log({ crypticCrossword });
 
   const prizeCryptic = useTelegraphPrizeCryptic(31711);
   console.log({ prizeCryptic });
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error: {error.message}</div>;
-  }
 
   const onAddCrossword = () => {
     addCrossword(crossword);
@@ -33,10 +47,14 @@ export const AdminPage = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <StyledBox>
-        <div>Puzzle Url: {crossword.url}</div>
-        <Button variant="outlined" size="small" onClick={onAddCrossword}>
-          Add Crossword
-        </Button>
+        <StyledBoxContent showContent={Boolean(crossword)}>
+          <div>Puzzle Url: {crossword?.url ?? ""}</div>
+          <Button variant="outlined" size="small" onClick={onAddCrossword}>
+            Add Crossword
+          </Button>
+        </StyledBoxContent>
+        {isLoading && <Loading />}
+        {isError && <Error error={error} />}
       </StyledBox>
     </Container>
   );
