@@ -28,13 +28,31 @@ const opts = { cors: true };
 exports.getCrypticCrossword = onRequest(opts, async (req, res) => {
   const id = req.query.id ?? req.body.data.id;
   logger.log("[getCrypticCrossword]", id);
-  const data = await getCrypticCrossword(id);
-  res.json({ data });
+  try {
+    const data = await getCrypticCrossword(id);
+    res.json({ data });
+  } catch (error) {
+    if (error?.response?.status === 404) {
+      res
+        .status(404)
+        .send(`Failed to find cryptic crossword with id, "${id}".`);
+    } else {
+      throw error;
+    }
+  }
 });
 
 exports.getPrizeCryptic = onRequest(opts, async (req, res) => {
   const id = req.query.id ?? req.body.data.id;
   logger.log("[getPrizeCryptic]", id);
-  const data = await getPrizeCryptic(id);
-  res.json({ data });
+  try {
+    const data = await getPrizeCryptic(id);
+    res.json({ data });
+  } catch (error) {
+    if (error?.response?.status === 404) {
+      res.status(404).send(`Failed to find prize cryptic with id, "${id}".`);
+    } else {
+      throw error;
+    }
+  }
 });

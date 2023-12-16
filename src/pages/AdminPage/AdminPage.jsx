@@ -25,7 +25,12 @@ const Loading = () => {
 };
 
 const Error = ({ error }) => {
-  return <StyledError>Error: {error.message}</StyledError>;
+  const errorMessage =
+    // eslint-disable-next-line react/prop-types
+    error?.code === "functions/not-found"
+      ? `Failed to find requested crossword.`
+      : `Error: ${error.message}`;
+  return <StyledError>{errorMessage}</StyledError>;
 };
 
 Error.propTypes = {
@@ -66,15 +71,15 @@ export const AdminPage = () => {
 
   const theDailyTelegraphCrypticCrossword =
     useTheDailyTelegraphCrypticCrosswordById(31769);
-  console.log({ telegraphCrossword1: theDailyTelegraphCrypticCrossword });
+  console.log({ theDailyTelegraphCrypticCrossword });
 
   const theDailyTelegraphPrizeCryptic =
     useTheDailyTelegraphPrizeCrypticById(31711);
-  console.log({ telegraphCrossword2: theDailyTelegraphPrizeCryptic });
+  console.log({ theDailyTelegraphPrizeCryptic });
 
   const theSundayTelegraphPrizrCryptic =
-    useTheSundayTelegraphPrizeCrypticById(31712);
-  console.log({ telegraphCrossword3: theSundayTelegraphPrizrCryptic });
+    useTheSundayTelegraphPrizeCrypticById(99999);
+  console.log({ theSundayTelegraphPrizrCryptic });
 
   const onAddCrossword = () => {
     addCrossword(privateEyeCrossword.crossword);
