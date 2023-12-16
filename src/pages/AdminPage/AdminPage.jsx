@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 
 import { addCrossword } from "@app/firebase";
 import {
-  usePrivateEye2,
-  useTelegraphCrypticCrossword,
-  useTelegraphPrizeCryptic,
+  usePrivateEyeCrosswordById,
+  useTheDailyTelegraphCrypticCrosswordById,
+  useTheDailyTelegraphPrizeCrypticById,
+  useTheSundayTelegraphPrizeCrypticById,
 } from "@app/hooks";
 
 import {
@@ -32,13 +33,17 @@ Error.propTypes = {
 };
 
 export const AdminPage = () => {
-  const { crossword, isLoading, isError, error } = usePrivateEye2(767);
+  const { crossword, isLoading, isError, error } =
+    usePrivateEyeCrosswordById(767);
 
-  const crypticCrossword = useTelegraphCrypticCrossword(31769);
-  console.log({ crypticCrossword });
+  const telegraphCrossword1 = useTheDailyTelegraphCrypticCrosswordById(31769);
+  console.log({ telegraphCrossword1 });
 
-  const prizeCryptic = useTelegraphPrizeCryptic(31711);
-  console.log({ prizeCryptic });
+  const telegraphCrossword2 = useTheDailyTelegraphPrizeCrypticById(31711);
+  console.log({ telegraphCrossword2 });
+
+  const telegraphCrossword3 = useTheSundayTelegraphPrizeCrypticById(31712);
+  console.log({ telegraphCrossword3 });
 
   const onAddCrossword = () => {
     addCrossword(crossword);

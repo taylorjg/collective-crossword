@@ -53,7 +53,7 @@ export const usePrivateEye = () => {
   return { crossword, isLoading, isError, error };
 };
 
-export const usePrivateEye2 = (id, enabled) => {
+export const usePrivateEyeCrosswordById = (id, enabled) => {
   const puzUrl = `https://www.private-eye.co.uk/pictures/crossword/download/${id}.puz`;
 
   const [puzData, setPuzData] = useState();
