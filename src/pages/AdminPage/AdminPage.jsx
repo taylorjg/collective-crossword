@@ -32,35 +32,69 @@ Error.propTypes = {
   error: PropTypes.shape({ message: PropTypes.string.isRequired }),
 };
 
+const Crossword = ({
+  crossword,
+  isLoading,
+  isError,
+  error,
+  onAddCrossword,
+}) => {
+  return (
+    <StyledBox>
+      <StyledBoxContent showContent={Boolean(crossword)}>
+        <div>Puzzle Url: {crossword?.url ?? ""}</div>
+        <Button variant="outlined" size="small" onClick={onAddCrossword}>
+          Add Crossword
+        </Button>
+      </StyledBoxContent>
+      {isLoading && <Loading />}
+      {isError && <Error error={error} />}
+    </StyledBox>
+  );
+};
+
+Crossword.propTypes = {
+  crossword: PropTypes.shape({ url: PropTypes.string.isRequired }),
+  isLoading: PropTypes.bool.isRequired,
+  isError: PropTypes.bool.isRequired,
+  error: PropTypes.shape({ message: PropTypes.string }),
+  onAddCrossword: PropTypes.func.isRequired,
+};
+
 export const AdminPage = () => {
-  const { crossword, isLoading, isError, error } =
-    usePrivateEyeCrosswordById(767);
+  const privateEyeCrossword = usePrivateEyeCrosswordById(767);
 
-  const telegraphCrossword1 = useTheDailyTelegraphCrypticCrosswordById(31769);
-  console.log({ telegraphCrossword1 });
+  const theDailyTelegraphCrypticCrossword =
+    useTheDailyTelegraphCrypticCrosswordById(31769);
+  console.log({ telegraphCrossword1: theDailyTelegraphCrypticCrossword });
 
-  const telegraphCrossword2 = useTheDailyTelegraphPrizeCrypticById(31711);
-  console.log({ telegraphCrossword2 });
+  const theDailyTelegraphPrizeCryptic =
+    useTheDailyTelegraphPrizeCrypticById(31711);
+  console.log({ telegraphCrossword2: theDailyTelegraphPrizeCryptic });
 
-  const telegraphCrossword3 = useTheSundayTelegraphPrizeCrypticById(31712);
-  console.log({ telegraphCrossword3 });
+  const theSundayTelegraphPrizrCryptic =
+    useTheSundayTelegraphPrizeCrypticById(31712);
+  console.log({ telegraphCrossword3: theSundayTelegraphPrizrCryptic });
 
   const onAddCrossword = () => {
-    addCrossword(crossword);
+    addCrossword(privateEyeCrossword.crossword);
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
-      <StyledBox>
-        <StyledBoxContent showContent={Boolean(crossword)}>
-          <div>Puzzle Url: {crossword?.url ?? ""}</div>
-          <Button variant="outlined" size="small" onClick={onAddCrossword}>
-            Add Crossword
-          </Button>
-        </StyledBoxContent>
-        {isLoading && <Loading />}
-        {isError && <Error error={error} />}
-      </StyledBox>
+      <Crossword {...privateEyeCrossword} onAddCrossword={onAddCrossword} />
+      <Crossword
+        {...theDailyTelegraphCrypticCrossword}
+        onAddCrossword={onAddCrossword}
+      />
+      <Crossword
+        {...theDailyTelegraphPrizeCryptic}
+        onAddCrossword={onAddCrossword}
+      />
+      <Crossword
+        {...theSundayTelegraphPrizrCryptic}
+        onAddCrossword={onAddCrossword}
+      />
     </Container>
   );
 };

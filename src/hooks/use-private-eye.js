@@ -22,7 +22,7 @@ const parsePuzzle = async (puzzleUrl) => {
   return response.data;
 };
 
-export const usePrivateEye = () => {
+export const usePrivateEyeCurrentCrossword = () => {
   const [puzUrl, setPuzUrl] = useState();
   const [puzData, setPuzData] = useState();
 

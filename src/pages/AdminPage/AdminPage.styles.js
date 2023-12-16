@@ -7,6 +7,7 @@ export const StyledBox = styled(Box)`
   border-radius: 4px;
   padding: 16px;
   position: relative;
+  margin-bottom: 1rem;
 `;
 
 export const StyledBoxContent = styled.div`
