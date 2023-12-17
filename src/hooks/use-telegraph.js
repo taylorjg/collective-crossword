@@ -1,56 +1,22 @@
-import { useState } from "react";
 import { useQuery } from "react-query";
 
-import {
-  getCrypticCrossword,
-  getPrizeCryptic,
-  doesCrosswordExistByTitle,
-} from "@app/firebase";
+import { getCrypticCrossword, getPrizeCryptic } from "@app/firebase";
 import { transformTelegraphCrossword } from "@app/transforms";
-
-const ExistenceValues = Object.freeze({
-  DontKnowYet: "DontKnowYet",
-  Yes: "Yes",
-  No: "No",
-  Error: "Error",
-});
+import { useExistenceCheck } from "./use-existence-check";
 
 const useTelegraphCommon = (fn, fnName, id) => {
-  const [internalState, setInternalState] = useState({
-    crossword: null,
-    existence: ExistenceValues.DontKnowYet,
-  });
-
   const queryResponse = useQuery([fnName, id], () => fn({ id }), {
     enabled: Boolean(id),
-    onSuccess: async (data) => {
-      const puzData = data.data?.puzData?.json ?? null;
-      const puzUrl = data.data?.puzUrl ?? null;
-      const crossword =
-        puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
-
-      try {
-        const exists = await doesCrosswordExistByTitle(crossword.title);
-        const existence = exists ? ExistenceValues.Yes : ExistenceValues.No;
-        setInternalState({ crossword, existence });
-      } catch (error) {
-        setInternalState({ crossword, existence: ExistenceValues.Error });
-      }
-    },
   });
 
-  let { isError, error } = queryResponse;
+  let { isLoading, isError, error } = queryResponse;
 
-  const { crossword, existence } = internalState;
-  const isLoading = existence === ExistenceValues.DontKnowYet;
-  const exists = existence === ExistenceValues.Yes;
+  const puzData = queryResponse.data?.data?.puzData?.json ?? null;
+  const puzUrl = queryResponse.data?.data?.puzUrl ?? null;
+  const crossword =
+    puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
 
-  if (existence === ExistenceValues.Error) {
-    isError = true;
-    error = new Error("Failed to check whether crossword already exists.");
-  }
-
-  return { isLoading, isError, error, crossword, exists };
+  return useExistenceCheck({ crossword, isLoading, isError, error });
 };
 
 export const useTheDailyTelegraphCrypticCrosswordById = (id) => {

@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 import { transformPrivateEyeCrossword } from "@app/transforms";
+import { useExistenceCheck } from "./use-existence-check";
 
 // TODO: move this into config of some sort ?
 const SERVERLESS_URL = "https://fr0r2wv048.execute-api.us-east-1.amazonaws.com";
@@ -50,7 +51,7 @@ export const usePrivateEyeCurrentCrossword = () => {
     ? transformPrivateEyeCrossword(puzData, puzUrl)
     : null;
 
-  return { crossword, isLoading, isError, error };
+  return useExistenceCheck({ crossword, isLoading, isError, error });
 };
 
 export const usePrivateEyeCrosswordById = (id, enabled) => {
@@ -76,5 +77,5 @@ export const usePrivateEyeCrosswordById = (id, enabled) => {
     ? transformPrivateEyeCrossword(puzData, puzUrl)
     : null;
 
-  return { crossword, isLoading, isError, error };
+  return useExistenceCheck({ crossword, isLoading, isError, error });
 };
