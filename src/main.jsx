@@ -10,7 +10,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { HomePage, AdminPage, NoMatchPage } from "@app/pages";
+import { HomePage, CrosswordPage, AdminPage, NoMatchPage } from "@app/pages";
 
 import { GlobalStyles } from "./Global.styles";
 import { Version } from "./Version";
@@ -20,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/crosswords/:id",
+    element: <CrosswordPage />,
   },
   {
     path: "/admin",

@@ -6,6 +6,7 @@ import {
   doc,
   addDoc,
   deleteDoc,
+  getDoc,
   getDocs,
   query,
   orderBy,
@@ -35,6 +36,11 @@ export const addCrossword = async (crossword) => {
     ...crossword,
   };
   return addDoc(collectionRef, data);
+};
+
+export const getCrossword = async (id) => {
+  const docRef = doc(db, "crosswords", id);
+  return getDoc(docRef);
 };
 
 export const getCrosswords = async () => {

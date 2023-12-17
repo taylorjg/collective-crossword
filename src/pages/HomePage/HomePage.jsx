@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { getCrosswords, deleteCrossword } from "@app/firebase";
 import { Button, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const invokeGetCrosswords = async () => {
@@ -19,7 +22,7 @@ export const HomePage = () => {
   }, []);
 
   const handleView = (id) => {
-    console.log("[handleView]", { id });
+    navigate(`/crosswords/${id}`);
   };
 
   const handleDelete = (id) => {
