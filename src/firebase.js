@@ -11,6 +11,7 @@ import {
   query,
   orderBy,
   serverTimestamp,
+  onSnapshot,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
@@ -43,15 +44,15 @@ export const getCrossword = async (id) => {
   return getDoc(docRef);
 };
 
-export const getCrosswords = async () => {
-  const collectionRef = collection(db, "crosswords");
-  const q = query(collectionRef, orderBy("timestamp"));
-  return getDocs(q);
-};
-
 export const deleteCrossword = async (id) => {
   const docRef = doc(db, "crosswords", id);
   return deleteDoc(docRef);
+};
+
+export const listenForCrosswordChanges = (onNext) => {
+  const collectionRef = collection(db, "crosswords");
+  const q = query(collectionRef, orderBy("timestamp"));
+  return onSnapshot(q, onNext);
 };
 
 const functions = getFunctions(app);

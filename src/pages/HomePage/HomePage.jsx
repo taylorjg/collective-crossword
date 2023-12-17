@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { getCrosswords, deleteCrossword } from "@app/firebase";
-import { Button, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Button, Container } from "@mui/material";
+
+import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
@@ -9,8 +10,7 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const invokeGetCrosswords = async () => {
-      const querySnapshot = await getCrosswords();
+    const onNext = (querySnapshot) => {
       const localCrosswords = [];
       querySnapshot.forEach((doc) => {
         localCrosswords.push({ id: doc.id, ...doc.data() });
@@ -18,7 +18,11 @@ export const HomePage = () => {
       setCrosswords(localCrosswords);
     };
 
-    invokeGetCrosswords();
+    const unsubscribe = listenForCrosswordChanges(onNext);
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleView = (id) => {
