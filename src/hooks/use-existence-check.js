@@ -25,6 +25,7 @@ export const useExistenceCheck = (crosswordResponse) => {
     };
 
     const { isLoading, crossword } = crosswordResponse;
+
     if (
       !isLoading &&
       Boolean(crossword) &&
@@ -34,23 +35,27 @@ export const useExistenceCheck = (crosswordResponse) => {
     }
   }, [crosswordResponse, existenceCheck]);
 
-  const isLoading =
-    crosswordResponse.isLoading ||
-    existenceCheck === ExistenceCheck.DontKnowYet;
-
   const isError =
     crosswordResponse.isError || existenceCheck === ExistenceCheck.Error;
 
-  const error =
-    crosswordResponse.error ?? existenceCheck === ExistenceCheck.Error
+  const error = crosswordResponse.isError
+    ? crosswordResponse.error
+    : existenceCheck === ExistenceCheck.Error
       ? new Error("Failed to check whether crossword already exists.")
-      : undefined;
+      : null;
+
+  const isLoading =
+    !isError &&
+    (crosswordResponse.isLoading ||
+      existenceCheck === ExistenceCheck.DontKnowYet);
+
+  const exists = existenceCheck === ExistenceCheck.Yes;
 
   return {
     ...crosswordResponse,
     isLoading,
     isError,
     error,
-    exists: existenceCheck === ExistenceCheck.Yes,
+    exists,
   };
 };
