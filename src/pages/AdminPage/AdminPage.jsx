@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { addCrossword } from "@app/firebase";
 import {
-  usePrivateEyeCrosswordById,
+  usePrivateEyeCurrentCrossword,
   useTheDailyTelegraphCrypticCrosswordById,
   useTheDailyTelegraphPrizeCrypticById,
   useTheSundayTelegraphPrizeCrypticById,
@@ -24,31 +24,35 @@ const Loading = () => {
   );
 };
 
+const isCloudFunctions404 = (error) => error?.code === "functions/not-found";
+const isAxios404 = (error) => error.response?.status === 404;
+
 const Error = ({ error }) => {
   const errorMessage =
-    // eslint-disable-next-line react/prop-types
-    error?.code === "functions/not-found"
+    isCloudFunctions404(error) || isAxios404(error)
       ? `Failed to find requested crossword.`
       : `Error: ${error.message}`;
   return <StyledError>{errorMessage}</StyledError>;
 };
 
 Error.propTypes = {
-  error: PropTypes.shape({ message: PropTypes.string.isRequired }),
+  error: PropTypes.shape({
+    message: PropTypes.string.isRequired,
+  }),
 };
 
-const Crossword = ({
-  crossword,
-  isLoading,
-  isError,
-  error,
-  onAddCrossword,
-}) => {
+const Crossword = ({ crosswordResponse, onAddCrossword }) => {
+  const { crossword, isLoading, isError, error } = crosswordResponse;
+
+  const handleAddCrossword = () => {
+    onAddCrossword(crossword);
+  };
+
   return (
     <StyledBox>
       <StyledBoxContent showContent={Boolean(crossword)}>
         <div>Puzzle Url: {crossword?.url ?? ""}</div>
-        <Button variant="outlined" size="small" onClick={onAddCrossword}>
+        <Button variant="outlined" size="small" onClick={handleAddCrossword}>
           Add Crossword
         </Button>
       </StyledBoxContent>
@@ -59,45 +63,60 @@ const Crossword = ({
 };
 
 Crossword.propTypes = {
-  crossword: PropTypes.shape({ url: PropTypes.string.isRequired }),
-  isLoading: PropTypes.bool.isRequired,
-  isError: PropTypes.bool.isRequired,
-  error: PropTypes.shape({ message: PropTypes.string }),
+  crosswordResponse: PropTypes.shape({
+    crossword: PropTypes.shape({
+      url: PropTypes.string.isRequired,
+    }),
+    isLoading: PropTypes.bool.isRequired,
+    isError: PropTypes.bool.isRequired,
+    error: PropTypes.shape({ message: PropTypes.string }),
+  }),
   onAddCrossword: PropTypes.func.isRequired,
 };
 
 export const AdminPage = () => {
-  const privateEyeCrossword = usePrivateEyeCrosswordById(767);
+  const privateEyeCrosswordResponse = usePrivateEyeCurrentCrossword();
+  console.log({ privateEyeCrossword: privateEyeCrosswordResponse });
 
-  const theDailyTelegraphCrypticCrossword =
+  const theDailyTelegraphCrypticCrosswordResponse =
     useTheDailyTelegraphCrypticCrosswordById(31769);
-  console.log({ theDailyTelegraphCrypticCrossword });
+  console.log({
+    theDailyTelegraphCrypticCrossword:
+      theDailyTelegraphCrypticCrosswordResponse,
+  });
 
-  const theDailyTelegraphPrizeCryptic =
+  const theDailyTelegraphPrizeCrypticResponse =
     useTheDailyTelegraphPrizeCrypticById(31711);
-  console.log({ theDailyTelegraphPrizeCryptic });
+  console.log({
+    theDailyTelegraphPrizeCryptic: theDailyTelegraphPrizeCrypticResponse,
+  });
 
-  const theSundayTelegraphPrizrCryptic =
+  const theSundayTelegraphPrizrCrypticResponse =
     useTheSundayTelegraphPrizeCrypticById(99999);
-  console.log({ theSundayTelegraphPrizrCryptic });
+  console.log({
+    theSundayTelegraphPrizrCryptic: theSundayTelegraphPrizrCrypticResponse,
+  });
 
-  const onAddCrossword = () => {
-    addCrossword(privateEyeCrossword.crossword);
+  const onAddCrossword = (crossword) => {
+    addCrossword(crossword);
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Crossword {...privateEyeCrossword} onAddCrossword={onAddCrossword} />
       <Crossword
-        {...theDailyTelegraphCrypticCrossword}
+        crosswordResponse={privateEyeCrosswordResponse}
         onAddCrossword={onAddCrossword}
       />
       <Crossword
-        {...theDailyTelegraphPrizeCryptic}
+        crosswordResponse={theDailyTelegraphCrypticCrosswordResponse}
         onAddCrossword={onAddCrossword}
       />
       <Crossword
-        {...theSundayTelegraphPrizrCryptic}
+        crosswordResponse={theDailyTelegraphPrizeCrypticResponse}
+        onAddCrossword={onAddCrossword}
+      />
+      <Crossword
+        crosswordResponse={theSundayTelegraphPrizrCrypticResponse}
         onAddCrossword={onAddCrossword}
       />
     </Container>
