@@ -43,7 +43,7 @@ Error.propTypes = {
 };
 
 const Crossword = ({ crosswordResponse, onAddCrossword }) => {
-  const { crossword, isLoading, isError, error } = crosswordResponse;
+  const { crossword, isLoading, isError, error, exists } = crosswordResponse;
 
   const handleAddCrossword = () => {
     onAddCrossword(crossword);
@@ -53,7 +53,12 @@ const Crossword = ({ crosswordResponse, onAddCrossword }) => {
     <StyledBox>
       <StyledBoxContent showContent={Boolean(crossword)}>
         <div>Puzzle Url: {crossword?.url ?? ""}</div>
-        <Button variant="outlined" size="small" onClick={handleAddCrossword}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleAddCrossword}
+          disabled={isLoading || exists === true}
+        >
           Add Crossword
         </Button>
       </StyledBoxContent>
@@ -71,6 +76,7 @@ Crossword.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     isError: PropTypes.bool.isRequired,
     error: PropTypes.shape({ message: PropTypes.string }),
+    exists: PropTypes.bool,
   }),
   onAddCrossword: PropTypes.func.isRequired,
 };

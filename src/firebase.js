@@ -12,6 +12,7 @@ import {
   orderBy,
   serverTimestamp,
   onSnapshot,
+  where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
@@ -39,9 +40,16 @@ export const addCrossword = async (crossword) => {
   return addDoc(collectionRef, data);
 };
 
-export const getCrossword = async (id) => {
+export const getCrosswordById = async (id) => {
   const docRef = doc(db, "crosswords", id);
   return getDoc(docRef);
+};
+
+export const doesCrosswordExistByTitle = async (title) => {
+  const collectionRef = collection(db, "crosswords");
+  const q = query(collectionRef, where("title", "==", title));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.size > 0;
 };
 
 export const deleteCrossword = async (id) => {

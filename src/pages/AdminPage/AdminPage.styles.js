@@ -19,19 +19,20 @@ export const StyledBoxContent = styled.div`
 `;
 
 export const StyledOverlay = styled.div`
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 4px;
+  left: 4px;
   display: grid;
   place-items: center;
+  background-color: ${(props) => props.theme.palette.background.default};
 `;
 
 export const StyledLoading = styled(StyledOverlay)`
-  color: orange;
+  //
 `;
 
 export const StyledError = styled(StyledOverlay)`
-  color: red;
+  color: ${(props) => props.theme.palette.error.dark};
 `;

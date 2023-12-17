@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Container } from "@mui/material";
 
-import { getCrossword } from "@app/firebase";
+import { getCrosswordById } from "@app/firebase";
 
 export const CrosswordPage = () => {
   const [crossword, setCrossword] = useState();
@@ -12,7 +12,7 @@ export const CrosswordPage = () => {
 
   useEffect(() => {
     const invokeGetCrossword = async () => {
-      const docSnap = await getCrossword(id);
+      const docSnap = await getCrosswordById(id);
       if (docSnap.exists()) {
         setCrossword({
           id: docSnap.id,
