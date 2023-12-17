@@ -1,5 +1,6 @@
 import { Button, Container, CircularProgress } from "@mui/material";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 import { addCrossword } from "@app/firebase";
 import {
@@ -92,7 +93,7 @@ export const AdminPage = () => {
   });
 
   const theSundayTelegraphPrizrCrypticResponse =
-    useTheSundayTelegraphPrizeCrypticById(99999);
+    useTheSundayTelegraphPrizeCrypticById(31712);
   console.log({
     theSundayTelegraphPrizrCryptic: theSundayTelegraphPrizrCrypticResponse,
   });
@@ -103,6 +104,10 @@ export const AdminPage = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
+      <div style={{ marginBottom: "1rem" }}>
+        <Link to="/">Home</Link>
+      </div>
+
       <Crossword
         crosswordResponse={privateEyeCrosswordResponse}
         onAddCrossword={onAddCrossword}

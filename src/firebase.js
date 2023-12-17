@@ -3,7 +3,12 @@ import { getAnalytics } from "firebase/analytics";
 import {
   getFirestore,
   collection,
+  doc,
   addDoc,
+  deleteDoc,
+  getDocs,
+  query,
+  orderBy,
   serverTimestamp,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -24,11 +29,23 @@ export const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 
 export const addCrossword = async (crossword) => {
-  const docRef = await addDoc(collection(db, "crosswords"), {
+  const collectionRef = collection(db, "crosswords");
+  const data = {
     timestamp: serverTimestamp(),
     ...crossword,
-  });
-  console.log("Document written with ID: ", docRef.id);
+  };
+  return addDoc(collectionRef, data);
+};
+
+export const getCrosswords = async () => {
+  const collectionRef = collection(db, "crosswords");
+  const q = query(collectionRef, orderBy("timestamp"));
+  return getDocs(q);
+};
+
+export const deleteCrossword = async (id) => {
+  const docRef = doc(db, "crosswords", id);
+  return deleteDoc(docRef);
 };
 
 const functions = getFunctions(app);
