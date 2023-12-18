@@ -18,6 +18,7 @@ import {
   StyledError,
   StyledRow,
   StyledRow2Cols,
+  StyledAlreadyAdded,
 } from "./AdminPage.styles";
 
 const Loading = () => {
@@ -54,16 +55,17 @@ const Crossword = ({ crosswordResponse, onAddCrossword }) => {
 
   return (
     <StyledBox>
-      <StyledBoxContent showContent={Boolean(crossword)}>
-        <div>Puzzle Url: {crossword?.url ?? ""}</div>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleAddCrossword}
-          disabled={isLoading || exists === true}
-        >
-          Add Crossword
-        </Button>
+      <StyledBoxContent showContent={crossword && !isLoading}>
+        <div>Url: {crossword?.url ?? ""}</div>
+        {exists ? (
+          <StyledAlreadyAdded>
+            This crossword has already been added.
+          </StyledAlreadyAdded>
+        ) : (
+          <Button variant="outlined" size="small" onClick={handleAddCrossword}>
+            Add Crossword
+          </Button>
+        )}
       </StyledBoxContent>
       {isLoading && <Loading />}
       {isError && <Error error={error} />}
@@ -136,20 +138,25 @@ const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
         >
           Reset
         </Button>
-        {crossword && (
+        {crossword && !isLoading && (
           <>
             <StyledRow2Cols>
               <div>Title: {crossword.title}</div>
               <div>Date: {puzData.copy["date-publish"]}</div>
             </StyledRow2Cols>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={handleAddCrossword}
-              disabled={isLoading || exists === true}
-            >
-              Add Crossword
-            </Button>
+            {exists ? (
+              <StyledAlreadyAdded>
+                This crossword has already been added.
+              </StyledAlreadyAdded>
+            ) : (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleAddCrossword}
+              >
+                Add Crossword
+              </Button>
+            )}
           </>
         )}
       </StyledBoxContent>

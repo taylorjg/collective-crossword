@@ -41,6 +41,10 @@ export const StyledOverlay = styled.div`
   background-color: ${(props) => props.theme.palette.background.default};
 `;
 
+export const StyledAlreadyAdded = styled.div`
+  font-style: italic;
+`;
+
 export const StyledLoading = styled(StyledOverlay)`
   //
 `;
