@@ -16,7 +16,7 @@ const useTelegraphCommon = (fn, fnName, id) => {
   const crossword =
     puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
 
-  return useExistenceCheck({ crossword, isLoading, isError, error });
+  return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
 };
 
 export const useTheDailyTelegraphCrypticCrosswordById = (id) => {

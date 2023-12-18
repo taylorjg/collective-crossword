@@ -51,7 +51,7 @@ export const usePrivateEyeCurrentCrossword = () => {
     ? transformPrivateEyeCrossword(puzData, puzUrl)
     : null;
 
-  return useExistenceCheck({ crossword, isLoading, isError, error });
+  return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
 };
 
 export const usePrivateEyeCrosswordById = (id, enabled) => {
@@ -77,5 +77,5 @@ export const usePrivateEyeCrosswordById = (id, enabled) => {
     ? transformPrivateEyeCrossword(puzData, puzUrl)
     : null;
 
-  return useExistenceCheck({ crossword, isLoading, isError, error });
+  return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
 };

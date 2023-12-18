@@ -18,6 +18,18 @@ export const StyledBoxContent = styled.div`
   visibility: ${(props) => (props.showContent ? "visible" : "hidden")};
 `;
 
+export const StyledRow = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: center;
+`;
+
+export const StyledRow2Cols = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
 export const StyledOverlay = styled.div`
   width: calc(100% - 8px);
   height: calc(100% - 8px);
