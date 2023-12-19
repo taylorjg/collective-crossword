@@ -43,6 +43,8 @@ export const StyledOverlay = styled.div`
 
 export const StyledAlreadyAdded = styled.div`
   font-style: italic;
+  display: flex;
+  align-items: center;
 `;
 
 export const StyledLoading = styled(StyledOverlay)`

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { doesCrosswordExistByTitle } from "@app/firebase";
+import { getExistingCrosswordIdByTitle } from "@app/firebase";
 
 const ExistenceCheck = Object.freeze({
   DontKnowYet: "DontKnowYet",
@@ -10,17 +10,26 @@ const ExistenceCheck = Object.freeze({
 });
 
 export const useExistenceCheck = (crosswordResponse) => {
-  const [existenceCheck, setExistenceCheck] = useState(
-    ExistenceCheck.DontKnowYet
-  );
+  const [result, setResult] = useState({
+    existenceCheck: ExistenceCheck.DontKnowYet,
+    crosswordId: undefined,
+  });
 
   useEffect(() => {
     const performExistenceCheck = async () => {
       try {
-        const exists = await doesCrosswordExistByTitle(crossword.title);
-        setExistenceCheck(exists ? ExistenceCheck.Yes : ExistenceCheck.No);
+        const crosswordId = await getExistingCrosswordIdByTitle(
+          crossword.title
+        );
+        setResult({
+          existenceCheck: crosswordId ? ExistenceCheck.Yes : ExistenceCheck.No,
+          crosswordId,
+        });
       } catch (error) {
-        setExistenceCheck(ExistenceCheck.Error);
+        setResult({
+          existenceCheck: ExistenceCheck.Error,
+          crosswordId: undefined,
+        });
       }
     };
 
@@ -29,33 +38,31 @@ export const useExistenceCheck = (crosswordResponse) => {
     if (
       !isLoading &&
       Boolean(crossword) &&
-      existenceCheck === ExistenceCheck.DontKnowYet
+      result.existenceCheck === ExistenceCheck.DontKnowYet
     ) {
       performExistenceCheck();
     }
-  }, [crosswordResponse, existenceCheck]);
+  }, [crosswordResponse, result]);
 
   const isError =
-    crosswordResponse.isError || existenceCheck === ExistenceCheck.Error;
+    crosswordResponse.isError || result.existenceCheck === ExistenceCheck.Error;
 
   const error = crosswordResponse.isError
     ? crosswordResponse.error
-    : existenceCheck === ExistenceCheck.Error
+    : result.existenceCheck === ExistenceCheck.Error
       ? new Error("Failed to check whether crossword already exists.")
       : null;
 
   const isLoading =
     !isError &&
     (crosswordResponse.isLoading ||
-      existenceCheck === ExistenceCheck.DontKnowYet);
-
-  const exists = existenceCheck === ExistenceCheck.Yes;
+      result.existenceCheck === ExistenceCheck.DontKnowYet);
 
   return {
     ...crosswordResponse,
     isLoading,
     isError,
     error,
-    exists,
+    crosswordId: result.crosswordId,
   };
 };

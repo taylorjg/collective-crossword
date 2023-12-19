@@ -45,11 +45,15 @@ export const getCrosswordById = async (id) => {
   return getDoc(docRef);
 };
 
-export const doesCrosswordExistByTitle = async (title) => {
+export const getExistingCrosswordIdByTitle = async (title) => {
   const collectionRef = collection(db, "crosswords");
   const q = query(collectionRef, where("title", "==", title));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.size > 0;
+  const ids = [];
+  querySnapshot.forEach((doc) => {
+    ids.push(doc.id);
+  });
+  return ids.length > 0 ? ids[0] : undefined;
 };
 
 export const deleteCrossword = async (id) => {

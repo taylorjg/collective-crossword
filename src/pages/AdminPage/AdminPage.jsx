@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Container, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { addCrossword } from "@app/firebase";
 import {
@@ -46,8 +47,26 @@ Error.propTypes = {
   }),
 };
 
+const AlreadyAdded = ({ crosswordId }) => {
+  const navigate = useNavigate();
+
+  return (
+    <StyledAlreadyAdded>
+      This crossword has already been added.&nbsp;
+      <Button onClick={() => navigate(`/crosswords/${crosswordId}`)}>
+        View
+      </Button>
+    </StyledAlreadyAdded>
+  );
+};
+
+AlreadyAdded.propTypes = {
+  crosswordId: PropTypes.number.isRequired,
+};
+
 const Crossword = ({ crosswordResponse, onAddCrossword }) => {
-  const { crossword, isLoading, isError, error, exists } = crosswordResponse;
+  const { crossword, isLoading, isError, error, crosswordId } =
+    crosswordResponse;
 
   const handleAddCrossword = () => {
     onAddCrossword(crossword);
@@ -57,10 +76,8 @@ const Crossword = ({ crosswordResponse, onAddCrossword }) => {
     <StyledBox>
       <StyledBoxContent showContent={crossword && !isLoading}>
         <div>Url: {crossword?.url ?? ""}</div>
-        {exists ? (
-          <StyledAlreadyAdded>
-            This crossword has already been added.
-          </StyledAlreadyAdded>
+        {crosswordId ? (
+          <AlreadyAdded crosswordId={crosswordId} />
         ) : (
           <Button variant="outlined" size="small" onClick={handleAddCrossword}>
             Add Crossword
@@ -81,7 +98,7 @@ Crossword.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     isError: PropTypes.bool.isRequired,
     error: PropTypes.shape({ message: PropTypes.string }),
-    exists: PropTypes.bool,
+    crosswordId: PropTypes.string,
   }),
   onAddCrossword: PropTypes.func.isRequired,
 };
@@ -92,7 +109,7 @@ const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
 
   const crosswordResponse = useCrossword(idToUse);
 
-  const { crossword, puzData, isLoading, isError, error, exists } =
+  const { crossword, puzData, isLoading, isError, error, crosswordId } =
     crosswordResponse;
 
   const handleFetchCrossword = () => {
@@ -144,10 +161,8 @@ const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
               <div>Title: {crossword.title}</div>
               <div>Date: {puzData.copy["date-publish"]}</div>
             </StyledRow2Cols>
-            {exists ? (
-              <StyledAlreadyAdded>
-                This crossword has already been added.
-              </StyledAlreadyAdded>
+            {crosswordId ? (
+              <AlreadyAdded crosswordId={crosswordId} />
             ) : (
               <Button
                 variant="outlined"
