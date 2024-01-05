@@ -54,8 +54,8 @@ export const useExistenceCheck = (crosswordResponse) => {
       : null;
 
   const isLoading =
-    !isError &&
-    (crosswordResponse.isLoading ||
+    crosswordResponse.isLoading ||
+    (crosswordResponse.crossword &&
       result.existenceCheck === ExistenceCheck.DontKnowYet);
 
   return {

@@ -47,21 +47,31 @@ Error.propTypes = {
   }),
 };
 
-const AlreadyAdded = ({ crosswordId }) => {
+const ViewCrosswordButton = ({ crosswordId }) => {
   const navigate = useNavigate();
 
   return (
+    <Button onClick={() => navigate(`/crosswords/${crosswordId}`)}>
+      View Crossword
+    </Button>
+  );
+};
+
+ViewCrosswordButton.propTypes = {
+  crosswordId: PropTypes.string.isRequired,
+};
+
+const AlreadyAdded = ({ crosswordId }) => {
+  return (
     <StyledAlreadyAdded>
-      This crossword has already been added.&nbsp;
-      <Button onClick={() => navigate(`/crosswords/${crosswordId}`)}>
-        View
-      </Button>
+      This crossword has already been added.&nbsp;{" "}
+      <ViewCrosswordButton crosswordId={crosswordId} />
     </StyledAlreadyAdded>
   );
 };
 
 AlreadyAdded.propTypes = {
-  crosswordId: PropTypes.number.isRequired,
+  crosswordId: PropTypes.string.isRequired,
 };
 
 const Crossword = ({ crosswordResponse, onAddCrossword }) => {
@@ -106,6 +116,8 @@ Crossword.propTypes = {
 const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
   const [id, setId] = useState("");
   const [idToUse, setIdToUse] = useState("");
+  const [showAddSpinner, setShowAddSpinner] = useState(false);
+  const [addedCrosswordId, setAddedCrosswordId] = useState();
 
   const crosswordResponse = useCrossword(idToUse);
 
@@ -121,8 +133,14 @@ const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
     setIdToUse("");
   };
 
-  const handleAddCrossword = () => {
-    onAddCrossword(crossword);
+  const handleAddCrossword = async () => {
+    try {
+      setShowAddSpinner(true);
+      const crosswordRef = await onAddCrossword(crossword);
+      setAddedCrosswordId(crosswordRef.id);
+    } finally {
+      setShowAddSpinner(false);
+    }
   };
 
   return (
@@ -146,6 +164,7 @@ const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
           >
             Fetch Crossword
           </Button>
+          {isLoading && <CircularProgress size="1.5rem" />}
         </StyledRow>
         <Button
           size="small"
@@ -164,13 +183,20 @@ const Crossword2 = ({ onAddCrossword, useCrossword, label, exampleId }) => {
             {crosswordId ? (
               <AlreadyAdded crosswordId={crosswordId} />
             ) : (
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleAddCrossword}
-              >
-                Add Crossword
-              </Button>
+              <StyledRow>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleAddCrossword}
+                  disabled={Boolean(addedCrosswordId)}
+                >
+                  Add Crossword
+                </Button>
+                {showAddSpinner && <CircularProgress size="1.5rem" />}
+                {addedCrosswordId && (
+                  <ViewCrosswordButton crosswordId={addedCrosswordId} />
+                )}
+              </StyledRow>
             )}
           </>
         )}
@@ -192,7 +218,7 @@ export const AdminPage = () => {
   console.log({ privateEyeCrossword: privateEyeCrosswordResponse });
 
   const onAddCrossword = (crossword) => {
-    addCrossword(crossword);
+    return addCrossword(crossword);
   };
 
   return (
