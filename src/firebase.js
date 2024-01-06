@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, GithubAuthProvider } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import {
   getFirestore,
@@ -15,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { auth } from "firebaseui";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOV1FlYTXlvlsKFI5Pngq84bdUsvZPtE0",
@@ -75,3 +77,19 @@ export const getCrypticCrossword = httpsCallable(
 );
 
 export const getPrizeCryptic = httpsCallable(functions, "getPrizeCryptic");
+
+const ui = new auth.AuthUI(getAuth());
+
+ui.start("#firebaseui-auth-container", {
+  signInOptions: [GithubAuthProvider.PROVIDER_ID],
+  signInFlow: "popup",
+  callbacks: {
+    signInSuccessWithAuthResult: (...args) => {
+      console.log("[signInSuccessWithAuthResult callback]", args);
+      return true;
+    },
+    uiShown: (...args) => {
+      console.log("[uiShown callback]", args);
+    },
+  },
+});
