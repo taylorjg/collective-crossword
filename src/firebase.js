@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GithubAuthProvider } from "firebase/auth";
+import { getAuth, GithubAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import {
   getFirestore,
@@ -78,7 +78,20 @@ export const getCrypticCrossword = httpsCallable(
 
 export const getPrizeCryptic = httpsCallable(functions, "getPrizeCryptic");
 
-const ui = new auth.AuthUI(getAuth());
+const myFirebaseAuth = getAuth();
+
+onAuthStateChanged(myFirebaseAuth, (...args) => {
+  console.log("[onAuthStateChanged callback]", args);
+});
+
+myFirebaseAuth.authStateReady().then(() => {
+  if (myFirebaseAuth.currentUser) {
+    const { displayName, email, uid } = myFirebaseAuth.currentUser;
+    console.log({ displayName, email, uid });
+  }
+});
+
+const ui = new auth.AuthUI(myFirebaseAuth);
 
 ui.start("#firebaseui-auth-container", {
   signInOptions: [GithubAuthProvider.PROVIDER_ID],
@@ -86,7 +99,7 @@ ui.start("#firebaseui-auth-container", {
   callbacks: {
     signInSuccessWithAuthResult: (...args) => {
       console.log("[signInSuccessWithAuthResult callback]", args);
-      return true;
+      return false;
     },
     uiShown: (...args) => {
       console.log("[uiShown callback]", args);
