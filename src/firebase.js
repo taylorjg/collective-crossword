@@ -93,16 +93,18 @@ myFirebaseAuth.authStateReady().then(() => {
 
 const ui = new auth.AuthUI(myFirebaseAuth);
 
-ui.start("#firebaseui-auth-container", {
-  signInOptions: [GithubAuthProvider.PROVIDER_ID],
-  signInFlow: "popup",
-  callbacks: {
-    signInSuccessWithAuthResult: (...args) => {
-      console.log("[signInSuccessWithAuthResult callback]", args);
-      return false;
+setTimeout(() => {
+  ui.start("#firebaseui-auth-container", {
+    signInOptions: [GithubAuthProvider.PROVIDER_ID],
+    signInFlow: "popup",
+    callbacks: {
+      signInSuccessWithAuthResult: (...args) => {
+        console.log("[signInSuccessWithAuthResult callback]", args);
+        return false;
+      },
+      uiShown: (...args) => {
+        console.log("[uiShown callback]", args);
+      },
     },
-    uiShown: (...args) => {
-      console.log("[uiShown callback]", args);
-    },
-  },
-});
+  });
+}, 1000);
