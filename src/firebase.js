@@ -28,6 +28,14 @@ const firebaseConfig = {
   measurementId: "G-BV82V50TSY",
 };
 
+if (window.location.hostname !== "collective-crossword.web.app") {
+  const apiKeyForDev = localStorage.getItem("API_KEY_FOR_DEV");
+  if (apiKeyForDev) {
+    firebaseConfig.apiKey = apiKeyForDev;
+    console.log("Using API_KEY_FOR_DEV for firebaseConfig.apiKey");
+  }
+}
+
 const app = initializeApp(firebaseConfig);
 
 export const analytics = getAnalytics(app);
