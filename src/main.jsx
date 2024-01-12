@@ -10,7 +10,9 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { HomePage, CrosswordPage, AdminPage, NoMatchPage } from "@app/pages";
+import { HomePage, CrosswordPage, AdminPage, NotFoundPage } from "@app/pages";
+import { Layout } from "@app/components";
+import { PathConstants } from "@app/constants";
 
 import { GlobalStyles } from "./Global.styles";
 import { Version } from "./Version";
@@ -18,20 +20,25 @@ import "./firebase";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/crosswords/:id",
-    element: <CrosswordPage />,
-  },
-  {
-    path: "/admin",
-    element: <AdminPage />,
-  },
-  {
-    path: "*",
-    element: <NoMatchPage />,
+    element: <Layout />,
+    children: [
+      {
+        path: PathConstants.Home,
+        element: <HomePage />,
+      },
+      {
+        path: PathConstants.Crossword,
+        element: <CrosswordPage />,
+      },
+      {
+        path: PathConstants.Admin,
+        element: <AdminPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+    ],
   },
 ]);
 

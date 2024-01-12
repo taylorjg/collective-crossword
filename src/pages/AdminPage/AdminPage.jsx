@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Button, Container, CircularProgress, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { addCrossword } from "@app/firebase";
@@ -222,11 +221,7 @@ export const AdminPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <div style={{ marginBottom: "1rem" }}>
-        <Link to="/">Home</Link>
-      </div>
-
+    <>
       <Crossword
         crosswordResponse={privateEyeCrosswordResponse}
         onAddCrossword={onAddCrossword}
@@ -252,6 +247,6 @@ export const AdminPage = () => {
         label="The Sunday Telegraph Prize Cryptic"
         exampleId={31712}
       />
-    </Container>
+    </>
   );
 };

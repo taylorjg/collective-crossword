@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container } from "@mui/material";
+import { Button } from "@mui/material";
 
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 
@@ -36,7 +36,7 @@ export const HomePage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <>
       <StyledAuthContainer id="firebaseui-auth-container" />
       {crosswords.map((crossword) => (
         <div
@@ -50,6 +50,6 @@ export const HomePage = () => {
           </Button>
         </div>
       ))}
-    </Container>
+    </>
   );
 };

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Container } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 import { getCrosswordById } from "@app/firebase";
 
@@ -33,11 +32,7 @@ export const CrosswordPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <div style={{ marginBottom: "1rem" }}>
-        <Link to="/">Home</Link>
-      </div>
-
+    <>
       <div>id: {id}</div>
       <div>crossword.title: {crossword?.title}</div>
       <div>errorMessage: {errorMessage}</div>
@@ -53,6 +48,6 @@ export const CrosswordPage = () => {
           <pre>{JSON.stringify(crossword, null, 2)}</pre>
         </>
       )}
-    </Container>
+    </>
   );
 };
