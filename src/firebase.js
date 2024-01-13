@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GithubAuthProvider, onAuthStateChanged } from "firebase/auth";
+// import { getAuth, GithubAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import {
   getFirestore,
@@ -16,7 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { auth } from "firebaseui";
+// import { auth } from "firebaseui";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOV1FlYTXlvlsKFI5Pngq84bdUsvZPtE0",
@@ -86,18 +86,18 @@ export const getCrypticCrossword = httpsCallable(
 
 export const getPrizeCryptic = httpsCallable(functions, "getPrizeCryptic");
 
-const myFirebaseAuth = getAuth();
+// const myFirebaseAuth = getAuth();
 
-onAuthStateChanged(myFirebaseAuth, (...args) => {
-  console.log("[onAuthStateChanged callback]", args);
-});
+// onAuthStateChanged(myFirebaseAuth, (...args) => {
+//   console.log("[onAuthStateChanged callback]", args);
+// });
 
-myFirebaseAuth.authStateReady().then(() => {
-  if (myFirebaseAuth.currentUser) {
-    const { displayName, email, uid } = myFirebaseAuth.currentUser;
-    console.log({ displayName, email, uid });
-  }
-});
+// myFirebaseAuth.authStateReady().then(() => {
+//   if (myFirebaseAuth.currentUser) {
+//     const { displayName, email, uid } = myFirebaseAuth.currentUser;
+//     console.log({ displayName, email, uid });
+//   }
+// });
 
 // const ui = new auth.AuthUI(myFirebaseAuth);
 
