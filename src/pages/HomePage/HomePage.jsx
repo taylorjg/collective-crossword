@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { useUser } from "@app/contexts";
 
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
+  const { user } = useUser();
+
+  console.log("[HomePage]", { user });
 
   const navigate = useNavigate();
 
@@ -42,9 +46,11 @@ export const HomePage = () => {
         >
           <div style={{ width: "20rem" }}>Title: {crossword.title}</div>
           <Button onClick={() => handleView(crossword.id)}>View</Button>
-          <Button color="error" onClick={() => handleDelete(crossword.id)}>
-            Delete
-          </Button>
+          {user?.isAdmin && (
+            <Button color="error" onClick={() => handleDelete(crossword.id)}>
+              Delete
+            </Button>
+          )}
         </div>
       ))}
     </>

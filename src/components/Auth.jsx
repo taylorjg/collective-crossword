@@ -81,6 +81,7 @@ export const Auth = () => {
     try {
       const auth = getAuth();
       await signOut(auth);
+      setUser();
     } catch (error) {
       console.log("[Auth#onSignOut]", error);
     }
