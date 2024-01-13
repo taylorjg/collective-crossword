@@ -15,7 +15,7 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-export const UserDetailsModal2 = ({ open, onClose, user }) => {
+export const UserDetailsModal = ({ open, onClose, user }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="sm">
       <DialogTitle>User Details</DialogTitle>
@@ -75,7 +75,7 @@ export const UserDetailsModal2 = ({ open, onClose, user }) => {
   );
 };
 
-UserDetailsModal2.propTypes = {
+UserDetailsModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   user: PropTypes.shape({
