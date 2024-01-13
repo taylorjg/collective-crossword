@@ -20,7 +20,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { db } from "@app/firebase";
 import { useUser } from "@app/contexts";
-import { UserDetailsModal } from "./UserDetailsModal";
+import { UserDetailsModal2 } from "./UserDetailsModal2";
 
 const SIGNED_IN_STATE_DONT_KNOW = 0;
 const SIGNED_IN_STATE_YES = 1;
@@ -153,7 +153,7 @@ export const Auth = () => {
             <Typography textAlign="center">Sign Out</Typography>
           </MenuItem>
         </Menu>
-        <UserDetailsModal
+        <UserDetailsModal2
           open={userDetailsModalOpen}
           user={user}
           onClose={() => setUserDetailsModalOpen(false)}
