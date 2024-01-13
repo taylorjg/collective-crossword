@@ -7,12 +7,20 @@ import {
   signOut,
   GithubAuthProvider,
 } from "firebase/auth";
-import { Button } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import { db } from "@app/firebase";
-
-import { useUser } from "@app/contexts/user";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+
+import { db } from "@app/firebase";
+import { useUser } from "@app/contexts";
+import { UserDetailsModal } from "./UserDetailsModal";
 
 const SIGNED_IN_STATE_DONT_KNOW = 0;
 const SIGNED_IN_STATE_YES = 1;
@@ -20,8 +28,10 @@ const SIGNED_IN_STATE_NO = 2;
 
 export const Auth = () => {
   const [signedInState, setSignedInState] = useState(SIGNED_IN_STATE_DONT_KNOW);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [userDetailsModalOpen, setUserDetailsModalOpen] = useState(false);
 
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const auth = getAuth();
@@ -30,14 +40,20 @@ export const Auth = () => {
         console.log("[Auth#onAuthStateChanged callback]", {
           uid: userArg.uid,
           currentUser: Boolean(auth.currentUser),
+          userArg,
         });
 
         const docRef = doc(db, "users", userArg.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const user = docSnap.data();
-          console.log("[Auth#onAuthStateChanged callback]", { user });
-          setUser(user);
+          const userEnhanced = {
+            ...user,
+            creationTime: userArg.metadata.creationTime,
+            lastSignInTime: userArg.metadata.lastSignInTime,
+          };
+          console.log("[Auth#onAuthStateChanged callback]", { userEnhanced });
+          setUser(userEnhanced);
         }
 
         setSignedInState(SIGNED_IN_STATE_YES);
@@ -58,6 +74,7 @@ export const Auth = () => {
       const additionalUserInfo = getAdditionalUserInfo(userCredential);
       console.log("[Auth#onSignIn]", {
         isNewUser: additionalUserInfo.isNewUser,
+        userCredential,
       });
       if (additionalUserInfo.isNewUser) {
         const user = {
@@ -67,10 +84,15 @@ export const Auth = () => {
           username: additionalUserInfo.username,
           isAdmin: false,
         };
-        console.log("[Auth#onSignIn]", { user });
         const docRef = doc(db, "users", userCredential.user.uid);
         await setDoc(docRef, user);
-        setUser(user);
+        const userEnhanced = {
+          ...user,
+          creationTime: userCredential.user.metadata.creationTime,
+          lastSignInTime: userCredential.user.metadata.lastSignInTime,
+        };
+        console.log("[Auth#onSignIn]", { userEnhanced });
+        setUser(userEnhanced);
       }
     } catch (error) {
       console.log("[Auth#onSignIn]", error);
@@ -89,8 +111,55 @@ export const Auth = () => {
 
   if (signedInState === SIGNED_IN_STATE_DONT_KNOW) return null;
 
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const onUserDetailsMenuItem = () => {
+    setUserDetailsModalOpen(true);
+    handleCloseUserMenu();
+  };
+
+  const onSignOutMenuItem = () => {
+    onSignOut();
+    handleCloseUserMenu();
+  };
+
   if (signedInState === SIGNED_IN_STATE_YES) {
-    return <Button onClick={onSignOut}>Sign Out</Button>;
+    return (
+      <>
+        <IconButton onClick={handleOpenUserMenu}>
+          <Avatar alt={user.username} src={user.photoURL} />
+        </IconButton>
+        <Menu
+          sx={{ mt: "45px" }}
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          <MenuItem onClick={onUserDetailsMenuItem}>
+            <Typography textAlign="center">User Details...</Typography>
+          </MenuItem>
+          <MenuItem onClick={onSignOutMenuItem}>
+            <Typography textAlign="center">Sign Out</Typography>
+          </MenuItem>
+        </Menu>
+        <UserDetailsModal
+          open={userDetailsModalOpen}
+          user={user}
+          onClose={() => setUserDetailsModalOpen(false)}
+        />
+      </>
+    );
   }
 
   if (signedInState === SIGNED_IN_STATE_NO) {

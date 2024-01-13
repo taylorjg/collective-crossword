@@ -1,4 +1,4 @@
-import { AppBar, Tabs, Tab } from "@mui/material";
+import { AppBar, Tabs, Tab, Toolbar } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
 import { useRouteMatch } from "@app/hooks";
@@ -19,8 +19,8 @@ export const Header = () => {
 
   return (
     currentTab && (
-      <header>
-        <AppBar>
+      <>
+        <AppBar position="fixed">
           <StyledHeader>
             <Tabs value={currentTab}>
               <Tab
@@ -47,7 +47,8 @@ export const Header = () => {
             <Auth />
           </StyledHeader>
         </AppBar>
-      </header>
+        <Toolbar />
+      </>
     )
   );
 };
