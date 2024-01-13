@@ -13,6 +13,7 @@ import "@fontsource/roboto/700.css";
 import { HomePage, CrosswordPage, AdminPage, NotFoundPage } from "@app/pages";
 import { Layout } from "@app/components";
 import { PathConstants } from "@app/constants";
+import { UserContextProvider } from "@app/contexts/user";
 
 import { GlobalStyles } from "./Global.styles";
 import { Version } from "./Version";
@@ -65,7 +66,9 @@ ReactDOM.createRoot(root).render(
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <UserContextProvider>
+          <RouterProvider router={router} />
+        </UserContextProvider>
         <Version />
       </QueryClientProvider>
     </ThemeProvider>

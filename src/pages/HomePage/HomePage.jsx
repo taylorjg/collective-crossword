@@ -4,8 +4,6 @@ import { Button } from "@mui/material";
 
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 
-import { StyledAuthContainer } from "./HomePage.styles";
-
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
 
@@ -37,7 +35,6 @@ export const HomePage = () => {
 
   return (
     <>
-      <StyledAuthContainer id="firebaseui-auth-container" />
       {crosswords.map((crossword) => (
         <div
           key={crossword.id}
