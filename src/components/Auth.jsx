@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut,
+  GithubAuthProvider,
+} from "firebase/auth";
 import { Button } from "@mui/material";
 
 const SIGNED_IN_STATE_DONT_KNOW = 0;
@@ -27,12 +33,27 @@ export const Auth = () => {
     });
   }, []);
 
-  const onSignIn = () => {
-    //
+  const onSignIn = async () => {
+    try {
+      const auth = getAuth();
+      const provider = new GithubAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      console.log("[Auth#onSignIn]", userCredential);
+      console.log("[Auth#onSignIn]", {
+        screenName: userCredential._tokenResponse.screenName,
+      });
+    } catch (error) {
+      console.log("[Auth#onSignIn]", error);
+    }
   };
 
-  const onSignOut = () => {
-    //
+  const onSignOut = async () => {
+    try {
+      const auth = getAuth();
+      await signOut(auth);
+    } catch (error) {
+      console.log("[Auth#onSignOut]", error);
+    }
   };
 
   if (signedInState === SIGNED_IN_STATE_DONT_KNOW) return null;
