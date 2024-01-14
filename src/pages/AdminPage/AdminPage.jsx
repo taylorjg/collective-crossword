@@ -11,6 +11,8 @@ import {
   useTheSundayTelegraphPrizeCrypticById,
 } from "@app/hooks";
 
+import { useUser } from "@app/contexts";
+
 import {
   StyledBox,
   StyledBoxContent,
@@ -20,6 +22,7 @@ import {
   StyledRow2Cols,
   StyledAlreadyAdded,
 } from "./AdminPage.styles";
+import { PathConstants } from "@app/constants";
 
 const Loading = () => {
   return (
@@ -213,8 +216,29 @@ Crossword2.propTypes = {
 };
 
 export const AdminPage = () => {
+  const { user } = useUser();
+  const navigate = useNavigate();
   const privateEyeCrosswordResponse = usePrivateEyeCurrentCrossword();
-  console.log({ privateEyeCrossword: privateEyeCrosswordResponse });
+
+  if (!user) {
+    const options = {
+      state: {
+        protectedRouteName: "Admin",
+        protectedRoute: PathConstants.Admin,
+      },
+    };
+    navigate(PathConstants.SignIn, options);
+    return;
+  }
+
+  if (!user.isAdmin) {
+    const options = {
+      state: {
+        protectedRouteName: "Admin",
+      },
+    };
+    navigate(PathConstants.NoAccess, options);
+  }
 
   const onAddCrossword = (crossword) => {
     return addCrossword(crossword);

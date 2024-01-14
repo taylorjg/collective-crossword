@@ -10,7 +10,14 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { HomePage, CrosswordPage, AdminPage, NotFoundPage } from "@app/pages";
+import {
+  HomePage,
+  CrosswordPage,
+  AdminPage,
+  NotFoundPage,
+  NoAccessPage,
+  SignInPage,
+} from "@app/pages";
 import { Layout } from "@app/components";
 import { PathConstants } from "@app/constants";
 import { UserContextProvider } from "@app/contexts/user";
@@ -34,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: PathConstants.Admin,
         element: <AdminPage />,
+      },
+      {
+        path: PathConstants.SignIn,
+        element: <SignInPage />,
+      },
+      {
+        path: PathConstants.NoAccess,
+        element: <NoAccessPage />,
       },
       {
         path: "*",

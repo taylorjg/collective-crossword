@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import { useRouteMatch } from "@app/hooks";
 import { PathConstants } from "@app/constants";
+import { useUser } from "@app/contexts";
 
 import { Auth } from "./Auth";
 import { StyledHeader } from "./Header.styles";
@@ -14,6 +15,9 @@ const routes = [
 ];
 
 export const Header = () => {
+  const { user } = useUser();
+  const isAdmin = user?.isAdmin;
+
   const routeMatch = useRouteMatch(routes);
   const currentTab = routeMatch?.pattern?.path;
 
@@ -37,12 +41,14 @@ export const Header = () => {
                   component={NavLink}
                 />
               )}
-              <Tab
-                label="Admin"
-                value={PathConstants.Admin}
-                to={PathConstants.Admin}
-                component={NavLink}
-              />
+              {isAdmin && (
+                <Tab
+                  label="Admin"
+                  value={PathConstants.Admin}
+                  to={PathConstants.Admin}
+                  component={NavLink}
+                />
+              )}
             </Tabs>
             <Auth />
           </StyledHeader>
