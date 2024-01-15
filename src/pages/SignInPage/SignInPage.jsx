@@ -1,31 +1,34 @@
+import { useEffect } from "react";
 import { Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
 import { PathConstants } from "@app/constants";
+import { useAuthState } from "@app/hooks";
 
 import { StyledSignInPage, StyledMessage } from "./SignInPage.styles";
 
 export const SignInPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, onSignIn } = useAuthState();
 
   const { protectedRouteName, protectedRoute } = location.state ?? {};
 
-  const onSignIn = () => {
-    // TODO: sign in
-    const user = {};
-    if (user.isAdmin) {
-      navigate(protectedRoute);
-    } else {
-      const options = {
-        state: {
-          protectedRouteName,
-        },
-      };
-      navigate(PathConstants.NoAccess, options);
+  useEffect(() => {
+    if (user) {
+      if (user.isAdmin) {
+        navigate(protectedRoute);
+      } else {
+        const options = {
+          state: {
+            protectedRouteName,
+          },
+        };
+        navigate(PathConstants.NoAccess, options);
+      }
     }
-  };
+  }, [user, navigate, protectedRoute, protectedRouteName]);
 
   return (
     <StyledSignInPage>
