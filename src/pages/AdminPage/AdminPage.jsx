@@ -11,7 +11,7 @@ import {
   useTheSundayTelegraphPrizeCrypticById,
 } from "@app/hooks";
 
-import { useUser } from "@app/contexts";
+import { useAuthState } from "@app/hooks";
 
 import {
   StyledBox,
@@ -216,7 +216,7 @@ Crossword2.propTypes = {
 };
 
 export const AdminPage = () => {
-  const { user } = useUser();
+  const { user } = useAuthState();
   const navigate = useNavigate();
   const privateEyeCrosswordResponse = usePrivateEyeCurrentCrossword();
 
