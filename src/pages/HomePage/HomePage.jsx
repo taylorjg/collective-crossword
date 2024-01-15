@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import { useAuthState } from "@app/hooks";
+import { useAuth } from "@app/contexts";
 
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
-  const { user } = useAuthState();
+  const { user } = useAuth();
 
   console.log("[HomePage]", { user });
 

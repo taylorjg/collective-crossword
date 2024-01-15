@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import { useRouteMatch } from "@app/hooks";
 import { PathConstants } from "@app/constants";
-import { useAuthState } from "@app/hooks";
+import { useAuth } from "@app/contexts";
 
 import { Auth } from "./Auth";
 import { StyledHeader } from "./Header.styles";
@@ -15,7 +15,7 @@ const routes = [
 ];
 
 export const Header = () => {
-  const { user } = useAuthState();
+  const { user } = useAuth();
   const isAdmin = user?.isAdmin;
 
   const routeMatch = useRouteMatch(routes);

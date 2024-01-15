@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import {
   getAuth,
   getAdditionalUserInfo,
@@ -10,16 +11,17 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { db } from "@app/firebase";
-import { useUser } from "@app/contexts";
 
-export const useAuthState = () => {
+import { AuthContext } from "./auth-context";
+
+export const AuthContextProvider = ({ children }) => {
   const [isCheckingAuthState, setIsCheckingAuthState] = useState(true);
-  const { user, setUser } = useUser();
+  const [user, setUser] = useState();
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (userArg) => {
-      console.log("[useAuthState onAuthStateChanged callback]", { userArg });
+      console.log("[onAuthStateChanged]", { userArg });
       if (userArg) {
         const docRef = doc(db, "users", userArg.uid);
         const docSnap = await getDoc(docRef);
@@ -30,7 +32,7 @@ export const useAuthState = () => {
             creationTime: userArg.metadata.creationTime,
             lastSignInTime: userArg.metadata.lastSignInTime,
           };
-          console.log("[useAuthState onAuthStateChanged callback]", {
+          console.log("[onAuthStateChanged]", {
             userEnhanced,
           });
           setUser(userEnhanced);
@@ -48,7 +50,7 @@ export const useAuthState = () => {
       const provider = new GithubAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
       const additionalUserInfo = getAdditionalUserInfo(userCredential);
-      console.log("[useAuthState#onSignIn]", {
+      console.log("[AuthContextProvider#onSignIn]", {
         isNewUser: additionalUserInfo.isNewUser,
         userCredential,
       });
@@ -67,11 +69,11 @@ export const useAuthState = () => {
           creationTime: userCredential.user.metadata.creationTime,
           lastSignInTime: userCredential.user.metadata.lastSignInTime,
         };
-        console.log("[useAuthState#onSignIn]", { userEnhanced });
+        console.log("[AuthContextProvider#onSignIn]", { userEnhanced });
         setUser(userEnhanced);
       }
     } catch (error) {
-      console.log("[useAuthState#onSignIn]", error);
+      console.log("[AuthContextProvider#onSignIn]", error);
     }
   };
 
@@ -81,14 +83,19 @@ export const useAuthState = () => {
       await signOut(auth);
       setUser();
     } catch (error) {
-      console.log("[useAuthState#onSignOut]", error);
+      console.log("[AuthContextProvider#onSignOut]", error);
     }
   };
 
-  return {
-    isCheckingAuthState,
-    user,
-    onSignIn,
-    onSignOut,
-  };
+  return (
+    <AuthContext.Provider
+      value={{ isCheckingAuthState, user, onSignIn, onSignOut }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+AuthContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

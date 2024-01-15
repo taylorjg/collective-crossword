@@ -9,14 +9,15 @@ import {
 } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
-import { useAuthState } from "@app/hooks";
+import { useAuth } from "@app/contexts";
+
 import { UserDetailsModal } from "./UserDetailsModal";
 
 export const Auth = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userDetailsModalOpen, setUserDetailsModalOpen] = useState(false);
 
-  const { isCheckingAuthState, user, onSignIn, onSignOut } = useAuthState();
+  const { isCheckingAuthState, user, onSignIn, onSignOut } = useAuth();
 
   if (isCheckingAuthState) return null;
 

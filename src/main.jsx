@@ -20,7 +20,7 @@ import {
 } from "@app/pages";
 import { Layout } from "@app/components";
 import { PathConstants } from "@app/constants";
-import { UserContextProvider } from "@app/contexts/user";
+import { AuthContextProvider } from "@app/contexts";
 
 import { GlobalStyles } from "./Global.styles";
 import { Version } from "./Version";
@@ -81,9 +81,9 @@ ReactDOM.createRoot(root).render(
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <UserContextProvider>
+        <AuthContextProvider>
           <RouterProvider router={router} />
-        </UserContextProvider>
+        </AuthContextProvider>
         <Version />
       </QueryClientProvider>
     </ThemeProvider>

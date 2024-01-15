@@ -4,14 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
 import { PathConstants } from "@app/constants";
-import { useAuthState } from "@app/hooks";
+import { useAuth } from "@app/contexts";
 
 import { StyledSignInPage, StyledMessage } from "./SignInPage.styles";
 
 export const SignInPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, onSignIn } = useAuthState();
+  const { user, onSignIn } = useAuth();
 
   const { protectedRouteName, protectedRoute } = location.state ?? {};
 
