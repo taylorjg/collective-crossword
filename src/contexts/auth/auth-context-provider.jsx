@@ -13,10 +13,12 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@app/firebase";
 
 import { AuthContext } from "./auth-context";
+import { useToast } from "@app/contexts";
 
 export const AuthContextProvider = ({ children }) => {
   const [isCheckingAuthState, setIsCheckingAuthState] = useState(true);
   const [user, setUser] = useState();
+  const { showError } = useToast();
 
   useEffect(() => {
     const auth = getAuth();
@@ -74,6 +76,7 @@ export const AuthContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log("[AuthContextProvider#onSignIn]", error);
+      showError("An error occurred signing in");
     }
   };
 
@@ -84,6 +87,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser();
     } catch (error) {
       console.log("[AuthContextProvider#onSignOut]", error);
+      showError("An error occurred signing out");
     }
   };
 

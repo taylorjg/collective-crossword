@@ -20,7 +20,7 @@ import {
 } from "@app/pages";
 import { Layout } from "@app/components";
 import { PathConstants } from "@app/constants";
-import { AuthContextProvider } from "@app/contexts";
+import { AuthContextProvider, ToastContextProvider } from "@app/contexts";
 
 import { GlobalStyles } from "./Global.styles";
 import "./firebase";
@@ -80,9 +80,11 @@ ReactDOM.createRoot(root).render(
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <AuthContextProvider>
-          <RouterProvider router={router} />
-        </AuthContextProvider>
+        <ToastContextProvider>
+          <AuthContextProvider>
+            <RouterProvider router={router} />
+          </AuthContextProvider>
+        </ToastContextProvider>
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>
