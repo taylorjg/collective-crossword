@@ -40,8 +40,9 @@ export const AdminPage = () => {
 
   const onAddCrossword = async (crossword) => {
     try {
-      await addCrossword(crossword);
+      const crosswordRef = await addCrossword(crossword);
       showSuccess("Successfully added crossword");
+      return crosswordRef;
     } catch (error) {
       showError("Failed to add crossword", error.message);
     }

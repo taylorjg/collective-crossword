@@ -1,18 +1,23 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 
 import { AlreadyAdded } from "./AlreadyAdded";
 import { Error } from "./Error";
 import { Loading } from "./Loading";
+import { ViewCrosswordButton } from "./ViewCrosswordButton";
 
-import { StyledBox, StyledBoxContent } from "./common.styles";
+import { StyledBox, StyledBoxContent, StyledRow } from "./common.styles";
 
 export const Crossword = ({ crosswordResponse, onAddCrossword }) => {
+  const [addedCrosswordId, setAddedCrosswordId] = useState();
+
   const { crossword, isLoading, isError, error, crosswordId } =
     crosswordResponse;
 
-  const handleAddCrossword = () => {
-    onAddCrossword(crossword);
+  const handleAddCrossword = async () => {
+    const crosswordRef = await onAddCrossword(crossword);
+    setAddedCrosswordId(crosswordRef.id);
   };
 
   return (
@@ -22,9 +27,18 @@ export const Crossword = ({ crosswordResponse, onAddCrossword }) => {
         {crosswordId ? (
           <AlreadyAdded crosswordId={crosswordId} />
         ) : (
-          <Button variant="outlined" size="small" onClick={handleAddCrossword}>
-            Add Crossword
-          </Button>
+          <StyledRow>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleAddCrossword}
+            >
+              Add Crossword
+            </Button>
+            {addedCrosswordId && (
+              <ViewCrosswordButton crosswordId={addedCrosswordId} />
+            )}
+          </StyledRow>
         )}
       </StyledBoxContent>
       {isLoading && <Loading />}

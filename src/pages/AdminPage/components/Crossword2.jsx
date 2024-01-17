@@ -65,7 +65,7 @@ export const Crossword2 = ({
             variant="outlined"
             size="small"
             onClick={handleFetchCrossword}
-            disabled={!id || idToUse}
+            disabled={!id || Boolean(idToUse)}
           >
             Fetch Crossword
           </Button>
