@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Container } from "@mui/material";
 
-import { Header } from "./Header";
+import { Header } from "./Header2";
 import { Version } from "./Version";
 
 export const Layout = () => {

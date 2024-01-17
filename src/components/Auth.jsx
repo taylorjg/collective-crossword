@@ -13,13 +13,21 @@ import { useAuth } from "@app/contexts";
 
 import { UserDetailsModal } from "./UserDetailsModal";
 
+const HiddenPlaceholderForConsistentHeight = () => {
+  return (
+    <IconButton style={{ visibility: "hidden" }}>
+      <Avatar />
+    </IconButton>
+  );
+};
+
 export const Auth = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userDetailsModalOpen, setUserDetailsModalOpen] = useState(false);
 
   const { isCheckingAuthState, user, onSignIn, onSignOut } = useAuth();
 
-  if (isCheckingAuthState) return null;
+  if (isCheckingAuthState) return <HiddenPlaceholderForConsistentHeight />;
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -42,7 +50,7 @@ export const Auth = () => {
   if (user) {
     return (
       <>
-        <IconButton onClick={handleOpenUserMenu}>
+        <IconButton onClick={handleOpenUserMenu} sx={{ mr: 1 }}>
           <Avatar alt={user.username} src={user.photoURL} />
         </IconButton>
         <Menu
@@ -73,9 +81,12 @@ export const Auth = () => {
   }
 
   return (
-    <Button onClick={onSignIn}>
-      Sign In&nbsp;
-      <GitHubIcon />
-    </Button>
+    <>
+      <HiddenPlaceholderForConsistentHeight />
+      <Button onClick={onSignIn} sx={{ mr: 1 }}>
+        Sign In&nbsp;
+        <GitHubIcon />
+      </Button>
+    </>
   );
 };

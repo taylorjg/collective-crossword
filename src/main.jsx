@@ -13,6 +13,7 @@ import "@fontsource/roboto/700.css";
 import {
   HomePage,
   CrosswordPage,
+  UsersPage,
   AdminPage,
   NotFoundPage,
   NoAccessPage,
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: PathConstants.Crossword,
         element: <CrosswordPage />,
+      },
+      {
+        path: PathConstants.Users,
+        element: <UsersPage />,
       },
       {
         path: PathConstants.Admin,
