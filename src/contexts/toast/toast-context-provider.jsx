@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Alert, Snackbar, Slide } from "@mui/material";
+import { Alert, Snackbar, Slide, AlertTitle } from "@mui/material";
 
 import { ToastContext } from "./toast-context";
 
@@ -8,23 +8,32 @@ export const ToastContextProvider = ({ children }) => {
   const [toastState, setToastState] = useState({
     open: false,
     message: "",
+    details: "",
     severity: "success",
   });
 
-  const { open, message, severity } = toastState;
+  const { open, message, details, severity } = toastState;
 
-  const showCommon = (message, severity) => {
+  const showCommon = (message, details, severity) => {
     setToastState({
       open: true,
       message,
+      details,
       severity,
     });
   };
 
-  const showSuccess = (message) => showCommon(message, "success");
-  const showInfo = (message) => showCommon(message, "info");
-  const showWarning = (message) => showCommon(message, "warning");
-  const showError = (message) => showCommon(message, "error");
+  const showSuccess = (message, details = "") =>
+    showCommon(message, details, "success");
+
+  const showInfo = (message, details = "") =>
+    showCommon(message, details, "info");
+
+  const showWarning = (message, details = "") =>
+    showCommon(message, details, "warning");
+
+  const showError = (message, details = "") =>
+    showCommon(message, details, "error");
 
   const handleClose = () => {
     setToastState((currentValue) => ({
@@ -56,7 +65,14 @@ export const ToastContextProvider = ({ children }) => {
           variant="filled"
           sx={{ width: "100%" }}
         >
-          {message}
+          {details ? (
+            <>
+              <AlertTitle>{message}</AlertTitle>
+              {details}
+            </>
+          ) : (
+            <>{message}</>
+          )}
         </Alert>
       </Snackbar>
     </ToastContext.Provider>

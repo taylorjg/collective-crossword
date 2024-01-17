@@ -76,7 +76,7 @@ export const AuthContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log("[AuthContextProvider#onSignIn]", error);
-      showError("An error occurred signing in");
+      showError("An error occurred signing in", error.message);
     }
   };
 
@@ -87,7 +87,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser();
     } catch (error) {
       console.log("[AuthContextProvider#onSignOut]", error);
-      showError("An error occurred signing out");
+      showError("An error occurred signing out", error.message);
     }
   };
 
