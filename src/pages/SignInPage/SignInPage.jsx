@@ -1,17 +1,15 @@
 import { useEffect } from "react";
-import { Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import GitHubIcon from "@mui/icons-material/GitHub";
 
 import { PathConstants } from "@app/constants";
 import { useAuth } from "@app/contexts";
 
-import { StyledSignInPage, StyledMessage } from "./SignInPage.styles";
+import { FullPageMessage } from "@app/components";
 
 export const SignInPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, onSignIn } = useAuth();
+  const { user } = useAuth();
 
   const { protectedRouteName, protectedRoute } = location.state ?? {};
 
@@ -30,15 +28,7 @@ export const SignInPage = () => {
     }
   }, [user, navigate, protectedRoute, protectedRouteName]);
 
-  return (
-    <StyledSignInPage>
-      <StyledMessage>
-        You must be signed in to access the {protectedRouteName} page
-      </StyledMessage>
-      <Button onClick={onSignIn}>
-        Sign In&nbsp;
-        <GitHubIcon />
-      </Button>
-    </StyledSignInPage>
-  );
+  const message = `You must be signed in to access the ${protectedRouteName} page`;
+
+  return <FullPageMessage message={message} />;
 };
