@@ -27,8 +27,6 @@ export const Auth = () => {
 
   const { isCheckingAuthState, user, onSignIn, onSignOut } = useAuth();
 
-  if (isCheckingAuthState) return <HiddenPlaceholderForConsistentHeight />;
-
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -46,6 +44,8 @@ export const Auth = () => {
     onSignOut();
     handleCloseUserMenu();
   };
+
+  if (isCheckingAuthState) return <HiddenPlaceholderForConsistentHeight />;
 
   if (user) {
     return (
