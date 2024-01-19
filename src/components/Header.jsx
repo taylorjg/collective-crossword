@@ -20,7 +20,7 @@ import {
   StyledHeaderLeft,
   StyledHeaderMiddle,
   StyledHeaderRight,
-} from "./Header2.styles";
+} from "./Header.styles";
 
 export const Header = () => {
   const [anchorElNavMenu, setAnchorElNavMenu] = useState(null);
