@@ -1,19 +1,10 @@
 import { useState } from "react";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
 
 import { useAuth } from "@app/contexts";
 
+import { UserMenu } from "./UserMenu";
 import { UserDetailsModal } from "./UserDetailsModal";
 
 const HiddenPlaceholderForConsistentHeight = () => {
@@ -28,7 +19,12 @@ export const Auth = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userDetailsModalOpen, setUserDetailsModalOpen] = useState(false);
 
-  const { isCheckingAuthState, user, onSignIn, onSignOut } = useAuth();
+  const {
+    isCheckingAuthState,
+    user,
+    onSignIn,
+    onSignOut: onSignOutFromHook,
+  } = useAuth();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -38,13 +34,13 @@ export const Auth = () => {
     setAnchorElUser(null);
   };
 
-  const onUserDetailsMenuItem = () => {
+  const onUserDetails = () => {
     setUserDetailsModalOpen(true);
     handleCloseUserMenu();
   };
 
-  const onSignOutMenuItem = () => {
-    onSignOut();
+  const onSignOut = () => {
+    onSignOutFromHook();
     handleCloseUserMenu();
   };
 
@@ -56,30 +52,13 @@ export const Auth = () => {
         <IconButton onClick={handleOpenUserMenu} sx={{ mr: 1 }}>
           <Avatar alt={user.username} src={user.photoURL} />
         </IconButton>
-        <Menu
-          sx={{ mt: "45px" }}
+        <UserMenu
           anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          keepMounted
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
-        >
-          <MenuItem onClick={onUserDetailsMenuItem}>
-            <ListItemIcon>
-              <PersonIcon fontSize="small" />
-            </ListItemIcon>
-            <Typography textAlign="center">User Details...</Typography>
-          </MenuItem>
-          <MenuItem onClick={onSignOutMenuItem}>
-            <ListItemIcon>
-              <LogoutIcon fontSize="small" />
-            </ListItemIcon>
-            <Typography textAlign="center">Sign Out</Typography>
-          </MenuItem>
-        </Menu>
+          onUserDetails={onUserDetails}
+          onSignOut={onSignOut}
+        />
         <UserDetailsModal
           open={userDetailsModalOpen}
           user={user}

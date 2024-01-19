@@ -17,7 +17,7 @@ import {
 
 export const Header = () => {
   const { user } = useAuth();
-  const isAdmin = user?.isAdmin;
+  const isAdmin = user?.isAdmin ?? false;
   const [anchorElNavMenu, setAnchorElNavMenu] = useState(null);
   const { title } = useRouteMatch();
 

@@ -42,7 +42,7 @@ export const NavMenu = ({ anchorEl, open, onClose, isAdmin }) => {
 };
 
 NavMenu.propTypes = {
-  anchorEl: PropTypes.element.isRequired,
+  anchorEl: PropTypes.object,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
