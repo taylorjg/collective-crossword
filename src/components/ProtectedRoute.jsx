@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@app/contexts";
@@ -11,25 +12,47 @@ export const ProtectedRoute = () => {
   const protectedRoute = routeMatch?.pattern?.path;
   const protectedRouteName = RoutesMap.get(protectedRoute) ?? "Not Found";
 
+  useEffect(() => {
+    if (isCheckingAuthState) {
+      return;
+    }
+
+    if (!user) {
+      const options = {
+        state: { protectedRouteName, protectedRoute },
+      };
+      navigate(PathConstants.SignIn, options);
+      return;
+    }
+
+    if (!user.isAdmin) {
+      const options = {
+        state: { protectedRouteName },
+      };
+      navigate(PathConstants.NoAccess, options);
+      return;
+    }
+  }, [isCheckingAuthState, user, protectedRoute, protectedRouteName, navigate]);
+
   if (isCheckingAuthState) {
     return null;
   }
 
-  if (!user) {
-    const options = {
-      state: { protectedRouteName, protectedRoute },
-    };
-    navigate(PathConstants.SignIn, options);
-    return;
-  }
+  // if (!user) {
+  //   const options = {
+  //     state: { protectedRouteName, protectedRoute },
+  //   };
+  //   navigate(PathConstants.SignIn, options);
+  //   return;
+  // }
 
-  if (!user.isAdmin) {
-    const options = {
-      state: { protectedRouteName },
-    };
-    navigate(PathConstants.NoAccess, options);
-    return;
-  }
+  // if (!user.isAdmin) {
+  //   const options = {
+  //     state: { protectedRouteName },
+  //   };
+  //   navigate(PathConstants.NoAccess, options);
+  //   return;
+  // }
 
   return <Outlet />;
 };
