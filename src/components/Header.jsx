@@ -1,24 +1,14 @@
 import { useState } from "react";
-import {
-  AppBar,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import LockIcon from "@mui/icons-material/Lock";
+import { AppBar, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import PeopleIcon from "@mui/icons-material/People";
-import { useNavigate } from "react-router-dom";
 
 import { useRouteMatch } from "@app/hooks";
 import { PathConstants, RoutesMap } from "@app/constants";
 import { useAuth } from "@app/contexts";
 
 import { Auth } from "./Auth";
+import { NavMenu } from "./NavMenu";
+
 import {
   StyledHeader,
   StyledHeaderLeft,
@@ -26,15 +16,15 @@ import {
   StyledHeaderRight,
 } from "./Header.styles";
 
-export const Header = () => {
-  const [anchorElNavMenu, setAnchorElNavMenu] = useState(null);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const isAdmin = user?.isAdmin;
+const DEFAULT_TITLE = "Not Found";
 
+export const Header = () => {
+  const { user } = useAuth();
+  const isAdmin = user?.isAdmin;
+  const [anchorElNavMenu, setAnchorElNavMenu] = useState(null);
   const routeMatch = useRouteMatch(Object.values(PathConstants));
   const path = routeMatch?.pattern?.path;
-  const title = RoutesMap.get(path) ?? "Not Found";
+  const title = RoutesMap.get(path) ?? DEFAULT_TITLE;
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNavMenu(event.currentTarget);
@@ -42,21 +32,6 @@ export const Header = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNavMenu(null);
-  };
-
-  const onClickHomeMenuItem = () => {
-    navigate(PathConstants.Home);
-    handleCloseNavMenu();
-  };
-
-  const onClickUsersMenuItem = () => {
-    navigate(PathConstants.Users);
-    handleCloseNavMenu();
-  };
-
-  const onClickAdminMenuItem = () => {
-    navigate(PathConstants.Admin);
-    handleCloseNavMenu();
   };
 
   return (
@@ -75,33 +50,12 @@ export const Header = () => {
         </StyledHeader>
       </AppBar>
       <Toolbar />
-      <Menu
+      <NavMenu
         anchorEl={anchorElNavMenu}
-        keepMounted
         open={Boolean(anchorElNavMenu)}
         onClose={handleCloseNavMenu}
-      >
-        <MenuItem onClick={onClickHomeMenuItem}>
-          <ListItemIcon>
-            <HomeIcon fontSize="small" />
-          </ListItemIcon>
-          <Typography textAlign="center">Home</Typography>
-        </MenuItem>
-        <MenuItem onClick={onClickUsersMenuItem}>
-          <ListItemIcon>
-            <PeopleIcon fontSize="small" />
-          </ListItemIcon>
-          <Typography textAlign="center">Users</Typography>
-        </MenuItem>
-        {isAdmin && (
-          <MenuItem onClick={onClickAdminMenuItem}>
-            <ListItemIcon>
-              <LockIcon fontSize="small" />
-            </ListItemIcon>
-            <Typography textAlign="center">Admin</Typography>
-          </MenuItem>
-        )}
-      </Menu>
+        isAdmin={isAdmin}
+      />
     </>
   );
 };
