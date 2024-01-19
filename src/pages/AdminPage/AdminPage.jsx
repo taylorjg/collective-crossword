@@ -1,43 +1,19 @@
-// import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import { addCrossword } from "@app/firebase";
-// import { useAuth, useToast } from "@app/contexts";
 import { useToast } from "@app/contexts";
-// import { PathConstants } from "@app/constants";
-import {
-  usePrivateEyeCurrentCrossword,
-  useTheDailyTelegraphCrypticCrosswordById,
-  useTheDailyTelegraphPrizeCrypticById,
-  useTheSundayTelegraphPrizeCrypticById,
-} from "@app/hooks";
 
-import { Crossword, Crossword2 } from "./components";
+import { PrivateEyeTab, TheTelegraphTab } from "./tabs";
 
 export const AdminPage = () => {
-  // const { user } = useAuth();
+  const [value, setValue] = useState("1");
   const { showSuccess, showError } = useToast();
-  // const navigate = useNavigate();
-  const privateEyeCrosswordResponse = usePrivateEyeCurrentCrossword();
 
-  // if (!user) {
-  //   const options = {
-  //     state: {
-  //       protectedRouteName: "Admin",
-  //       protectedRoute: PathConstants.Admin,
-  //     },
-  //   };
-  //   navigate(PathConstants.SignIn, options);
-  //   return;
-  // }
-
-  // if (!user.isAdmin) {
-  //   const options = {
-  //     state: {
-  //       protectedRouteName: "Admin",
-  //     },
-  //   };
-  //   navigate(PathConstants.NoAccess, options);
-  // }
+  const onChangeTab = (_, newValue) => {
+    setValue(newValue);
+  };
 
   const onAddCrossword = async (crossword) => {
     try {
@@ -50,32 +26,17 @@ export const AdminPage = () => {
   };
 
   return (
-    <>
-      <Crossword
-        crosswordResponse={privateEyeCrosswordResponse}
-        onAddCrossword={onAddCrossword}
-      />
-
-      <Crossword2
-        onAddCrossword={onAddCrossword}
-        useCrossword={useTheDailyTelegraphCrypticCrosswordById}
-        label="The Daily Telegraph Cryptic Crossword"
-        exampleId={31769}
-      />
-
-      <Crossword2
-        onAddCrossword={onAddCrossword}
-        useCrossword={useTheDailyTelegraphPrizeCrypticById}
-        label="The Daily Telegraph Prize Cryptic"
-        exampleId={31711}
-      />
-
-      <Crossword2
-        onAddCrossword={onAddCrossword}
-        useCrossword={useTheSundayTelegraphPrizeCrypticById}
-        label="The Sunday Telegraph Prize Cryptic"
-        exampleId={31712}
-      />
-    </>
+    <TabContext value={value}>
+      <TabList onChange={onChangeTab}>
+        <Tab label="Private Eye" value="1" />
+        <Tab label="The Telegraph" value="2" />
+      </TabList>
+      <TabPanel value="1">
+        <PrivateEyeTab onAddCrossword={onAddCrossword} />
+      </TabPanel>
+      <TabPanel value="2">
+        <TheTelegraphTab onAddCrossword={onAddCrossword} />
+      </TabPanel>
+    </TabContext>
   );
 };
