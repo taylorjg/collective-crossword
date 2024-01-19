@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import { addCrossword } from "@app/firebase";
-import { useAuth, useToast } from "@app/contexts";
-import { PathConstants } from "@app/constants";
+// import { useAuth, useToast } from "@app/contexts";
+import { useToast } from "@app/contexts";
+// import { PathConstants } from "@app/constants";
 import {
   usePrivateEyeCurrentCrossword,
   useTheDailyTelegraphCrypticCrosswordById,
@@ -13,30 +14,30 @@ import {
 import { Crossword, Crossword2 } from "./components";
 
 export const AdminPage = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const { showSuccess, showError } = useToast();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const privateEyeCrosswordResponse = usePrivateEyeCurrentCrossword();
 
-  if (!user) {
-    const options = {
-      state: {
-        protectedRouteName: "Admin",
-        protectedRoute: PathConstants.Admin,
-      },
-    };
-    navigate(PathConstants.SignIn, options);
-    return;
-  }
+  // if (!user) {
+  //   const options = {
+  //     state: {
+  //       protectedRouteName: "Admin",
+  //       protectedRoute: PathConstants.Admin,
+  //     },
+  //   };
+  //   navigate(PathConstants.SignIn, options);
+  //   return;
+  // }
 
-  if (!user.isAdmin) {
-    const options = {
-      state: {
-        protectedRouteName: "Admin",
-      },
-    };
-    navigate(PathConstants.NoAccess, options);
-  }
+  // if (!user.isAdmin) {
+  //   const options = {
+  //     state: {
+  //       protectedRouteName: "Admin",
+  //     },
+  //   };
+  //   navigate(PathConstants.NoAccess, options);
+  // }
 
   const onAddCrossword = async (crossword) => {
     try {

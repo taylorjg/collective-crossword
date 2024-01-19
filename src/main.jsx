@@ -19,6 +19,7 @@ import {
   NoAccessPage,
   SignInPage,
 } from "@app/pages";
+import { ProtectedRoute } from "@app/components";
 import { Layout } from "@app/components";
 import { PathConstants } from "@app/constants";
 import { AuthContextProvider, ToastContextProvider } from "@app/contexts";
@@ -43,8 +44,13 @@ const router = createBrowserRouter([
         element: <UsersPage />,
       },
       {
-        path: PathConstants.Admin,
-        element: <AdminPage />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: PathConstants.Admin,
+            element: <AdminPage />,
+          },
+        ],
       },
       {
         path: PathConstants.SignIn,

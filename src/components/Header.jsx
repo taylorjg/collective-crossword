@@ -33,8 +33,8 @@ export const Header = () => {
   const isAdmin = user?.isAdmin;
 
   const routeMatch = useRouteMatch(Object.values(PathConstants));
-  const currentTab = routeMatch?.pattern?.path;
-  const title = RoutesMap.get(currentTab) ?? "Not Found";
+  const path = routeMatch?.pattern?.path;
+  const title = RoutesMap.get(path) ?? "Not Found";
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNavMenu(event.currentTarget);
