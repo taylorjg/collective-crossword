@@ -4,10 +4,14 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  ListItemIcon,
   Toolbar,
   Typography,
 } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import LockIcon from "@mui/icons-material/Lock";
 import MenuIcon from "@mui/icons-material/Menu";
+import PeopleIcon from "@mui/icons-material/People";
 import { useNavigate } from "react-router-dom";
 
 import { useRouteMatch } from "@app/hooks";
@@ -78,13 +82,22 @@ export const Header = () => {
         onClose={handleCloseNavMenu}
       >
         <MenuItem onClick={onClickHomeMenuItem}>
+          <ListItemIcon>
+            <HomeIcon fontSize="small" />
+          </ListItemIcon>
           <Typography textAlign="center">Home</Typography>
         </MenuItem>
         <MenuItem onClick={onClickUsersMenuItem}>
+          <ListItemIcon>
+            <PeopleIcon fontSize="small" />
+          </ListItemIcon>
           <Typography textAlign="center">Users</Typography>
         </MenuItem>
         {isAdmin && (
           <MenuItem onClick={onClickAdminMenuItem}>
+            <ListItemIcon>
+              <LockIcon fontSize="small" />
+            </ListItemIcon>
             <Typography textAlign="center">Admin</Typography>
           </MenuItem>
         )}
