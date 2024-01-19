@@ -3,11 +3,14 @@ import {
   Avatar,
   Button,
   IconButton,
+  ListItemIcon,
   Menu,
   MenuItem,
   Typography,
 } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
 
 import { useAuth } from "@app/contexts";
 
@@ -65,9 +68,15 @@ export const Auth = () => {
           onClose={handleCloseUserMenu}
         >
           <MenuItem onClick={onUserDetailsMenuItem}>
+            <ListItemIcon>
+              <PersonIcon fontSize="small" />
+            </ListItemIcon>
             <Typography textAlign="center">User Details...</Typography>
           </MenuItem>
           <MenuItem onClick={onSignOutMenuItem}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
             <Typography textAlign="center">Sign Out</Typography>
           </MenuItem>
         </Menu>
