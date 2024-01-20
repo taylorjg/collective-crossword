@@ -6,26 +6,26 @@ import {
   useTheSundayTelegraphPrizeCrypticById,
 } from "@app/hooks";
 
-import { Crossword2 } from "../components";
+import { ImportCrossword } from "./ImportCrossword";
 
 export const TheTelegraphTab = ({ onAddCrossword }) => {
   return (
     <>
-      <Crossword2
+      <ImportCrossword
         onAddCrossword={onAddCrossword}
         useCrossword={useTheDailyTelegraphCrypticCrosswordById}
         label="The Daily Telegraph Cryptic Crossword"
         exampleId={31769}
       />
 
-      <Crossword2
+      <ImportCrossword
         onAddCrossword={onAddCrossword}
         useCrossword={useTheDailyTelegraphPrizeCrypticById}
         label="The Daily Telegraph Prize Cryptic"
         exampleId={31711}
       />
 
-      <Crossword2
+      <ImportCrossword
         onAddCrossword={onAddCrossword}
         useCrossword={useTheSundayTelegraphPrizeCrypticById}
         label="The Sunday Telegraph Prize Cryptic"

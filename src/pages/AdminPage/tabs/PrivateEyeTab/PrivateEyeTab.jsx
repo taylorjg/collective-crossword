@@ -1,13 +1,9 @@
 import PropTypes from "prop-types";
 
-import { Crossword3 } from "../components";
+import { ImportCrossword } from "./ImportCrossword";
 
 export const PrivateEyeTab = ({ onAddCrossword }) => {
-  return (
-    <>
-      <Crossword3 onAddCrossword={onAddCrossword} />
-    </>
-  );
+  return <ImportCrossword onAddCrossword={onAddCrossword} />;
 };
 
 PrivateEyeTab.propTypes = {

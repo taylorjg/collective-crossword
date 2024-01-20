@@ -7,18 +7,18 @@ import {
   usePrivateEyeCrosswordByUrl,
 } from "@app/hooks";
 
-import { AlreadyAdded } from "./AlreadyAdded";
-import { Error } from "./Error";
-import { ViewCrosswordButton } from "./ViewCrosswordButton";
+import { AlreadyAdded } from "../../components/AlreadyAdded";
+import { Error } from "../../components/Error";
+import { ViewCrosswordButton } from "../../components/ViewCrosswordButton";
 
 import {
   StyledBox,
   StyledBoxContent,
   StyledRow,
   StyledRow2Cols,
-} from "./common.styles";
+} from "../../components/common.styles";
 
-export const Crossword3 = ({ onAddCrossword }) => {
+export const ImportCrossword = ({ onAddCrossword }) => {
   const [selectedPuzzleId, setSelectedPuzzleId] = useState("");
   const [puzzleToFetch, setPuzzleToFetch] = useState();
   const [showAddSpinner, setShowAddSpinner] = useState(false);
@@ -121,6 +121,6 @@ export const Crossword3 = ({ onAddCrossword }) => {
   );
 };
 
-Crossword3.propTypes = {
+ImportCrossword.propTypes = {
   onAddCrossword: PropTypes.func.isRequired,
 };

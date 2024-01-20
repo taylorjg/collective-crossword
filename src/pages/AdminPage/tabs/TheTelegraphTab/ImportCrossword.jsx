@@ -2,18 +2,18 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, CircularProgress, TextField } from "@mui/material";
 
-import { AlreadyAdded } from "./AlreadyAdded";
-import { Error } from "./Error";
-import { ViewCrosswordButton } from "./ViewCrosswordButton";
+import { AlreadyAdded } from "../../components/AlreadyAdded";
+import { Error } from "../../components/Error";
+import { ViewCrosswordButton } from "../../components/ViewCrosswordButton";
 
 import {
   StyledBox,
   StyledBoxContent,
   StyledRow,
   StyledRow2Cols,
-} from "./common.styles";
+} from "../../components/common.styles";
 
-export const Crossword2 = ({
+export const ImportCrossword = ({
   onAddCrossword,
   useCrossword,
   label,
@@ -111,7 +111,7 @@ export const Crossword2 = ({
   );
 };
 
-Crossword2.propTypes = {
+ImportCrossword.propTypes = {
   onAddCrossword: PropTypes.func.isRequired,
   useCrossword: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
