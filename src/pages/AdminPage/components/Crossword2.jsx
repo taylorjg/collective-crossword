@@ -20,22 +20,22 @@ export const Crossword2 = ({
   exampleId,
 }) => {
   const [id, setId] = useState("");
-  const [idToUse, setIdToUse] = useState("");
+  const [idToFetch, setIdToFetch] = useState("");
   const [showAddSpinner, setShowAddSpinner] = useState(false);
   const [addedCrosswordId, setAddedCrosswordId] = useState();
 
-  const crosswordResponse = useCrossword(idToUse);
+  const crosswordResponse = useCrossword(idToFetch);
 
   const { crossword, puzData, isLoading, isError, error, crosswordId } =
     crosswordResponse;
 
   const handleFetchCrossword = () => {
-    setIdToUse(id);
+    setIdToFetch(id);
   };
 
   const handleReset = () => {
     setId("");
-    setIdToUse("");
+    setIdToFetch("");
   };
 
   const handleAddCrossword = async () => {
@@ -59,13 +59,13 @@ export const Crossword2 = ({
             value={id}
             onChange={(e) => setId(e.target.value)}
             size="small"
-            disabled={Boolean(idToUse)}
+            disabled={Boolean(idToFetch)}
           />
           <Button
             variant="outlined"
             size="small"
             onClick={handleFetchCrossword}
-            disabled={!id || Boolean(idToUse)}
+            disabled={!id || id === idToFetch}
           >
             Fetch Crossword
           </Button>
@@ -75,7 +75,7 @@ export const Crossword2 = ({
           size="small"
           onClick={handleReset}
           style={{ position: "absolute", top: "16px", right: "16px" }}
-          disabled={!idToUse}
+          disabled={!idToFetch}
         >
           Reset
         </Button>

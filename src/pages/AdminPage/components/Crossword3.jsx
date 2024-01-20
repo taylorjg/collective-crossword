@@ -4,7 +4,7 @@ import { Button, CircularProgress, MenuItem, Select } from "@mui/material";
 
 import {
   usePrivateEyeCrosswords,
-  usePrivateEyeCrosswordById,
+  usePrivateEyeCrosswordByUrl,
 } from "@app/hooks";
 
 import { AlreadyAdded } from "./AlreadyAdded";
@@ -19,26 +19,29 @@ import {
 } from "./common.styles";
 
 export const Crossword3 = ({ onAddCrossword }) => {
-  const [selectedPuzzle, setSelectedPuzzle] = useState("");
-  const [idToUse, setIdToUse] = useState("");
+  const [selectedPuzzleId, setSelectedPuzzleId] = useState("");
+  const [puzzleToFetch, setPuzzleToFetch] = useState();
   const [showAddSpinner, setShowAddSpinner] = useState(false);
   const [addedCrosswordId, setAddedCrosswordId] = useState();
 
   const hookResult1 = usePrivateEyeCrosswords();
   const { puzList } = hookResult1;
 
-  useEffect(() => {
-    if (puzList.length > 0 && selectedPuzzle === "") {
-      const id = puzList[0].id;
-      setSelectedPuzzle(id);
-    }
-  }, [puzList, selectedPuzzle]);
-
-  const hookResult2 = usePrivateEyeCrosswordById(idToUse, Boolean(idToUse));
+  const hookResult2 = usePrivateEyeCrosswordByUrl(puzzleToFetch?.url);
   const { crossword, crosswordId } = hookResult2;
 
+  useEffect(() => {
+    if (puzList.length > 0 && selectedPuzzleId === "") {
+      const id = puzList[0].id;
+      setSelectedPuzzleId(id);
+    }
+  }, [puzList, selectedPuzzleId]);
+
   const handleFetchCrossword = () => {
-    setIdToUse(selectedPuzzle);
+    const puzzle = puzList.find(({ id }) => id === selectedPuzzleId);
+    if (puzzle) {
+      setPuzzleToFetch(puzzle);
+    }
   };
 
   const handleAddCrossword = async () => {
@@ -59,9 +62,9 @@ export const Crossword3 = ({ onAddCrossword }) => {
             sx={{ width: "15rem" }}
             size="small"
             aria-label="Puzzles"
-            value={selectedPuzzle}
+            value={selectedPuzzleId}
             onChange={(e) => {
-              setSelectedPuzzle(e.target.value);
+              setSelectedPuzzleId(e.target.value);
             }}
           >
             {puzList.map((puzzle) => {
@@ -77,7 +80,9 @@ export const Crossword3 = ({ onAddCrossword }) => {
             variant="outlined"
             size="small"
             onClick={handleFetchCrossword}
-            disabled={!selectedPuzzle || idToUse === selectedPuzzle}
+            disabled={
+              !selectedPuzzleId || selectedPuzzleId === puzzleToFetch?.id
+            }
           >
             Fetch Crossword
           </Button>
