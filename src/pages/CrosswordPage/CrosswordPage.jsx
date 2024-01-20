@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { formatDate } from "@app/utils";
 
 import { getCrosswordById } from "@app/firebase";
+
+import { FullPageMessage } from "@app/components";
 
 export const CrosswordPage = () => {
   const [crossword, setCrossword] = useState();
@@ -18,7 +21,7 @@ export const CrosswordPage = () => {
           ...docSnap.data(),
         });
       } else {
-        setErrorMessage("Failed to load specified crossword.");
+        setErrorMessage("Failed to load specified crossword");
       }
     };
 
@@ -31,23 +34,23 @@ export const CrosswordPage = () => {
     return charsOut.join("");
   };
 
+  if (errorMessage) return <FullPageMessage message={errorMessage} />;
+
+  if (!crossword) return <FullPageMessage message="Fetching crossword..." />;
+
   return (
     <>
-      <div>id: {id}</div>
-      <div>crossword.title: {crossword?.title}</div>
-      <div>errorMessage: {errorMessage}</div>
-
-      {crossword && (
-        <>
-          <pre>
-            {crossword.grid.map((line, index) => (
-              <div key={index}>{transformLine(line)}</div>
-            ))}
-          </pre>
-          <br />
-          <pre>{JSON.stringify(crossword, null, 2)}</pre>
-        </>
-      )}
+      <div>Publication: {crossword.publication}</div>
+      <div>Publish Date: {formatDate(crossword.publishDate)}</div>
+      <div>Title: {crossword.title}</div>
+      {crossword.author && <div>Author: {crossword.author}</div>}
+      <pre>
+        {crossword.grid.map((line, index) => (
+          <div key={index}>{transformLine(line)}</div>
+        ))}
+      </pre>
+      <br />
+      <pre>{JSON.stringify(crossword, null, 2)}</pre>
     </>
   );
 };

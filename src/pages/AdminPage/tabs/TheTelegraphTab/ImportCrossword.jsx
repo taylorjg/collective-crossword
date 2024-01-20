@@ -2,6 +2,8 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, CircularProgress, TextField } from "@mui/material";
 
+import { formatDate } from "@app/utils";
+
 import { AlreadyAdded } from "../../components/AlreadyAdded";
 import { Error } from "../../components/Error";
 import { ViewCrosswordButton } from "../../components/ViewCrosswordButton";
@@ -26,7 +28,7 @@ export const ImportCrossword = ({
 
   const crosswordResponse = useCrossword(idToFetch);
 
-  const { crossword, puzData, isLoading, isError, error, crosswordId } =
+  const { crossword, isLoading, isError, error, crosswordId } =
     crosswordResponse;
 
   const handleFetchCrossword = () => {
@@ -83,7 +85,7 @@ export const ImportCrossword = ({
           <>
             <StyledRow2Cols>
               <div>Title: {crossword.title}</div>
-              <div>Date: {puzData.copy["date-publish"]}</div>
+              <div>Date: {formatDate(crossword.publishDate)}</div>
             </StyledRow2Cols>
             {crosswordId ? (
               <AlreadyAdded crosswordId={crosswordId} />

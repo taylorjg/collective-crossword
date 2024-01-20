@@ -4,6 +4,9 @@ import { Button } from "@mui/material";
 import { useAuth } from "@app/contexts";
 
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
+import { formatDate } from "@app/utils";
+
+import { StyledCard, StyledDetails, StyledDetail } from "./HomePage.styles";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
@@ -38,18 +41,34 @@ export const HomePage = () => {
   return (
     <>
       {crosswords.map((crossword) => (
-        <div
-          key={crossword.id}
-          style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}
-        >
-          <div style={{ width: "20rem" }}>Title: {crossword.title}</div>
+        <StyledCard key={crossword.id}>
+          <StyledDetails>
+            <StyledDetail>
+              <div>Publication:</div>
+              <div>{crossword.publication}</div>
+            </StyledDetail>
+            <StyledDetail>
+              <div>Publish Date:</div>
+              <div>{formatDate(crossword.publishDate)}</div>
+            </StyledDetail>
+            <StyledDetail>
+              <div>Title:</div>
+              <div>{crossword.title}</div>
+            </StyledDetail>
+            {crossword.author && (
+              <StyledDetail>
+                <div>Author:</div>
+                <div>{crossword.author}</div>
+              </StyledDetail>
+            )}
+          </StyledDetails>
           <Button onClick={() => handleView(crossword.id)}>View</Button>
           {user?.isAdmin && (
             <Button color="error" onClick={() => handleDelete(crossword.id)}>
               Delete
             </Button>
           )}
-        </div>
+        </StyledCard>
       ))}
     </>
   );

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import { range } from "@app/utils";
 
 const makeGrid = (puzData) => {
@@ -51,11 +53,18 @@ export const transformTelegraphCrossword = (puzData, url) => {
   const acrossClues = makeAcrossClues(puzData);
   const downClues = makeDownClues(puzData);
 
+  // e.g. "Wednesday, 06 December 2023",
+  const momentPublishDate = moment(
+    puzData.copy["date-publish"],
+    "dddd, DD MMMM YYYY"
+  );
+
   return {
     url,
-    publication: "Telegraph",
+    publication: "The Telegraph",
     author: puzData.copy.setter,
     title: puzData.copy.title,
+    publishDate: momentPublishDate.unix(),
     grid,
     acrossClues,
     downClues,

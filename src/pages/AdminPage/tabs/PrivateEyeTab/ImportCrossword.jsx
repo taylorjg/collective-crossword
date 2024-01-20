@@ -6,6 +6,7 @@ import {
   usePrivateEyeCrosswords,
   usePrivateEyeCrosswordByUrl,
 } from "@app/hooks";
+import { formatDate } from "@app/utils";
 
 import { AlreadyAdded } from "../../components/AlreadyAdded";
 import { Error } from "../../components/Error";
@@ -27,7 +28,7 @@ export const ImportCrossword = ({ onAddCrossword }) => {
   const hookResult1 = usePrivateEyeCrosswords();
   const { puzList } = hookResult1;
 
-  const hookResult2 = usePrivateEyeCrosswordByUrl(puzzleToFetch?.url);
+  const hookResult2 = usePrivateEyeCrosswordByUrl(puzzleToFetch);
   const { crossword, crosswordId } = hookResult2;
 
   useEffect(() => {
@@ -92,8 +93,7 @@ export const ImportCrossword = ({ onAddCrossword }) => {
           <>
             <StyledRow2Cols>
               <div>Title: {crossword.title}</div>
-              {/* <div>Date: {puzData.copy["date-publish"]}</div> */}
-              <div>Date: (not available)</div>
+              <div>Date: {formatDate(crossword.publishDate)}</div>
             </StyledRow2Cols>
             {crosswordId ? (
               <AlreadyAdded crosswordId={crosswordId} />
