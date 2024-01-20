@@ -85,6 +85,40 @@ export const usePrivateEyeCrosswordById = (id, enabled) => {
   return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
 };
 
+export const usePrivateEyeCrosswordByUrl = (puzUrl) => {
+  const [puzData, setPuzData] = useState();
+
+  const queryResponse = useQuery(
+    ["parsePuzzle", puzUrl],
+    () => parsePuzzle(puzUrl),
+    {
+      enabled: Boolean(puzUrl),
+      onSuccess: (data) => {
+        setPuzData(data);
+      },
+    }
+  );
+
+  const isLoading = queryResponse.isLoading;
+  const isError = queryResponse.isError;
+  const error = queryResponse.error;
+  const crossword = puzData
+    ? transformPrivateEyeCrossword(puzData, puzUrl)
+    : null;
+
+  return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
+};
+
+const extractIdFromUrl = (url) => {
+  const m = url.match(/(\d+)\.puz$/);
+  return Number(m[1]);
+};
+
+const extractFilenameFromUrl = (url) => {
+  const pos = url.lastIndexOf("/");
+  return pos >= 0 ? url.substring(pos + 1) : url;
+};
+
 export const usePrivateEyeCrosswords = () => {
   const queryResponse = useQuery("listPuzzles", listPuzzles);
   const { data, isLoading, isError, error } = queryResponse;
@@ -96,6 +130,13 @@ export const usePrivateEyeCrosswords = () => {
       ({ url, timestamp }) =>
         !(url.endsWith("783.puz") && timestamp === "2022-10-07")
     )
+    .map((entry) => {
+      return {
+        ...entry,
+        id: extractIdFromUrl(entry.url),
+        filename: extractFilenameFromUrl(entry.url),
+      };
+    })
     .reverse();
 
   return { puzList, isLoading, isError, error };

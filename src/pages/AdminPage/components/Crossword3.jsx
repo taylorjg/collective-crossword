@@ -18,12 +18,6 @@ import {
   StyledRow2Cols,
 } from "./common.styles";
 
-// TODO: do this inside usePrivateEyeCrosswords - add an id property to each entry
-const extractPuzzleIdFromUrl = (url) => {
-  const m = url.match(/(\d+)\.puz$/);
-  return m[1];
-};
-
 export const Crossword3 = ({ onAddCrossword }) => {
   const [selectedPuzzle, setSelectedPuzzle] = useState("");
   const [idToUse, setIdToUse] = useState("");
@@ -35,7 +29,7 @@ export const Crossword3 = ({ onAddCrossword }) => {
 
   useEffect(() => {
     if (puzList.length > 0 && selectedPuzzle === "") {
-      const id = extractPuzzleIdFromUrl(puzList[0].url);
+      const id = puzList[0].id;
       setSelectedPuzzle(id);
     }
   }, [puzList, selectedPuzzle]);
@@ -71,11 +65,10 @@ export const Crossword3 = ({ onAddCrossword }) => {
             }}
           >
             {puzList.map((puzzle) => {
-              const { url, timestamp } = puzzle;
-              const id = extractPuzzleIdFromUrl(url);
+              const { id, filename, timestamp } = puzzle;
               return (
                 <MenuItem key={id} value={id}>
-                  {id} ({timestamp})
+                  {filename} ({timestamp})
                 </MenuItem>
               );
             })}
