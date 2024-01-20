@@ -23,6 +23,11 @@ const parsePuzzle = async (puzzleUrl) => {
   return response.data;
 };
 
+const listPuzzles = async () => {
+  const response = await axios.get(`${SERVERLESS_URL}/list-puzzles`);
+  return response.data;
+};
+
 export const usePrivateEyeCurrentCrossword = () => {
   const [puzUrl, setPuzUrl] = useState();
   const [puzData, setPuzData] = useState();
@@ -59,7 +64,7 @@ export const usePrivateEyeCrosswordById = (id, enabled) => {
 
   const [puzData, setPuzData] = useState();
 
-  const query2Response = useQuery(
+  const queryResponse = useQuery(
     ["parsePuzzle", puzUrl],
     () => parsePuzzle(puzUrl),
     {
@@ -70,12 +75,28 @@ export const usePrivateEyeCrosswordById = (id, enabled) => {
     }
   );
 
-  const isLoading = query2Response.isLoading;
-  const error = query2Response.error;
-  const isError = Boolean(error);
+  const isLoading = queryResponse.isLoading;
+  const isError = queryResponse.isError;
+  const error = queryResponse.error;
   const crossword = puzData
     ? transformPrivateEyeCrossword(puzData, puzUrl)
     : null;
 
   return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
+};
+
+export const usePrivateEyeCrosswords = () => {
+  const queryResponse = useQuery("listPuzzles", listPuzzles);
+  const { data, isLoading, isError, error } = queryResponse;
+
+  const puzzles = data?.puzzles ?? [];
+  const puzList = puzzles
+    .filter(({ timestamp }) => timestamp !== "2017-04-24")
+    .filter(
+      ({ url, timestamp }) =>
+        !(url.endsWith("783.puz") && timestamp === "2022-10-07")
+    )
+    .reverse();
+
+  return { puzList, isLoading, isError, error };
 };

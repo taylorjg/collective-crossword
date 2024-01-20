@@ -9,8 +9,6 @@ export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
   const { user } = useAuth();
 
-  console.log("[HomePage]", { user });
-
   const navigate = useNavigate();
 
   useEffect(() => {

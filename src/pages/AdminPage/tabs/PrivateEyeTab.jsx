@@ -1,17 +1,12 @@
 import PropTypes from "prop-types";
 
-import { usePrivateEyeCurrentCrossword } from "@app/hooks";
-
-import { Crossword } from "../components";
+import { Crossword3 } from "../components";
 
 export const PrivateEyeTab = ({ onAddCrossword }) => {
-  const privateEyeCrosswordResponse = usePrivateEyeCurrentCrossword();
-
   return (
-    <Crossword
-      crosswordResponse={privateEyeCrosswordResponse}
-      onAddCrossword={onAddCrossword}
-    />
+    <>
+      <Crossword3 onAddCrossword={onAddCrossword} />
+    </>
   );
 };
 
