@@ -8,16 +8,16 @@ import {
 } from "@app/hooks";
 import { formatDate } from "@app/utils";
 
-import { AlreadyAdded } from "../../components/AlreadyAdded";
-import { Error } from "../../components/Error";
-import { ViewCrosswordButton } from "../../components/ViewCrosswordButton";
+import { AlreadyAdded } from "../components/AlreadyAdded";
+import { Error } from "../components/Error";
+import { ViewCrosswordButton } from "../components/ViewCrosswordButton";
 
 import {
   StyledBox,
   StyledBoxContent,
   StyledRow,
   StyledRow2Cols,
-} from "../../components/common.styles";
+} from "../components/common.styles";
 
 export const PrivateEyeTab = ({ onAddCrossword }) => {
   const [selectedPuzzleId, setSelectedPuzzleId] = useState("");
