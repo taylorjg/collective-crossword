@@ -1,15 +1,19 @@
 import { useQuery } from "react-query";
 
-import { getCrypticCrossword, getPrizeCryptic } from "@app/firebase";
+import {
+  getCrypticCrossword,
+  getPrizeCryptic,
+  getPrizeToughie,
+} from "@app/firebase";
 import { transformTelegraphCrossword } from "@app/transforms";
 import { useExistenceCheck } from "./use-existence-check";
 
-const useTelegraphCommon = (fn, fnName, id) => {
+const useTheTelegraphCrossword = (fn, fnName, id) => {
   const queryResponse = useQuery([fnName, id], () => fn({ id }), {
     enabled: Boolean(id),
   });
 
-  let { isLoading, isError, error } = queryResponse;
+  const { isLoading, isError, error } = queryResponse;
 
   const puzData = queryResponse.data?.data?.puzData?.json ?? null;
   const puzUrl = queryResponse.data?.data?.puzUrl ?? null;
@@ -19,14 +23,18 @@ const useTelegraphCommon = (fn, fnName, id) => {
   return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
 };
 
-export const useTheDailyTelegraphCrypticCrosswordById = (id) => {
-  return useTelegraphCommon(getCrypticCrossword, "getCrypticCrossword", id);
+export const useTheTelegraphCrypticCrosswordById = (id) => {
+  return useTheTelegraphCrossword(
+    getCrypticCrossword,
+    "getCrypticCrossword",
+    id
+  );
 };
 
-export const useTheDailyTelegraphPrizeCrypticById = (id) => {
-  return useTelegraphCommon(getPrizeCryptic, "getPrizeCryptic", id);
+export const useTheTelegraphPrizeCrypticById = (id) => {
+  return useTheTelegraphCrossword(getPrizeCryptic, "getPrizeCryptic", id);
 };
 
-export const useTheSundayTelegraphPrizeCrypticById = (id) => {
-  return useTelegraphCommon(getPrizeCryptic, "getPrizeCryptic", id);
+export const useTheTelegraphPrizeToughieById = (id) => {
+  return useTheTelegraphCrossword(getPrizeToughie, "getPrizeToughie", id);
 };

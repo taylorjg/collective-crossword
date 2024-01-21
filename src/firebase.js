@@ -83,3 +83,5 @@ export const getCrypticCrossword = httpsCallable(
 );
 
 export const getPrizeCryptic = httpsCallable(functions, "getPrizeCryptic");
+
+export const getPrizeToughie = httpsCallable(functions, "getPrizeToughie");

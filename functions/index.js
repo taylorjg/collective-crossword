@@ -23,6 +23,12 @@ const getPrizeCryptic = async (id) => {
   return { puzData: response.data, puzUrl: url };
 };
 
+const getPrizeToughie = async (id) => {
+  const url = `${PUZZLESDATA_URL}/puzzles/prize-toughie/prize-toughie-${id}.json`;
+  const response = await axios.get(url);
+  return { puzData: response.data, puzUrl: url };
+};
+
 const opts = { cors: true };
 
 exports.getCrypticCrossword = onRequest(opts, async (req, res) => {
@@ -51,6 +57,21 @@ exports.getPrizeCryptic = onRequest(opts, async (req, res) => {
   } catch (error) {
     if (error?.response?.status === 404) {
       res.status(404).send(`Failed to find prize cryptic with id, "${id}".`);
+    } else {
+      throw error;
+    }
+  }
+});
+
+exports.getPrizeToughie = onRequest(opts, async (req, res) => {
+  const id = req.query.id ?? req.body.data.id;
+  logger.log("[getPrizeToughie]", id);
+  try {
+    const data = await getPrizeToughie(id);
+    res.json({ data });
+  } catch (error) {
+    if (error?.response?.status === 404) {
+      res.status(404).send(`Failed to find prize toughie with id, "${id}".`);
     } else {
       throw error;
     }

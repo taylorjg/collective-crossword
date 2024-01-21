@@ -1,7 +1,19 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Button, CircularProgress, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
 
+import {
+  useTheTelegraphCrypticCrosswordById,
+  useTheTelegraphPrizeCrypticById,
+  useTheTelegraphPrizeToughieById,
+} from "@app/hooks";
 import { formatDate } from "@app/utils";
 
 import { AlreadyAdded } from "../../components/AlreadyAdded";
@@ -15,17 +27,27 @@ import {
   StyledRow2Cols,
 } from "../../components/common.styles";
 
-export const ImportCrossword = ({
-  onAddCrossword,
-  useCrossword,
-  label,
-  exampleId,
-}) => {
+const getUseCrossword = (crosswordType) => {
+  switch (crosswordType) {
+    default:
+    case "cryptic-crossword":
+      return useTheTelegraphCrypticCrosswordById;
+    case "prize-cryptic":
+      return useTheTelegraphPrizeCrypticById;
+    case "prize-toughie":
+      return useTheTelegraphPrizeToughieById;
+  }
+};
+
+export const ImportCrossword = ({ onAddCrossword }) => {
+  const [selectedCrosswordType, setSelectedCrosswordType] =
+    useState("cryptic-crossword");
   const [id, setId] = useState("");
   const [idToFetch, setIdToFetch] = useState("");
   const [showAddSpinner, setShowAddSpinner] = useState(false);
   const [addedCrosswordId, setAddedCrosswordId] = useState();
 
+  const useCrossword = getUseCrossword(selectedCrosswordType);
   const crosswordResponse = useCrossword(idToFetch);
 
   const { crossword, isLoading, isError, error, crosswordId } =
@@ -50,14 +72,36 @@ export const ImportCrossword = ({
     }
   };
 
+  const onChangeCrosswordType = (event) => {
+    setSelectedCrosswordType(event.target.value);
+  };
+
   return (
     <StyledBox>
       <StyledBoxContent>
-        <div>{label}</div>
+        <RadioGroup
+          value={selectedCrosswordType}
+          onChange={onChangeCrosswordType}
+        >
+          <FormControlLabel
+            value="cryptic-crossword"
+            control={<Radio size="small" />}
+            label="Cryptic Crossword"
+          />
+          <FormControlLabel
+            value="prize-cryptic"
+            control={<Radio size="small" />}
+            label="Prize Cryptic"
+          />
+          <FormControlLabel
+            value="prize-toughie"
+            control={<Radio size="small" />}
+            label="Prize Toughie"
+          />
+        </RadioGroup>
         <StyledRow>
           <TextField
             label="Crossword ID"
-            placeholder={`e.g. ${exampleId}`}
             value={id}
             onChange={(e) => setId(e.target.value)}
             size="small"
@@ -115,7 +159,4 @@ export const ImportCrossword = ({
 
 ImportCrossword.propTypes = {
   onAddCrossword: PropTypes.func.isRequired,
-  useCrossword: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  exampleId: PropTypes.number.isRequired,
 };

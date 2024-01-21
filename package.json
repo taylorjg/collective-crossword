@@ -10,7 +10,9 @@
     "lint": "eslint . --ext js,jsx,cjs --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "open": "open https://collective-crossword.web.app",
-    "deploy": "npm run build && firebase deploy --only hosting"
+    "deploy:app": "npm run build && firebase deploy --only hosting",
+    "deploy:rules": "npm run build && firebase deploy --only firestore:rules",
+    "deploy:functions": "firebase deploy --only functions"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
