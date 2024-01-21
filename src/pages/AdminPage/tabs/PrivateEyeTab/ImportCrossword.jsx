@@ -57,7 +57,7 @@ export const ImportCrossword = ({ onAddCrossword }) => {
 
   return (
     <StyledBox>
-      <StyledBoxContent showContent={true}>
+      <StyledBoxContent>
         <StyledRow>
           <Select
             sx={{ width: "20rem" }}
@@ -89,6 +89,7 @@ export const ImportCrossword = ({ onAddCrossword }) => {
             Fetch Crossword
           </Button>
           {hookResult1.isLoading && <CircularProgress size="1.5rem" />}
+          {hookResult1.isError && <Error error={hookResult1.error} />}
         </StyledRow>
         {crossword && !hookResult2.isLoading && (
           <>

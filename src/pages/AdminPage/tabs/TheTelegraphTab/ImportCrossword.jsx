@@ -52,7 +52,7 @@ export const ImportCrossword = ({
 
   return (
     <StyledBox>
-      <StyledBoxContent showContent={true}>
+      <StyledBoxContent>
         <div>{label}</div>
         <StyledRow>
           <TextField

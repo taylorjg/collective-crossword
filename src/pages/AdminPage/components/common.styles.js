@@ -1,17 +1,6 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 
-export const StyledOverlay = styled.div`
-  width: calc(100% - 8px);
-  height: calc(100% - 8px);
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  display: grid;
-  place-items: center;
-  background-color: ${(props) => props.theme.palette.background.default};
-`;
-
 export const StyledBox = styled(Box)`
   border: 1px solid white;
   border-radius: 4px;
@@ -25,7 +14,6 @@ export const StyledBoxContent = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
-  visibility: ${(props) => (props.showContent ? "visible" : "hidden")};
 `;
 
 export const StyledRow = styled.div`
