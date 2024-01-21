@@ -6,7 +6,7 @@ import { useAuth } from "@app/contexts";
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 import { formatDate } from "@app/utils";
 
-import { StyledCard, StyledDetails, StyledDetail } from "./HomePage.styles";
+import { StyledCard, StyledDetails } from "./HomePage.styles";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
@@ -43,24 +43,8 @@ export const HomePage = () => {
       {crosswords.map((crossword) => (
         <StyledCard key={crossword.id}>
           <StyledDetails>
-            <StyledDetail>
-              <div>Publication:</div>
-              <div>{crossword.publication}</div>
-            </StyledDetail>
-            <StyledDetail>
-              <div>Publish Date:</div>
-              <div>{formatDate(crossword.publishDate)}</div>
-            </StyledDetail>
-            <StyledDetail>
-              <div>Title:</div>
-              <div>{crossword.title}</div>
-            </StyledDetail>
-            {crossword.author && (
-              <StyledDetail>
-                <div>Author:</div>
-                <div>{crossword.author}</div>
-              </StyledDetail>
-            )}
+            <div>{crossword.publication}</div>
+            <div>{formatDate(crossword.publishDate)}</div>
           </StyledDetails>
           <Button onClick={() => handleView(crossword.id)}>View</Button>
           {user?.isAdmin && (

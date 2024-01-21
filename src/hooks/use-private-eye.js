@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import axios from "axios";
+import moment from "moment";
 
 import { transformPrivateEyeCrossword } from "@app/transforms";
 import { useExistenceCheck } from "./use-existence-check";
@@ -44,10 +45,16 @@ export const usePrivateEyeCrosswords = () => {
         !(url.endsWith("783.puz") && timestamp === "2022-10-07")
     )
     .map((entry) => {
+      const { url, timestamp } = entry;
+      const id = extractIdFromUrl(url);
+      const filename = extractFilenameFromUrl(url);
+      const unixTimestamp = moment(timestamp, "YYYY-MM-DD").unix();
+
       return {
         ...entry,
-        id: extractIdFromUrl(entry.url),
-        filename: extractFilenameFromUrl(entry.url),
+        id,
+        filename,
+        unixTimestamp,
       };
     })
     .reverse();
@@ -57,7 +64,7 @@ export const usePrivateEyeCrosswords = () => {
 
 export const usePrivateEyeCrosswordByUrl = (puzzleToFetch) => {
   const puzUrl = puzzleToFetch?.url;
-  const timestamp = puzzleToFetch?.timestamp;
+  const unixTimestamp = puzzleToFetch?.unixTimestamp;
 
   const queryResponse = useQuery(
     ["parsePuzzle", puzUrl],
@@ -71,7 +78,7 @@ export const usePrivateEyeCrosswordByUrl = (puzzleToFetch) => {
   const error = queryResponse.error;
 
   const crossword = puzData
-    ? transformPrivateEyeCrossword(puzData, puzUrl, timestamp)
+    ? transformPrivateEyeCrossword(puzData, puzUrl, unixTimestamp)
     : null;
 
   return useExistenceCheck({ crossword, puzData, isLoading, isError, error });

@@ -13,9 +13,5 @@ export const StyledCard = styled(Box)`
 export const StyledDetails = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-export const StyledDetail = styled.div`
-  display: grid;
-  grid-template-columns: 10rem 20rem;
+  width: 10rem;
 `;

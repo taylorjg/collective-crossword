@@ -42,6 +42,7 @@ export const CrosswordPage = () => {
     <>
       <div>Publication: {crossword.publication}</div>
       <div>Publish Date: {formatDate(crossword.publishDate)}</div>
+      <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
       <div>Title: {crossword.title}</div>
       {crossword.author && <div>Author: {crossword.author}</div>}
       <pre>

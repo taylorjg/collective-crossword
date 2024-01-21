@@ -1,15 +1,10 @@
-import moment from "moment";
-
-export const transformPrivateEyeCrossword = (puzData, url, timestamp) => {
-  // e.g. "2024-01-17",
-  const momentPublishDate = moment(timestamp, "YYYY-MM-DD");
-
+export const transformPrivateEyeCrossword = (puzData, url, unixTimestamp) => {
   return {
     url,
     publication: "Private Eye",
     author: puzData.puzzle.author,
     title: puzData.puzzle.title,
-    publishDate: momentPublishDate.unix(),
+    publishDate: unixTimestamp,
     grid: puzData.grid,
     acrossClues: puzData.acrossClues,
     downClues: puzData.downClues,

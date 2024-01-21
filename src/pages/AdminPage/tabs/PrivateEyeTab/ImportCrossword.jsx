@@ -60,7 +60,7 @@ export const ImportCrossword = ({ onAddCrossword }) => {
       <StyledBoxContent showContent={true}>
         <StyledRow>
           <Select
-            sx={{ width: "15rem" }}
+            sx={{ width: "20rem" }}
             size="small"
             aria-label="Puzzles"
             value={selectedPuzzleId}
@@ -69,10 +69,11 @@ export const ImportCrossword = ({ onAddCrossword }) => {
             }}
           >
             {puzList.map((puzzle) => {
-              const { id, filename, timestamp } = puzzle;
+              const { id, filename, unixTimestamp } = puzzle;
+              const publishDate = formatDate(unixTimestamp);
               return (
                 <MenuItem key={id} value={id}>
-                  {filename} ({timestamp})
+                  {filename} ({publishDate})
                 </MenuItem>
               );
             })}
@@ -87,7 +88,7 @@ export const ImportCrossword = ({ onAddCrossword }) => {
           >
             Fetch Crossword
           </Button>
-          {hookResult2.isLoading && <CircularProgress size="1.5rem" />}
+          {hookResult1.isLoading && <CircularProgress size="1.5rem" />}
         </StyledRow>
         {crossword && !hookResult2.isLoading && (
           <>
