@@ -14,17 +14,9 @@ import {
   useTheTelegraphPrizeCrypticById,
   useTheTelegraphPrizeToughieById,
 } from "@app/hooks";
-import { formatDate } from "@app/utils";
 
-import { AlreadyAdded } from "../components/AlreadyAdded";
-import { Error } from "../components/Error";
-import { ViewCrosswordButton } from "../components/ViewCrosswordButton";
-
-import {
-  StyledImportForm,
-  StyledRow,
-  StyledRow2Cols,
-} from "../components/common.styles";
+import { AddOrViewCrossword, Error } from "../components";
+import { StyledImportForm, StyledRow } from "../components/common.styles";
 
 const getUseCrossword = (crosswordType) => {
   switch (crosswordType) {
@@ -43,8 +35,6 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
     useState("cryptic-crossword");
   const [id, setId] = useState("");
   const [idToFetch, setIdToFetch] = useState("");
-  const [showAddSpinner, setShowAddSpinner] = useState(false);
-  const [addedCrosswordId, setAddedCrosswordId] = useState();
 
   const useCrossword = getUseCrossword(selectedCrosswordType);
   const crosswordResponse = useCrossword(idToFetch);
@@ -59,16 +49,6 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
   const handleReset = () => {
     setId("");
     setIdToFetch("");
-  };
-
-  const handleAddCrossword = async () => {
-    try {
-      setShowAddSpinner(true);
-      const crosswordRef = await onAddCrossword(crossword);
-      setAddedCrosswordId(crosswordRef.id);
-    } finally {
-      setShowAddSpinner(false);
-    }
   };
 
   const onChangeCrosswordType = (event) => {
@@ -123,32 +103,12 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
       >
         Reset
       </Button>
-      {crossword && !isLoading && (
-        <>
-          <StyledRow2Cols>
-            <div>Title: {crossword.title}</div>
-            <div>Date: {formatDate(crossword.publishDate)}</div>
-          </StyledRow2Cols>
-          {crosswordId ? (
-            <AlreadyAdded crosswordId={crosswordId} />
-          ) : (
-            <StyledRow>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleAddCrossword}
-                disabled={Boolean(addedCrosswordId)}
-              >
-                Add Crossword
-              </Button>
-              {showAddSpinner && <CircularProgress size="1.5rem" />}
-              {addedCrosswordId && (
-                <ViewCrosswordButton crosswordId={addedCrosswordId} />
-              )}
-            </StyledRow>
-          )}
-        </>
-      )}
+      <AddOrViewCrossword
+        crossword={crossword}
+        crosswordId={crosswordId}
+        isLoading={isLoading}
+        onAddCrossword={onAddCrossword}
+      />
       {isError && <Error error={error} />}
     </StyledImportForm>
   );

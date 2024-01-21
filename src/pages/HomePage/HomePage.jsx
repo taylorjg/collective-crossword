@@ -44,6 +44,7 @@ export const HomePage = () => {
         <StyledCard key={crossword.id}>
           <StyledDetails>
             <div>{crossword.publication}</div>
+            <div>{crossword.title}</div>
             <div>{formatDate(crossword.publishDate)}</div>
           </StyledDetails>
           <Button onClick={() => handleView(crossword.id)}>View</Button>

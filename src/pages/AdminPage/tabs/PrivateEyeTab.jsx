@@ -8,21 +8,12 @@ import {
 } from "@app/hooks";
 import { formatDate } from "@app/utils";
 
-import { AlreadyAdded } from "../components/AlreadyAdded";
-import { Error } from "../components/Error";
-import { ViewCrosswordButton } from "../components/ViewCrosswordButton";
-
-import {
-  StyledImportForm,
-  StyledRow,
-  StyledRow2Cols,
-} from "../components/common.styles";
+import { AddOrViewCrossword, Error } from "../components";
+import { StyledImportForm, StyledRow } from "../components/common.styles";
 
 export const PrivateEyeTab = ({ onAddCrossword }) => {
   const [selectedPuzzleId, setSelectedPuzzleId] = useState("");
   const [puzzleToFetch, setPuzzleToFetch] = useState();
-  const [showAddSpinner, setShowAddSpinner] = useState(false);
-  const [addedCrosswordId, setAddedCrosswordId] = useState();
 
   const hookResult1 = usePrivateEyeCrosswords();
   const { puzList } = hookResult1;
@@ -41,16 +32,6 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
     const puzzle = puzList.find(({ id }) => id === selectedPuzzleId);
     if (puzzle) {
       setPuzzleToFetch(puzzle);
-    }
-  };
-
-  const handleAddCrossword = async () => {
-    try {
-      setShowAddSpinner(true);
-      const crosswordRef = await onAddCrossword(crossword);
-      setAddedCrosswordId(crosswordRef.id);
-    } finally {
-      setShowAddSpinner(false);
     }
   };
 
@@ -87,32 +68,12 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
         {hookResult1.isLoading && <CircularProgress size="1.5rem" />}
         {hookResult1.isError && <Error error={hookResult1.error} />}
       </StyledRow>
-      {crossword && !hookResult2.isLoading && (
-        <>
-          <StyledRow2Cols>
-            <div>Title: {crossword.title}</div>
-            <div>Date: {formatDate(crossword.publishDate)}</div>
-          </StyledRow2Cols>
-          {crosswordId ? (
-            <AlreadyAdded crosswordId={crosswordId} />
-          ) : (
-            <StyledRow>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleAddCrossword}
-                disabled={Boolean(addedCrosswordId)}
-              >
-                Add Crossword
-              </Button>
-              {showAddSpinner && <CircularProgress size="1.5rem" />}
-              {addedCrosswordId && (
-                <ViewCrosswordButton crosswordId={addedCrosswordId} />
-              )}
-            </StyledRow>
-          )}
-        </>
-      )}
+      <AddOrViewCrossword
+        crossword={crossword}
+        crosswordId={crosswordId}
+        isLoading={hookResult2.isLoading}
+        onAddCrossword={onAddCrossword}
+      />
       {hookResult2.isError && <Error error={hookResult2.error} />}
     </StyledImportForm>
   );

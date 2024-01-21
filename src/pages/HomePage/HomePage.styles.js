@@ -13,5 +13,5 @@ export const StyledCard = styled(Box)`
 export const StyledDetails = styled.div`
   display: flex;
   flex-direction: column;
-  width: 10rem;
+  width: 15rem;
 `;
