@@ -21,8 +21,7 @@ import { Error } from "../components/Error";
 import { ViewCrosswordButton } from "../components/ViewCrosswordButton";
 
 import {
-  StyledBox,
-  StyledBoxContent,
+  StyledImportForm,
   StyledRow,
   StyledRow2Cols,
 } from "../components/common.styles";
@@ -77,83 +76,81 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
   };
 
   return (
-    <StyledBox>
-      <StyledBoxContent>
-        <RadioGroup
-          value={selectedCrosswordType}
-          onChange={onChangeCrosswordType}
-        >
-          <FormControlLabel
-            value="cryptic-crossword"
-            control={<Radio size="small" />}
-            label="Cryptic Crossword"
-          />
-          <FormControlLabel
-            value="prize-cryptic"
-            control={<Radio size="small" />}
-            label="Prize Cryptic"
-          />
-          <FormControlLabel
-            value="prize-toughie"
-            control={<Radio size="small" />}
-            label="Prize Toughie"
-          />
-        </RadioGroup>
-        <StyledRow>
-          <TextField
-            label="Crossword ID"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            size="small"
-            disabled={Boolean(idToFetch)}
-          />
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={handleFetchCrossword}
-            disabled={!id || id === idToFetch}
-          >
-            Fetch Crossword
-          </Button>
-          {isLoading && <CircularProgress size="1.5rem" />}
-        </StyledRow>
-        <Button
+    <StyledImportForm>
+      <RadioGroup
+        value={selectedCrosswordType}
+        onChange={onChangeCrosswordType}
+      >
+        <FormControlLabel
+          value="cryptic-crossword"
+          control={<Radio size="small" />}
+          label="Cryptic Crossword"
+        />
+        <FormControlLabel
+          value="prize-cryptic"
+          control={<Radio size="small" />}
+          label="Prize Cryptic"
+        />
+        <FormControlLabel
+          value="prize-toughie"
+          control={<Radio size="small" />}
+          label="Prize Toughie"
+        />
+      </RadioGroup>
+      <StyledRow>
+        <TextField
+          label="Crossword ID"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
           size="small"
-          onClick={handleReset}
-          style={{ position: "absolute", top: "16px", right: "16px" }}
-          disabled={!idToFetch}
+          disabled={Boolean(idToFetch)}
+        />
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleFetchCrossword}
+          disabled={!id || id === idToFetch}
         >
-          Reset
+          Fetch Crossword
         </Button>
-        {crossword && !isLoading && (
-          <>
-            <StyledRow2Cols>
-              <div>Title: {crossword.title}</div>
-              <div>Date: {formatDate(crossword.publishDate)}</div>
-            </StyledRow2Cols>
-            {crosswordId ? (
-              <AlreadyAdded crosswordId={crosswordId} />
-            ) : (
-              <StyledRow>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleAddCrossword}
-                  disabled={Boolean(addedCrosswordId)}
-                >
-                  Add Crossword
-                </Button>
-                {showAddSpinner && <CircularProgress size="1.5rem" />}
-                {addedCrosswordId && (
-                  <ViewCrosswordButton crosswordId={addedCrosswordId} />
-                )}
-              </StyledRow>
-            )}
-          </>
-        )}
-      </StyledBoxContent>
+        {isLoading && <CircularProgress size="1.5rem" />}
+      </StyledRow>
+      <Button
+        size="small"
+        onClick={handleReset}
+        style={{ position: "absolute", top: "16px", right: "16px" }}
+        disabled={!idToFetch}
+      >
+        Reset
+      </Button>
+      {crossword && !isLoading && (
+        <>
+          <StyledRow2Cols>
+            <div>Title: {crossword.title}</div>
+            <div>Date: {formatDate(crossword.publishDate)}</div>
+          </StyledRow2Cols>
+          {crosswordId ? (
+            <AlreadyAdded crosswordId={crosswordId} />
+          ) : (
+            <StyledRow>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleAddCrossword}
+                disabled={Boolean(addedCrosswordId)}
+              >
+                Add Crossword
+              </Button>
+              {showAddSpinner && <CircularProgress size="1.5rem" />}
+              {addedCrosswordId && (
+                <ViewCrosswordButton crosswordId={addedCrosswordId} />
+              )}
+            </StyledRow>
+          )}
+        </>
+      )}
       {isError && <Error error={error} />}
-    </StyledBox>
+    </StyledImportForm>
   );
 };
 

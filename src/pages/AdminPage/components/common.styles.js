@@ -1,15 +1,6 @@
 import styled from "@emotion/styled";
-import { Box } from "@mui/material";
 
-export const StyledBox = styled(Box)`
-  border: 1px solid white;
-  border-radius: 4px;
-  padding: 16px;
-  position: relative;
-  margin-bottom: 1rem;
-`;
-
-export const StyledBoxContent = styled.div`
+export const StyledImportForm = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;

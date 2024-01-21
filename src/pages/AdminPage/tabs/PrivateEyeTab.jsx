@@ -13,8 +13,7 @@ import { Error } from "../components/Error";
 import { ViewCrosswordButton } from "../components/ViewCrosswordButton";
 
 import {
-  StyledBox,
-  StyledBoxContent,
+  StyledImportForm,
   StyledRow,
   StyledRow2Cols,
 } from "../components/common.styles";
@@ -56,70 +55,66 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
   };
 
   return (
-    <StyledBox>
-      <StyledBoxContent>
-        <StyledRow>
-          <Select
-            sx={{ width: "20rem" }}
-            size="small"
-            aria-label="Puzzles"
-            value={selectedPuzzleId}
-            onChange={(e) => {
-              setSelectedPuzzleId(e.target.value);
-            }}
-          >
-            {puzList.map((puzzle) => {
-              const { id, filename, unixTimestamp } = puzzle;
-              const publishDate = formatDate(unixTimestamp);
-              return (
-                <MenuItem key={id} value={id}>
-                  {filename} ({publishDate})
-                </MenuItem>
-              );
-            })}
-          </Select>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={handleFetchCrossword}
-            disabled={
-              !selectedPuzzleId || selectedPuzzleId === puzzleToFetch?.id
-            }
-          >
-            Fetch Crossword
-          </Button>
-          {hookResult1.isLoading && <CircularProgress size="1.5rem" />}
-          {hookResult1.isError && <Error error={hookResult1.error} />}
-        </StyledRow>
-        {crossword && !hookResult2.isLoading && (
-          <>
-            <StyledRow2Cols>
-              <div>Title: {crossword.title}</div>
-              <div>Date: {formatDate(crossword.publishDate)}</div>
-            </StyledRow2Cols>
-            {crosswordId ? (
-              <AlreadyAdded crosswordId={crosswordId} />
-            ) : (
-              <StyledRow>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleAddCrossword}
-                  disabled={Boolean(addedCrosswordId)}
-                >
-                  Add Crossword
-                </Button>
-                {showAddSpinner && <CircularProgress size="1.5rem" />}
-                {addedCrosswordId && (
-                  <ViewCrosswordButton crosswordId={addedCrosswordId} />
-                )}
-              </StyledRow>
-            )}
-          </>
-        )}
-      </StyledBoxContent>
+    <StyledImportForm>
+      <StyledRow>
+        <Select
+          sx={{ width: "20rem" }}
+          size="small"
+          aria-label="Puzzles"
+          value={selectedPuzzleId}
+          onChange={(e) => {
+            setSelectedPuzzleId(e.target.value);
+          }}
+        >
+          {puzList.map((puzzle) => {
+            const { id, filename, unixTimestamp } = puzzle;
+            const publishDate = formatDate(unixTimestamp);
+            return (
+              <MenuItem key={id} value={id}>
+                {filename} ({publishDate})
+              </MenuItem>
+            );
+          })}
+        </Select>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleFetchCrossword}
+          disabled={!selectedPuzzleId || selectedPuzzleId === puzzleToFetch?.id}
+        >
+          Fetch Crossword
+        </Button>
+        {hookResult1.isLoading && <CircularProgress size="1.5rem" />}
+        {hookResult1.isError && <Error error={hookResult1.error} />}
+      </StyledRow>
+      {crossword && !hookResult2.isLoading && (
+        <>
+          <StyledRow2Cols>
+            <div>Title: {crossword.title}</div>
+            <div>Date: {formatDate(crossword.publishDate)}</div>
+          </StyledRow2Cols>
+          {crosswordId ? (
+            <AlreadyAdded crosswordId={crosswordId} />
+          ) : (
+            <StyledRow>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleAddCrossword}
+                disabled={Boolean(addedCrosswordId)}
+              >
+                Add Crossword
+              </Button>
+              {showAddSpinner && <CircularProgress size="1.5rem" />}
+              {addedCrosswordId && (
+                <ViewCrosswordButton crosswordId={addedCrosswordId} />
+              )}
+            </StyledRow>
+          )}
+        </>
+      )}
       {hookResult2.isError && <Error error={hookResult2.error} />}
-    </StyledBox>
+    </StyledImportForm>
   );
 };
 
