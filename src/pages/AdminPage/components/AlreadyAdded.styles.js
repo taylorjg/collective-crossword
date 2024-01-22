@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
 
-export const StyledAlreadyAdded = styled.div`
-  font-style: italic;
-  display: flex;
-  align-items: center;
+export const StyledActionWrapper = styled.div`
+  margin-top: -4px;
 `;

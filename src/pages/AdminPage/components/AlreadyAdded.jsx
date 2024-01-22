@@ -1,14 +1,22 @@
 import PropTypes from "prop-types";
+import { Alert } from "@mui/material";
 
 import { ViewCrosswordButton } from "./ViewCrosswordButton";
-import { StyledAlreadyAdded } from "./AlreadyAdded.styles";
+import { StyledActionWrapper } from "./AlreadyAdded.styles";
 
 export const AlreadyAdded = ({ crosswordId }) => {
   return (
-    <StyledAlreadyAdded>
-      This crossword has already been added.&nbsp;{" "}
-      <ViewCrosswordButton crosswordId={crosswordId} />
-    </StyledAlreadyAdded>
+    <Alert
+      severity="info"
+      variant="outlined"
+      action={
+        <StyledActionWrapper>
+          <ViewCrosswordButton crosswordId={crosswordId} />
+        </StyledActionWrapper>
+      }
+    >
+      This crossword has already been added.
+    </Alert>
   );
 };
 

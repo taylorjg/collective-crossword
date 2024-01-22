@@ -9,7 +9,11 @@ export const Error = ({ error }) => {
     isCloudFunctions404(error) || isAxios404(error)
       ? `Failed to find requested crossword.`
       : `Error: ${error.message}`;
-  return <Alert severity="error">{errorMessage}</Alert>;
+  return (
+    <Alert severity="error" variant="outlined">
+      {errorMessage}
+    </Alert>
+  );
 };
 
 Error.propTypes = {
