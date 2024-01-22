@@ -1,11 +1,14 @@
 import PropTypes from "prop-types";
+import { Alert } from "@mui/material";
 
-import { StyledFullPageMessage, StyledMessage } from "./FullPageMessage.styles";
+import { StyledFullPageMessage } from "./FullPageMessage.styles";
 
 export const FullPageMessage = ({ message }) => {
   return (
     <StyledFullPageMessage>
-      <StyledMessage>{message}</StyledMessage>
+      <Alert severity="info" variant="outlined">
+        {message}
+      </Alert>
     </StyledFullPageMessage>
   );
 };

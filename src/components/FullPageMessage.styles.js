@@ -11,10 +11,3 @@ export const StyledFullPageMessage = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-export const StyledMessage = styled.div`
-  border: 1px solid white;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
-`;
