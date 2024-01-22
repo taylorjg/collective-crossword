@@ -28,7 +28,8 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
     }
   }, [puzList, selectedPuzzleId]);
 
-  const handleFetchCrossword = () => {
+  const onSubmit = (e) => {
+    e.preventDefault();
     const puzzle = puzList.find(({ id }) => id === selectedPuzzleId);
     if (puzzle) {
       setPuzzleToFetch(puzzle);
@@ -37,37 +38,43 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
 
   return (
     <StyledImportForm>
-      <StyledRow>
-        <Select
-          sx={{ width: "20rem" }}
-          size="small"
-          aria-label="Puzzles"
-          value={selectedPuzzleId}
-          onChange={(e) => {
-            setSelectedPuzzleId(e.target.value);
-          }}
-        >
-          {puzList.map((puzzle) => {
-            const { id, filename, unixTimestamp } = puzzle;
-            const publishDate = formatDate(unixTimestamp);
-            return (
-              <MenuItem key={id} value={id}>
-                {filename} ({publishDate})
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleFetchCrossword}
-          disabled={!selectedPuzzleId || selectedPuzzleId === puzzleToFetch?.id}
-        >
-          Fetch Crossword
-        </Button>
-        {hookResult1.isLoading && <CircularProgress size="1.5rem" />}
-        {hookResult1.isError && <Error error={hookResult1.error} />}
-      </StyledRow>
+      <form autoComplete="off" onSubmit={onSubmit}>
+        <StyledRow>
+          <Select
+            sx={{ width: "20rem" }}
+            size="small"
+            aria-label="Puzzles"
+            value={selectedPuzzleId}
+            onChange={(e) => {
+              setSelectedPuzzleId(e.target.value);
+            }}
+          >
+            {puzList.map((puzzle) => {
+              const { id, filename, unixTimestamp } = puzzle;
+              const publishDate = formatDate(unixTimestamp);
+              return (
+                <MenuItem key={id} value={id}>
+                  {filename} ({publishDate})
+                </MenuItem>
+              );
+            })}
+          </Select>
+          <Button
+            type="submit"
+            variant="outlined"
+            size="small"
+            disabled={
+              !selectedPuzzleId || selectedPuzzleId === puzzleToFetch?.id
+            }
+          >
+            Fetch Crossword
+          </Button>
+          {(hookResult1.isLoading || hookResult2.isLoading) && (
+            <CircularProgress size="1.5rem" />
+          )}
+          {hookResult1.isError && <Error error={hookResult1.error} />}
+        </StyledRow>
+      </form>
       <AddOrViewCrossword
         crossword={crossword}
         crosswordId={crosswordId}

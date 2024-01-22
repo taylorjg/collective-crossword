@@ -42,67 +42,71 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
   const { crossword, isLoading, isError, error, crosswordId } =
     crosswordResponse;
 
-  const handleFetchCrossword = () => {
-    setIdToFetch(id);
+  const onChangeCrosswordType = (e) => {
+    setSelectedCrosswordType(e.target.value);
   };
 
-  const handleReset = () => {
+  const onReset = () => {
     setId("");
     setIdToFetch("");
   };
 
-  const onChangeCrosswordType = (event) => {
-    setSelectedCrosswordType(event.target.value);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setIdToFetch(id);
   };
 
   return (
     <StyledImportForm>
-      <RadioGroup
-        value={selectedCrosswordType}
-        onChange={onChangeCrosswordType}
-      >
-        <FormControlLabel
-          value="cryptic-crossword"
-          control={<Radio size="small" />}
-          label="Cryptic Crossword"
-        />
-        <FormControlLabel
-          value="prize-cryptic"
-          control={<Radio size="small" />}
-          label="Prize Cryptic"
-        />
-        <FormControlLabel
-          value="prize-toughie"
-          control={<Radio size="small" />}
-          label="Prize Toughie"
-        />
-      </RadioGroup>
-      <StyledRow>
-        <TextField
-          label="Crossword ID"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-          size="small"
-          disabled={Boolean(idToFetch)}
-        />
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleFetchCrossword}
-          disabled={!id || id === idToFetch}
+      <form autoComplete="off" onSubmit={onSubmit}>
+        <RadioGroup
+          value={selectedCrosswordType}
+          onChange={onChangeCrosswordType}
         >
-          Fetch Crossword
+          <FormControlLabel
+            value="cryptic-crossword"
+            control={<Radio size="small" />}
+            label="Cryptic Crossword"
+          />
+          <FormControlLabel
+            value="prize-cryptic"
+            control={<Radio size="small" />}
+            label="Prize Cryptic"
+          />
+          <FormControlLabel
+            value="prize-toughie"
+            control={<Radio size="small" />}
+            label="Prize Toughie"
+          />
+        </RadioGroup>
+        <StyledRow>
+          <TextField
+            label="Crossword ID"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            size="small"
+            disabled={Boolean(idToFetch)}
+          />
+          <Button
+            type="submit"
+            variant="outlined"
+            size="small"
+            disabled={!id || id === idToFetch}
+          >
+            Fetch Crossword
+          </Button>
+          {isLoading && <CircularProgress size="1.5rem" />}
+        </StyledRow>
+        <Button
+          size="small"
+          onClick={onReset}
+          style={{ position: "absolute", top: "16px", right: "16px" }}
+          disabled={!idToFetch}
+        >
+          Reset
         </Button>
-        {isLoading && <CircularProgress size="1.5rem" />}
-      </StyledRow>
-      <Button
-        size="small"
-        onClick={handleReset}
-        style={{ position: "absolute", top: "16px", right: "16px" }}
-        disabled={!idToFetch}
-      >
-        Reset
-      </Button>
+      </form>
+
       <AddOrViewCrossword
         crossword={crossword}
         crosswordId={crosswordId}
