@@ -3,8 +3,10 @@ import { useParams } from "react-router-dom";
 import { formatDate } from "@app/utils";
 
 import { getCrosswordById } from "@app/firebase";
-
 import { FullPageMessage } from "@app/components";
+
+import { Grid } from "./Grid";
+import { StyledGrid } from "./CrosswordPage.styles";
 
 export const CrosswordPage = () => {
   const [crossword, setCrossword] = useState();
@@ -28,12 +30,6 @@ export const CrosswordPage = () => {
     invokeGetCrossword();
   }, [id]);
 
-  const transformLine = (line) => {
-    const charsIn = Array.from(line);
-    const charsOut = charsIn.map((ch) => (ch === "." ? "\u2591" : "\u2588"));
-    return charsOut.join("");
-  };
-
   if (errorMessage) return <FullPageMessage message={errorMessage} />;
 
   if (!crossword) return <FullPageMessage message="Fetching crossword..." />;
@@ -44,14 +40,12 @@ export const CrosswordPage = () => {
       <div>Publish Date: {formatDate(crossword.publishDate)}</div>
       <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
       <div>Title: {crossword.title}</div>
+      <StyledGrid>
+        <Grid crossword={crossword} />
+      </StyledGrid>
       {crossword.author && <div>Author: {crossword.author}</div>}
-      <pre>
-        {crossword.grid.map((line, index) => (
-          <div key={index}>{transformLine(line)}</div>
-        ))}
-      </pre>
-      <br />
-      <pre>{JSON.stringify(crossword, null, 2)}</pre>
+      <pre>{JSON.stringify(crossword.acrossClues, null, 2)}</pre>
+      <pre>{JSON.stringify(crossword.downClues, null, 2)}</pre>
     </>
   );
 };
