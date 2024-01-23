@@ -1,5 +1,11 @@
 import styled from "@emotion/styled";
 
+export const StyledPuzzle = styled.div`
+  display: grid;
+  grid-template-columns: 50fr 25fr 25fr;
+  gap: 1rem;
+`;
+
 export const StyledGrid = styled.div`
   aspect-ratio: 1;
   width: calc(min(50vw, 50vh));
@@ -8,4 +14,25 @@ export const StyledGrid = styled.div`
   line-height: 0;
   margin-left: auto;
   margin-right: auto;
+`;
+
+export const StyledClues = styled.div`
+  //
+`;
+
+export const StyledClue = styled.div`
+  display: grid;
+  grid-template-columns: 10fr 90fr;
+`;
+
+export const StyledClueNumber = styled.div`
+  //
+`;
+
+export const StyledClueText = styled.div`
+  //
+`;
+
+export const StyledClueLength = styled.div`
+  //
 `;

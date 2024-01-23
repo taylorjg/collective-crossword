@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { formatDate } from "@app/utils";
+import { Typography } from "@mui/material";
 
 import { getCrosswordById } from "@app/firebase";
 import { FullPageMessage, Grid } from "@app/components";
+import { formatDate } from "@app/utils";
 
-import { StyledGrid } from "./CrosswordPage.styles";
+import {
+  StyledPuzzle,
+  StyledGrid,
+  StyledClues,
+  StyledClue,
+  StyledClueNumber,
+  StyledClueText,
+} from "./CrosswordPage.styles";
 
 export const CrosswordPage = () => {
   const [crossword, setCrossword] = useState();
@@ -39,12 +47,34 @@ export const CrosswordPage = () => {
       <div>Publish Date: {formatDate(crossword.publishDate)}</div>
       <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
       <div>Title: {crossword.title}</div>
-      <StyledGrid>
-        <Grid crossword={crossword} />
-      </StyledGrid>
       {crossword.author && <div>Author: {crossword.author}</div>}
-      <pre>{JSON.stringify(crossword.acrossClues, null, 2)}</pre>
-      <pre>{JSON.stringify(crossword.downClues, null, 2)}</pre>
+      <StyledPuzzle>
+        <StyledGrid>
+          <Grid crossword={crossword} />
+        </StyledGrid>
+        <StyledClues>
+          <Typography variant="h6">Across</Typography>
+          {crossword.acrossClues.map((clue) => {
+            return (
+              <StyledClue key={`across-clue-${clue.clueNumber}`}>
+                <StyledClueNumber>{clue.clueNumber}</StyledClueNumber>
+                <StyledClueText>{clue.clue}</StyledClueText>
+              </StyledClue>
+            );
+          })}
+        </StyledClues>
+        <StyledClues>
+          <Typography variant="h6">Down</Typography>
+          {crossword.downClues.map((clue) => {
+            return (
+              <StyledClue key={`down-clue-${clue.clueNumber}`}>
+                <StyledClueNumber>{clue.clueNumber}</StyledClueNumber>
+                <StyledClueText>{clue.clue}</StyledClueText>
+              </StyledClue>
+            );
+          })}
+        </StyledClues>
+      </StyledPuzzle>
     </>
   );
 };

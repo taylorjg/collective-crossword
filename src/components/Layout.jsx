@@ -6,7 +6,7 @@ import { Version } from "./Version";
 
 export const Layout = () => {
   return (
-    <Container maxWidth="md" sx={{ mt: 2 }}>
+    <Container maxWidth="lg" disableGutters sx={{ mt: 2 }}>
       <Header />
       <main>
         <Outlet />
