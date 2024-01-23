@@ -5,8 +5,13 @@ import { useAuth } from "@app/contexts";
 
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 import { formatDate } from "@app/utils";
+import { Grid } from "@app/components";
 
-import { StyledCard, StyledDetails } from "./HomePage.styles";
+import {
+  StyledCard,
+  StyledDetails,
+  StyledThumbnailGrid,
+} from "./HomePage.styles";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
@@ -47,6 +52,9 @@ export const HomePage = () => {
             <div>{crossword.title}</div>
             <div>{formatDate(crossword.publishDate)}</div>
           </StyledDetails>
+          <StyledThumbnailGrid>
+            <Grid crossword={crossword} />
+          </StyledThumbnailGrid>
           <Button onClick={() => handleView(crossword.id)}>View</Button>
           {user?.isAdmin && (
             <Button color="error" onClick={() => handleDelete(crossword.id)}>

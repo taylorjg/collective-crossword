@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom";
 import { formatDate } from "@app/utils";
 
 import { getCrosswordById } from "@app/firebase";
-import { FullPageMessage } from "@app/components";
+import { FullPageMessage, Grid } from "@app/components";
 
-import { Grid } from "./Grid";
 import { StyledGrid } from "./CrosswordPage.styles";
 
 export const CrosswordPage = () => {

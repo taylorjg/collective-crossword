@@ -15,3 +15,13 @@ export const StyledDetails = styled.div`
   flex-direction: column;
   width: 15rem;
 `;
+
+export const StyledThumbnailGrid = styled.div`
+  aspect-ratio: 1;
+  width: 7rem;
+  margin: 1rem;
+  border: 2px solid grey;
+  line-height: 0;
+  margin-left: auto;
+  margin-right: auto;
+`;
