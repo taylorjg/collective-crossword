@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import {
+  Grid,
   Table,
   TableHead,
   TableBody,
@@ -32,48 +33,46 @@ export const UsersPage = () => {
   }, []);
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography>Display Name</Typography>
-            </TableCell>
-            <TableCell>
-              <Typography>Email</Typography>
-            </TableCell>
-            <TableCell>
-              <Typography>Username</Typography>
-            </TableCell>
-            <TableCell>
-              <Typography>Admin</Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>
-                <Typography>{user.displayName}</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography>{user.email}</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography>{user.username}</Typography>
-              </TableCell>
-              <TableCell>
-                {user.isAdmin ? (
-                  <CheckIcon color="success" />
-                ) : (
-                  <CloseIcon color="error" />
-                )}
-                {}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Grid container>
+      <Grid item xs={12} md={6} sx={{ mx: { xs: 2, md: "auto" } }}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Typography>Display Name</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Username</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Admin</Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <Typography>{user.displayName}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{user.username}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    {user.isAdmin ? (
+                      <CheckIcon color="success" />
+                    ) : (
+                      <CloseIcon color="error" />
+                    )}
+                    {}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 };
