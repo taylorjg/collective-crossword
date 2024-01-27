@@ -1,19 +1,27 @@
 import PropTypes from "prop-types";
 import { Avatar } from "@mui/material";
 
-const getPublicationInitials = (publication) => {
+const getLogo = (publication) => {
   switch (publication) {
     case "The Telegraph":
-      return "TT";
+      return {
+        src: "logos/the-telegraph-logo.svg",
+        alt: "The Telegraph logo",
+      };
     case "Private Eye":
-      return "PE";
+      return {
+        src: "logos/private-eye-logo.png",
+        alt: "Private Eye logo",
+      };
     default:
-      return "?";
+      return null;
   }
 };
 
 export const CrosswordAvatar = ({ crossword }) => {
-  return <Avatar>{getPublicationInitials(crossword.publication)}</Avatar>;
+  const logo = getLogo(crossword.publication);
+
+  return logo ? <Avatar {...logo} /> : <Avatar>?</Avatar>;
 };
 
 CrosswordAvatar.propTypes = {
