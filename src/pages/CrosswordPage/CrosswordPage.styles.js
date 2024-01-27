@@ -6,7 +6,7 @@ export const StyledPuzzle = styled.div`
   gap: 1rem;
 `;
 
-export const StyledGrid = styled.div`
+export const StyledPuzzleGrid = styled.div`
   aspect-ratio: 1;
   width: calc(min(50vw, 50vh));
   margin: 1rem;
@@ -22,7 +22,7 @@ export const StyledClues = styled.div`
 
 export const StyledClue = styled.div`
   display: grid;
-  grid-template-columns: 10fr 90fr;
+  grid-template-columns: 2rem 1fr;
 `;
 
 export const StyledClueNumber = styled.div`

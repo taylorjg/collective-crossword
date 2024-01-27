@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 import { range } from "@app/utils";
 
-export const Grid = ({ crossword }) => {
+export const PuzzleGrid = ({ crossword }) => {
   const VIEWBOX_WIDTH = 100;
   const VIEWBOX_HEIGHT = 100;
   const GRID_LINE_FULL_THICKNESS = 1 / 4;
@@ -141,6 +141,6 @@ export const Grid = ({ crossword }) => {
   );
 };
 
-Grid.propTypes = {
+PuzzleGrid.propTypes = {
   crossword: PropTypes.object.isRequired,
 };
