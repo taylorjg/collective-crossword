@@ -11,6 +11,7 @@ import {
 
 import {
   useTheTelegraphCrypticCrosswordById,
+  useTheTelegraphToughieCrosswordById,
   useTheTelegraphPrizeCrypticById,
   useTheTelegraphPrizeToughieById,
 } from "@app/hooks";
@@ -23,6 +24,8 @@ const getUseCrossword = (crosswordType) => {
     default:
     case "cryptic-crossword":
       return useTheTelegraphCrypticCrosswordById;
+    case "toughie-crossword":
+      return useTheTelegraphToughieCrosswordById;
     case "prize-cryptic":
       return useTheTelegraphPrizeCrypticById;
     case "prize-toughie":
@@ -69,6 +72,11 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
             label="Cryptic Crossword"
           />
           <FormControlLabel
+            value="toughie-crossword"
+            control={<Radio size="small" />}
+            label="Toughie Crossword"
+          />
+          <FormControlLabel
             value="prize-cryptic"
             control={<Radio size="small" />}
             label="Prize Cryptic"
@@ -93,7 +101,7 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
             size="small"
             disabled={!id || id === idToFetch}
           >
-            Fetch Crossword
+            Fetch
           </Button>
           {isLoading && <CircularProgress size="1.5rem" />}
         </StyledRow>

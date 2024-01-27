@@ -9,9 +9,11 @@ import { UserDetailsModal } from "./UserDetailsModal";
 
 const HiddenPlaceholderForConsistentHeight = () => {
   return (
-    <IconButton style={{ visibility: "hidden" }}>
-      <Avatar />
-    </IconButton>
+    <div style={{ visibility: "hidden", width: 0 }}>
+      <IconButton>
+        <Avatar />
+      </IconButton>
+    </div>
   );
 };
 

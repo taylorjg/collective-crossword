@@ -6,9 +6,7 @@ export const ViewCrosswordButton = ({ crosswordId }) => {
   const navigate = useNavigate();
 
   return (
-    <Button onClick={() => navigate(`/crosswords/${crosswordId}`)}>
-      View Crossword
-    </Button>
+    <Button onClick={() => navigate(`/crosswords/${crosswordId}`)}>View</Button>
   );
 };
 

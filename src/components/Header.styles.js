@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const StyledHeader = styled.div`
   display: grid;
-  grid-template-columns: 2fr 8fr 2fr;
+  grid-template-columns: 30% 40% 30%;
 `;
 
 export const StyledHeaderLeft = styled.div`

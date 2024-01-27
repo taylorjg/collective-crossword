@@ -11,69 +11,57 @@ initializeApp();
 // TODO: move this into config of some sort ?
 const PUZZLESDATA_URL = "https://puzzlesdata.telegraph.co.uk";
 
-const getCrypticCrossword = async (id) => {
-  const url = `${PUZZLESDATA_URL}/puzzles/cryptic-crossword-1/cryptic-crossword-${id}.json`;
-  const response = await axios.get(url);
-  return { puzData: response.data, puzUrl: url };
-};
-
-const getPrizeCryptic = async (id) => {
-  const url = `${PUZZLESDATA_URL}/puzzles/prize-cryptic/prize-cryptic-${id}.json`;
-  const response = await axios.get(url);
-  return { puzData: response.data, puzUrl: url };
-};
-
-const getPrizeToughie = async (id) => {
-  const url = `${PUZZLESDATA_URL}/puzzles/prize-toughie/prize-toughie-${id}.json`;
-  const response = await axios.get(url);
-  return { puzData: response.data, puzUrl: url };
-};
-
 const opts = { cors: true };
 
-exports.getCrypticCrossword = onRequest(opts, async (req, res) => {
+const getCommon = async (req, res, fnName, label, makeUrl) => {
   const id = req.query.id ?? req.body.data.id;
-  logger.log("[getCrypticCrossword]", id);
+  logger.log(`[${fnName}]`, id);
   try {
-    const data = await getCrypticCrossword(id);
-    res.json({ data });
+    const url = makeUrl(id);
+    const response = await axios.get(url);
+    res.json({
+      data: {
+        puzData: response.data,
+        puzUrl: url,
+      },
+    });
   } catch (error) {
     if (error?.response?.status === 404) {
-      res
-        .status(404)
-        .send(`Failed to find cryptic crossword with id, "${id}".`);
+      res.status(404).send(`Failed to find ${label} with id, "${id}".`);
     } else {
       throw error;
     }
   }
+};
+
+exports.getCrypticCrossword = onRequest(opts, async (req, res) => {
+  const fnName = "getCrypticCrossword";
+  const label = "cryptic crossword";
+  const makeUrl = (id) =>
+    `${PUZZLESDATA_URL}/puzzles/cryptic-crossword-1/cryptic-crossword-${id}.json`;
+  await getCommon(req, res, fnName, label, makeUrl);
+});
+
+exports.getToughieCrossword = onRequest(opts, async (req, res) => {
+  const fnName = "getToughieCrossword";
+  const label = "toughie crossword";
+  const makeUrl = (id) =>
+    `${PUZZLESDATA_URL}/puzzles/toughie-crossword/toughie-crossword-${id}.json`;
+  await getCommon(req, res, fnName, label, makeUrl);
 });
 
 exports.getPrizeCryptic = onRequest(opts, async (req, res) => {
-  const id = req.query.id ?? req.body.data.id;
-  logger.log("[getPrizeCryptic]", id);
-  try {
-    const data = await getPrizeCryptic(id);
-    res.json({ data });
-  } catch (error) {
-    if (error?.response?.status === 404) {
-      res.status(404).send(`Failed to find prize cryptic with id, "${id}".`);
-    } else {
-      throw error;
-    }
-  }
+  const fnName = "getPrizeCryptic";
+  const label = "prize cryptic";
+  const makeUrl = (id) =>
+    `${PUZZLESDATA_URL}/puzzles/prize-cryptic/prize-cryptic-${id}.json`;
+  await getCommon(req, res, fnName, label, makeUrl);
 });
 
 exports.getPrizeToughie = onRequest(opts, async (req, res) => {
-  const id = req.query.id ?? req.body.data.id;
-  logger.log("[getPrizeToughie]", id);
-  try {
-    const data = await getPrizeToughie(id);
-    res.json({ data });
-  } catch (error) {
-    if (error?.response?.status === 404) {
-      res.status(404).send(`Failed to find prize toughie with id, "${id}".`);
-    } else {
-      throw error;
-    }
-  }
+  const fnName = "getPrizeToughie";
+  const label = "prize toughie";
+  const makeUrl = (id) =>
+    `${PUZZLESDATA_URL}/puzzles/prize-toughie/prize-toughie-${id}.json`;
+  await getCommon(req, res, fnName, label, makeUrl);
 });

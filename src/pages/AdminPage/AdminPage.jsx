@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tab } from "@mui/material";
+import { Grid, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import { addCrossword } from "@app/firebase";
@@ -26,17 +26,21 @@ export const AdminPage = () => {
   };
 
   return (
-    <TabContext value={value}>
-      <TabList onChange={onChangeTab}>
-        <Tab label="Private Eye" value="1" />
-        <Tab label="The Telegraph" value="2" />
-      </TabList>
-      <TabPanel value="1">
-        <PrivateEyeTab onAddCrossword={onAddCrossword} />
-      </TabPanel>
-      <TabPanel value="2">
-        <TheTelegraphTab onAddCrossword={onAddCrossword} />
-      </TabPanel>
-    </TabContext>
+    <Grid container>
+      <Grid item xs={12} md={6} sx={{ mx: { xs: 2, md: "auto" } }}>
+        <TabContext value={value}>
+          <TabList onChange={onChangeTab}>
+            <Tab label="Private Eye" value="1" />
+            <Tab label="The Telegraph" value="2" />
+          </TabList>
+          <TabPanel value="1">
+            <PrivateEyeTab onAddCrossword={onAddCrossword} />
+          </TabPanel>
+          <TabPanel value="2">
+            <TheTelegraphTab onAddCrossword={onAddCrossword} />
+          </TabPanel>
+        </TabContext>
+      </Grid>
+    </Grid>
   );
 };

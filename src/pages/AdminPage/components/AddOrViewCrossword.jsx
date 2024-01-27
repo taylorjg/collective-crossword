@@ -46,7 +46,7 @@ export const AddOrViewCrossword = ({
                 onClick={handleAddCrossword}
                 disabled={Boolean(addedCrosswordId)}
               >
-                Add Crossword
+                Add
               </Button>
               {showAddSpinner && <CircularProgress size="1.5rem" />}
               {addedCrosswordId && (
@@ -62,7 +62,7 @@ export const AddOrViewCrossword = ({
 
 AddOrViewCrossword.propTypes = {
   crossword: PropTypes.object,
-  crosswordId: PropTypes.number,
+  crosswordId: PropTypes.string,
   isLoading: PropTypes.bool,
   onAddCrossword: PropTypes.func.isRequired,
 };

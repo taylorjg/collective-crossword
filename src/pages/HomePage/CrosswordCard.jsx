@@ -11,18 +11,8 @@ import {
 import { Grid } from "@app/components";
 import { formatDate } from "@app/utils";
 
+import { CrosswordAvatar } from "./CrosswordAvatar";
 import { StyledThumbnailGrid } from "./CrosswordCard.styles";
-
-const getPublicationAvatar = (publication) => {
-  switch (publication) {
-    case "The Telegraph":
-      return "TT";
-    case "Private Eye":
-      return "PE";
-    default:
-      return "?";
-  }
-};
 
 export const CrosswordCard = ({
   crossword,
@@ -33,7 +23,7 @@ export const CrosswordCard = ({
   return (
     <Card square variant="outlined">
       <CardHeader
-        avatar={<Avatar>{getPublicationAvatar(crossword.publication)}</Avatar>}
+        avatar={<CrosswordAvatar crossword={crossword} />}
         title={crossword.title}
         subheader={formatDate(crossword.publishDate)}
       />

@@ -67,7 +67,7 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
               !selectedPuzzleId || selectedPuzzleId === puzzleToFetch?.id
             }
           >
-            Fetch Crossword
+            Fetch
           </Button>
           {(hookResult1.isLoading || hookResult2.isLoading) && (
             <CircularProgress size="1.5rem" />

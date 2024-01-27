@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 
 import {
   getCrypticCrossword,
+  getToughieCrossword,
   getPrizeCryptic,
   getPrizeToughie,
 } from "@app/firebase";
@@ -27,6 +28,14 @@ export const useTheTelegraphCrypticCrosswordById = (id) => {
   return useTheTelegraphCrossword(
     getCrypticCrossword,
     "getCrypticCrossword",
+    id
+  );
+};
+
+export const useTheTelegraphToughieCrosswordById = (id) => {
+  return useTheTelegraphCrossword(
+    getToughieCrossword,
+    "getToughieCrossword",
     id
   );
 };
