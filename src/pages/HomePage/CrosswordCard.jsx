@@ -14,12 +14,7 @@ import { formatDate } from "@app/utils";
 import { CrosswordAvatar } from "./CrosswordAvatar";
 import { StyledThumbnailGrid } from "./CrosswordCard.styles";
 
-export const CrosswordCard = ({
-  crossword,
-  isAdmin,
-  onViewCrossword,
-  onDeleteCrossword,
-}) => {
+export const CrosswordCard = ({ crossword, isAdmin, onView, onDelete }) => {
   return (
     <Card square variant="outlined">
       <CardHeader
@@ -33,9 +28,9 @@ export const CrosswordCard = ({
         </StyledThumbnailGrid>
       </CardContent>
       <CardActions>
-        <Button onClick={() => onViewCrossword(crossword.id)}>View</Button>
+        <Button onClick={() => onView(crossword.id)}>View</Button>
         {isAdmin && (
-          <Button color="error" onClick={() => onDeleteCrossword(crossword.id)}>
+          <Button color="error" onClick={() => onDelete(crossword.id)}>
             Delete
           </Button>
         )}
@@ -47,6 +42,6 @@ export const CrosswordCard = ({
 CrosswordCard.propTypes = {
   crossword: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  onViewCrossword: PropTypes.func.isRequired,
-  onDeleteCrossword: PropTypes.func.isRequired,
+  onView: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };

@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@app/contexts";
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 
-import { CrosswordCard } from "./CrosswordCard";
-import { StyledCrosswordCards } from "./HomePage.styles";
+// import { CrosswordCards } from "./CrosswordCards";
+import { CrosswordList } from "./CrosswordList";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
@@ -29,27 +29,22 @@ export const HomePage = () => {
     };
   }, []);
 
-  const onViewCrossword = (id) => {
+  const onView = (id) => {
     navigate(`/crosswords/${id}`);
   };
 
-  const onDeleteCrossword = (id) => {
+  const onDelete = (id) => {
     deleteCrossword(id);
   };
 
   const isAdmin = user?.isAdmin ?? false;
 
   return (
-    <StyledCrosswordCards>
-      {crosswords.map((crossword) => (
-        <CrosswordCard
-          key={crossword.id}
-          crossword={crossword}
-          isAdmin={isAdmin}
-          onViewCrossword={onViewCrossword}
-          onDeleteCrossword={onDeleteCrossword}
-        />
-      ))}
-    </StyledCrosswordCards>
+    <CrosswordList
+      crosswords={crosswords}
+      isAdmin={isAdmin}
+      onView={onView}
+      onDelete={onDelete}
+    />
   );
 };

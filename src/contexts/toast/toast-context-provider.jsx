@@ -62,7 +62,7 @@ export const ToastContextProvider = ({ children }) => {
         <Alert
           onClose={handleClose}
           severity={severity}
-          variant="filled"
+          variant="outlined"
           sx={{ width: "100%" }}
         >
           {details ? (
