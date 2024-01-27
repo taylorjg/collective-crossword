@@ -14,6 +14,7 @@ import {
   useTheTelegraphToughieCrosswordById,
   useTheTelegraphPrizeCrypticById,
   useTheTelegraphPrizeToughieById,
+  useTheTelegraphQuickCrosswordById,
 } from "@app/hooks";
 
 import { AddOrViewCrossword, Error } from "../components";
@@ -30,6 +31,8 @@ const getUseCrossword = (crosswordType) => {
       return useTheTelegraphPrizeCrypticById;
     case "prize-toughie":
       return useTheTelegraphPrizeToughieById;
+    case "quick-crossword":
+      return useTheTelegraphQuickCrosswordById;
   }
 };
 
@@ -85,6 +88,11 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
             value="prize-toughie"
             control={<Radio size="small" />}
             label="Prize Toughie"
+          />
+          <FormControlLabel
+            value="quick-crossword"
+            control={<Radio size="small" />}
+            label="Quick Crossword"
           />
         </RadioGroup>
         <StyledRow>

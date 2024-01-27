@@ -77,6 +77,8 @@ export const listenForCrosswordChanges = (onNext) => {
 
 const functions = getFunctions(app);
 
+export const getQuickCrossword = httpsCallable(functions, "getQuickCrossword");
+
 export const getCrypticCrossword = httpsCallable(
   functions,
   "getCrypticCrossword"

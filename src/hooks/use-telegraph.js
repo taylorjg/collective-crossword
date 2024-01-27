@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 
 import {
+  getQuickCrossword,
   getCrypticCrossword,
   getToughieCrossword,
   getPrizeCryptic,
@@ -22,6 +23,10 @@ const useTheTelegraphCrossword = (fn, fnName, id) => {
     puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
 
   return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
+};
+
+export const useTheTelegraphQuickCrosswordById = (id) => {
+  return useTheTelegraphCrossword(getQuickCrossword, "getQuickCrossword", id);
 };
 
 export const useTheTelegraphCrypticCrosswordById = (id) => {

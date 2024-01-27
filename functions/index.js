@@ -26,6 +26,7 @@ const getCommon = async (req, res, fnName, label, makeUrl) => {
       },
     });
   } catch (error) {
+    logger.log(`[${fnName}]`, error);
     if (error?.response?.status === 404) {
       res.status(404).send(`Failed to find ${label} with id, "${id}".`);
     } else {
@@ -33,6 +34,14 @@ const getCommon = async (req, res, fnName, label, makeUrl) => {
     }
   }
 };
+
+exports.getQuickCrossword = onRequest(opts, async (req, res) => {
+  const fnName = "getQuickCrossword";
+  const label = "quick crossword";
+  const makeUrl = (id) =>
+    `${PUZZLESDATA_URL}/puzzles/quick-crossword-1/quick-crossword-${id}.json`;
+  await getCommon(req, res, fnName, label, makeUrl);
+});
 
 exports.getCrypticCrossword = onRequest(opts, async (req, res) => {
   const fnName = "getCrypticCrossword";
