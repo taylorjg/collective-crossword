@@ -1,6 +1,6 @@
 import { PathConstants } from "./path-constants";
 
-export const RoutesMap = new Map([
+export const RouteTitlesMap = new Map([
   [PathConstants.Home, "Home"],
   [PathConstants.Crossword, "Crossword"],
   [PathConstants.Users, "Users"],

@@ -1,6 +1,6 @@
 import { matchPath, useLocation } from "react-router-dom";
 
-import { PathConstants, RoutesMap } from "@app/constants";
+import { PathConstants, RouteTitlesMap } from "@app/constants";
 
 const DEFAULT_TITLE = "Not Found";
 
@@ -19,7 +19,7 @@ export const useRouteMatch = () => {
 
   const routeMatch = tryToMatchRoute();
   const path = routeMatch?.pattern?.path;
-  const title = RoutesMap.get(path) ?? DEFAULT_TITLE;
+  const title = RouteTitlesMap.get(path) ?? DEFAULT_TITLE;
 
   return { routeMatch, path, title };
 };
