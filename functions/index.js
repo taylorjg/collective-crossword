@@ -26,7 +26,7 @@ const getCommon = async (req, res, fnName, label, makeUrl) => {
       },
     });
   } catch (error) {
-    logger.log(`[${fnName}]`, error);
+    logger.error(`[${fnName}]`, error.message);
     if (error?.response?.status === 404) {
       res.status(404).send(`Failed to find ${label} with id, "${id}".`);
     } else {
