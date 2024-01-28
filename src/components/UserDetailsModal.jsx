@@ -6,67 +6,82 @@ import {
   DialogContent,
   DialogActions,
   Divider,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { StyledTitle } from "./UserDetailsModal.styles";
+
 export const UserDetailsModal = ({ open, onClose, user }) => {
+  const theme = useTheme();
+  const mediaQuery = theme.breakpoints.down("sm");
+  const isXs = useMediaQuery(mediaQuery);
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="sm">
-      <DialogTitle>User Details</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth={true}
+      maxWidth={isXs ? "xs" : "sm"}
+      fullScreen={isXs}
+    >
+      <DialogTitle>
+        <StyledTitle>
+          User Details
+          <IconButton edge="end" onClick={onClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+        </StyledTitle>
+      </DialogTitle>
       <Divider />
       <DialogContent>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                <Typography>Display Name</Typography>
-              </TableCell>
-              <TableCell>{user.displayName}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography>Email</Typography>
-              </TableCell>
-              <TableCell>{user.email}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography>Username</Typography>
-              </TableCell>
-              <TableCell>{user.username}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography>Admin</Typography>
-              </TableCell>
-              <TableCell>
-                {user.isAdmin ? (
+        <List disablePadding dense>
+          <ListItem>
+            <ListItemText primary="Display Name" secondary={user.displayName} />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText primary="Email" secondary={user.email} />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText primary="Username" secondary={user.username} />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText
+              primary="Admin"
+              secondary={
+                user.isAdmin ? (
                   <CheckIcon color="success" />
                 ) : (
                   <CloseIcon color="error" />
-                )}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography>Creation Time</Typography>
-              </TableCell>
-              <TableCell>{user.creationTime}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography>Last Sign In Time</Typography>
-              </TableCell>
-              <TableCell>{user.lastSignInTime}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+                )
+              }
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText
+              primary="Creation Time"
+              secondary={user.creationTime}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText
+              primary="Last Sign In Time"
+              secondary={user.lastSignInTime}
+            />
+          </ListItem>
+          <Divider />
+        </List>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
