@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import {
   Button,
   CircularProgress,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 
@@ -65,43 +66,27 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
   return (
     <StyledImportForm>
       <form autoComplete="off" onSubmit={onSubmit}>
-        <RadioGroup
-          value={selectedCrosswordType}
-          onChange={onChangeCrosswordType}
-        >
-          <FormControlLabel
-            value="cryptic-crossword"
-            control={<Radio size="small" />}
-            label="Cryptic Crossword"
-          />
-          <FormControlLabel
-            value="toughie-crossword"
-            control={<Radio size="small" />}
-            label="Toughie Crossword"
-          />
-          <FormControlLabel
-            value="prize-cryptic"
-            control={<Radio size="small" />}
-            label="Prize Cryptic"
-          />
-          <FormControlLabel
-            value="prize-toughie"
-            control={<Radio size="small" />}
-            label="Prize Toughie"
-          />
-          <FormControlLabel
-            value="quick-crossword"
-            control={<Radio size="small" />}
-            label="Quick Crossword"
-          />
-        </RadioGroup>
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="demo-simple-select-label">Crossword Type</InputLabel>
+          <Select
+            label="Crossword Type"
+            size="small"
+            value={selectedCrosswordType}
+            onChange={onChangeCrosswordType}
+          >
+            <MenuItem value="cryptic-crossword">Cryptic Crossword</MenuItem>
+            <MenuItem value="toughie-crossword">Toughie Crossword</MenuItem>
+            <MenuItem value="prize-cryptic">Prize Cryptic</MenuItem>
+            <MenuItem value="prize-toughie">Prize Toughie</MenuItem>
+            <MenuItem value="quick-crossword">Quick Crossword</MenuItem>
+          </Select>
+        </FormControl>
         <StyledRow>
           <TextField
             label="Crossword ID"
             value={id}
             onChange={(e) => setId(e.target.value)}
             size="small"
-            sx={{ my: 1 }}
             disabled={Boolean(idToFetch)}
           />
           <Button
