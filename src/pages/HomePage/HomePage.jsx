@@ -13,7 +13,9 @@ import { StyledControls } from "./HomePage.styles";
 
 export const HomePage = () => {
   const [crosswords, setCrosswords] = useState([]);
-  const [gridMode, setGridMode] = useState(true);
+  const [gridMode, setGridMode] = useState(() =>
+    Boolean(localStorage.getItem("grid-mode"))
+  );
   const { user } = useAuth();
 
   const navigate = useNavigate();
@@ -46,18 +48,24 @@ export const HomePage = () => {
 
   const CrosswordLayoutType = gridMode ? CrosswordGrid : CrosswordList;
 
+  const toggleGridMode = () => {
+    const newGridMode = !gridMode;
+    localStorage.setItem("grid-mode", newGridMode ? "true" : "");
+    setGridMode(newGridMode);
+  };
+
   return (
     <>
       <StyledControls>
         {gridMode ? (
           <ListIcon
             titleAccess="Switch to list view"
-            onClick={() => setGridMode(false)}
+            onClick={toggleGridMode}
           />
         ) : (
           <GridViewIcon
             titleAccess="Switch to grid view"
-            onClick={() => setGridMode(true)}
+            onClick={toggleGridMode}
           />
         )}
       </StyledControls>
