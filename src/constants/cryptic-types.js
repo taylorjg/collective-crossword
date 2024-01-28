@@ -4,4 +4,5 @@ export const CrypticTypes = Object.freeze({
   ToughieCrossword: "Toughie Crossword",
   PrizeCryptic: "Prize Cryptic",
   PrizeToughie: "Prize Toughie",
+  NotApplicable: "Not Applicable",
 });

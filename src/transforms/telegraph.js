@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import { range } from "@app/utils";
+import { Publications } from "@app/constants";
 
 const makeGrid = (puzData) => {
   const rows = Number(puzData.copy.gridsize.rows);
@@ -48,7 +49,12 @@ const makeDownClues = (puzData) => {
   });
 };
 
-export const transformTelegraphCrossword = (puzData, url) => {
+export const transformTelegraphCrossword = (
+  crosswordType,
+  crypticType,
+  puzData,
+  url
+) => {
   const grid = makeGrid(puzData);
   const acrossClues = makeAcrossClues(puzData);
   const downClues = makeDownClues(puzData);
@@ -60,8 +66,10 @@ export const transformTelegraphCrossword = (puzData, url) => {
   );
 
   return {
+    publication: Publications.TheTelegraph,
+    crosswordType,
+    crypticType,
     url,
-    publication: "The Telegraph",
     author: puzData.copy.setter,
     title: puzData.copy.title,
     publishDate: momentPublishDate.unix(),

@@ -1,7 +1,11 @@
+import { CrosswordTypes, CrypticTypes, Publications } from "@app/constants";
+
 export const transformPrivateEyeCrossword = (puzData, url, unixTimestamp) => {
   return {
+    publication: Publications.PrivateEye,
+    crosswordType: CrosswordTypes.Cryptic,
+    crypticType: CrypticTypes.CrypticCrossword,
     url,
-    publication: "Private Eye",
     author: puzData.puzzle.author,
     title: puzData.puzzle.title,
     publishDate: unixTimestamp,

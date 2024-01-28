@@ -9,8 +9,15 @@ import {
 } from "@app/firebase";
 import { transformTelegraphCrossword } from "@app/transforms";
 import { useExistenceCheck } from "./use-existence-check";
+import { CrosswordTypes, CrypticTypes } from "@app/constants";
 
-const useTheTelegraphCrossword = (fn, fnName, id) => {
+const useTheTelegraphCrossword = (
+  crosswordType,
+  crypticType,
+  fn,
+  fnName,
+  id
+) => {
   const queryResponse = useQuery([fnName, id], () => fn({ id }), {
     enabled: Boolean(id),
   });
@@ -20,17 +27,27 @@ const useTheTelegraphCrossword = (fn, fnName, id) => {
   const puzData = queryResponse.data?.data?.puzData?.json ?? null;
   const puzUrl = queryResponse.data?.data?.puzUrl ?? null;
   const crossword =
-    puzData && puzUrl ? transformTelegraphCrossword(puzData, puzUrl) : null;
+    puzData && puzUrl
+      ? transformTelegraphCrossword(crosswordType, crypticType, puzData, puzUrl)
+      : null;
 
   return useExistenceCheck({ crossword, puzData, isLoading, isError, error });
 };
 
 export const useTheTelegraphQuickCrosswordById = (id) => {
-  return useTheTelegraphCrossword(getQuickCrossword, "getQuickCrossword", id);
+  return useTheTelegraphCrossword(
+    CrosswordTypes.Quick,
+    CrypticTypes.NotApplicable,
+    getQuickCrossword,
+    "getQuickCrossword",
+    id
+  );
 };
 
 export const useTheTelegraphCrypticCrosswordById = (id) => {
   return useTheTelegraphCrossword(
+    CrosswordTypes.Cryptic,
+    CrypticTypes.CrypticCrossword,
     getCrypticCrossword,
     "getCrypticCrossword",
     id
@@ -39,6 +56,8 @@ export const useTheTelegraphCrypticCrosswordById = (id) => {
 
 export const useTheTelegraphToughieCrosswordById = (id) => {
   return useTheTelegraphCrossword(
+    CrosswordTypes.Cryptic,
+    CrypticTypes.ToughieCrossword,
     getToughieCrossword,
     "getToughieCrossword",
     id
@@ -46,9 +65,21 @@ export const useTheTelegraphToughieCrosswordById = (id) => {
 };
 
 export const useTheTelegraphPrizeCrypticById = (id) => {
-  return useTheTelegraphCrossword(getPrizeCryptic, "getPrizeCryptic", id);
+  return useTheTelegraphCrossword(
+    CrosswordTypes.Cryptic,
+    CrypticTypes.PrizeCryptic,
+    getPrizeCryptic,
+    "getPrizeCryptic",
+    id
+  );
 };
 
 export const useTheTelegraphPrizeToughieById = (id) => {
-  return useTheTelegraphCrossword(getPrizeToughie, "getPrizeToughie", id);
+  return useTheTelegraphCrossword(
+    CrosswordTypes.Cryptic,
+    CrypticTypes.PrizeToughie,
+    getPrizeToughie,
+    "getPrizeToughie",
+    id
+  );
 };

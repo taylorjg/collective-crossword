@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import {
-  Avatar,
   Button,
   Card,
   CardHeader,
@@ -8,13 +7,13 @@ import {
   CardActions,
 } from "@mui/material";
 
-import { Grid } from "@app/components";
+import { PuzzleGrid } from "@app/components";
 import { formatDate } from "@app/utils";
 
 import { CrosswordAvatar } from "./CrosswordAvatar";
-import { StyledThumbnailGrid } from "./CrosswordCard.styles";
+import { StyledThumbnailGrid } from "./CrosswordGridItem.styles";
 
-export const CrosswordCard = ({ crossword, isAdmin, onView, onDelete }) => {
+export const CrosswordGridItem = ({ crossword, isAdmin, onView, onDelete }) => {
   return (
     <Card square variant="outlined">
       <CardHeader
@@ -24,7 +23,7 @@ export const CrosswordCard = ({ crossword, isAdmin, onView, onDelete }) => {
       />
       <CardContent>
         <StyledThumbnailGrid>
-          <Grid crossword={crossword} />
+          <PuzzleGrid crossword={crossword} />
         </StyledThumbnailGrid>
       </CardContent>
       <CardActions>
@@ -39,7 +38,7 @@ export const CrosswordCard = ({ crossword, isAdmin, onView, onDelete }) => {
   );
 };
 
-CrosswordCard.propTypes = {
+CrosswordGridItem.propTypes = {
   crossword: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   onView: PropTypes.func.isRequired,

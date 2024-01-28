@@ -1,4 +1,4 @@
 export const CrosswordTypes = Object.freeze({
-  Quick: "quick",
-  Cryptic: "cryptic",
+  Quick: "Quick",
+  Cryptic: "Cryptic",
 });

@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
 
-import { CrosswordCard } from "./CrosswordCard";
-import { StyledCrosswordCards } from "./HomePage.styles";
+import { CrosswordGridItem } from "./CrosswordGridItem";
+import { StyledCrosswordGrid } from "./HomePage.styles";
 
-export const CrosswordCards = ({ crosswords, isAdmin, onView, onDelete }) => {
+export const CrosswordGrid = ({ crosswords, isAdmin, onView, onDelete }) => {
   return (
-    <StyledCrosswordCards>
+    <StyledCrosswordGrid>
       {crosswords.map((crossword) => (
-        <CrosswordCard
+        <CrosswordGridItem
           key={crossword.id}
           crossword={crossword}
           isAdmin={isAdmin}
@@ -15,11 +15,11 @@ export const CrosswordCards = ({ crosswords, isAdmin, onView, onDelete }) => {
           onDelete={onDelete}
         />
       ))}
-    </StyledCrosswordCards>
+    </StyledCrosswordGrid>
   );
 };
 
-CrosswordCards.propTypes = {
+CrosswordGrid.propTypes = {
   crosswords: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   isAdmin: PropTypes.bool.isRequired,
   onView: PropTypes.func.isRequired,
