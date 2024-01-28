@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, MenuItem, Select } from "@mui/material";
+import { Button, LinearProgress, MenuItem, Select } from "@mui/material";
 
 import {
   usePrivateEyeCrosswords,
@@ -70,17 +70,20 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
           >
             Fetch
           </Button>
-          {hookResult1.isLoading && <FullPageLoading />}
-          {hookResult1.isError && <Error error={hookResult1.error} />}
         </StyledRow>
+
+        {hookResult1.isLoading && <FullPageLoading />}
+        {hookResult1.isError && <Error error={hookResult1.error} />}
+        {hookResult2.isLoading && <LinearProgress sx={{ mt: 2 }} />}
+        {hookResult2.isError && <Error error={hookResult2.error} />}
       </form>
+
       <AddOrViewCrossword
         crossword={crossword}
         crosswordId={crosswordId}
         isLoading={hookResult2.isLoading}
         onAddCrossword={onAddCrossword}
       />
-      {hookResult2.isError && <Error error={hookResult2.error} />}
     </StyledImportForm>
   );
 };

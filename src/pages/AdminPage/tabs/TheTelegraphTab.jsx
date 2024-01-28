@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
-  CircularProgress,
+  LinearProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -97,7 +97,6 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
           >
             Fetch
           </Button>
-          {isLoading && <CircularProgress size="1.5rem" />}
         </StyledRow>
         <Button
           size="small"
@@ -107,6 +106,9 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
         >
           Reset
         </Button>
+
+        {isLoading && <LinearProgress sx={{ mt: 2 }} />}
+        {isError && <Error error={error} />}
       </form>
 
       <AddOrViewCrossword
@@ -115,7 +117,6 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
         isLoading={isLoading}
         onAddCrossword={onAddCrossword}
       />
-      {isError && <Error error={error} />}
     </StyledImportForm>
   );
 };
