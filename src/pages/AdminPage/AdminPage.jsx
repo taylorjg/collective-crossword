@@ -29,14 +29,14 @@ export const AdminPage = () => {
     <Grid container>
       <Grid item xs={12} md={6} sx={{ mx: { xs: 2, md: "auto" } }}>
         <TabContext value={value}>
-          <TabList onChange={onChangeTab}>
+          <TabList onChange={onChangeTab} variant="fullWidth">
             <Tab label="Private Eye" value="1" />
             <Tab label="The Telegraph" value="2" />
           </TabList>
-          <TabPanel value="1">
+          <TabPanel value="1" sx={{ px: 0 }}>
             <PrivateEyeTab onAddCrossword={onAddCrossword} />
           </TabPanel>
-          <TabPanel value="2">
+          <TabPanel value="2" sx={{ px: 0 }}>
             <TheTelegraphTab onAddCrossword={onAddCrossword} />
           </TabPanel>
         </TabContext>

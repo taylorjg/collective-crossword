@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, CircularProgress, MenuItem, Select } from "@mui/material";
+import { Button, MenuItem, Select } from "@mui/material";
 
 import {
   usePrivateEyeCrosswords,
   usePrivateEyeCrosswordByUrl,
 } from "@app/hooks";
 import { formatDate } from "@app/utils";
+import { FullPageLoading } from "@app/components";
 
 import { AddOrViewCrossword, Error } from "../components";
 import { StyledImportForm, StyledRow } from "../components/common.styles";
@@ -41,7 +42,7 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
       <form autoComplete="off" onSubmit={onSubmit}>
         <StyledRow>
           <Select
-            sx={{ width: "20rem" }}
+            sx={{ width: "15rem" }}
             size="small"
             aria-label="Puzzles"
             value={selectedPuzzleId}
@@ -69,9 +70,7 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
           >
             Fetch
           </Button>
-          {(hookResult1.isLoading || hookResult2.isLoading) && (
-            <CircularProgress size="1.5rem" />
-          )}
+          {hookResult1.isLoading && <FullPageLoading />}
           {hookResult1.isError && <Error error={hookResult1.error} />}
         </StyledRow>
       </form>

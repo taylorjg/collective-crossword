@@ -1,13 +1,19 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Button, CircularProgress } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 
 import { formatDate } from "@app/utils";
 
 import { AlreadyAdded } from "./AlreadyAdded";
 import { ViewCrosswordButton } from "./ViewCrosswordButton";
 
-import { StyledRow, StyledRow2Cols } from "./common.styles";
+import { StyledRow } from "./common.styles";
 
 export const AddOrViewCrossword = ({
   crossword,
@@ -32,10 +38,17 @@ export const AddOrViewCrossword = ({
     <>
       {crossword && !isLoading && (
         <>
-          <StyledRow2Cols>
-            <div>Title: {crossword.title}</div>
-            <div>Date: {formatDate(crossword.publishDate)}</div>
-          </StyledRow2Cols>
+          <List disablePadding dense>
+            <ListItem disableGutters disablePadding>
+              <ListItemText primary="Title" secondary={crossword.title} />
+            </ListItem>
+            <ListItem disableGutters disablePadding>
+              <ListItemText
+                primary="Date"
+                secondary={formatDate(crossword.publishDate)}
+              />
+            </ListItem>
+          </List>
           {crosswordId ? (
             <AlreadyAdded crosswordId={crosswordId} />
           ) : (

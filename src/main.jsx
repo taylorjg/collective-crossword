@@ -2,7 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Global } from "@emotion/react";
-import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  responsiveFontSizes,
+} from "@mui/material";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import "@fontsource/roboto/300.css";
@@ -68,11 +73,13 @@ const router = createBrowserRouter([
   },
 ]);
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+const darkTheme = responsiveFontSizes(
+  createTheme({
+    palette: {
+      mode: "dark",
+    },
+  })
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {

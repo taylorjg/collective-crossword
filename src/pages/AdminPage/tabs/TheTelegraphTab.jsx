@@ -101,6 +101,7 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
             value={id}
             onChange={(e) => setId(e.target.value)}
             size="small"
+            sx={{ my: 1 }}
             disabled={Boolean(idToFetch)}
           />
           <Button
