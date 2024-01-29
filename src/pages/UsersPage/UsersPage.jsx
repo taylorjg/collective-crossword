@@ -15,8 +15,10 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { db } from "@app/firebase";
 
+import { FullPageLoading } from "@app/components";
+
 export const UsersPage = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState();
 
   useEffect(() => {
     const getUsersAsync = async () => {
@@ -31,6 +33,8 @@ export const UsersPage = () => {
 
     getUsersAsync();
   }, []);
+
+  if (!users) return <FullPageLoading />;
 
   return (
     <Grid container>

@@ -5,14 +5,14 @@ import ListIcon from "@mui/icons-material/List";
 
 import { useAuth } from "@app/contexts";
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
+import { FullPageLoading } from "@app/components";
 
 import { CrosswordGrid } from "./CrosswordGrid";
 import { CrosswordList } from "./CrosswordList";
-
 import { StyledControls } from "./HomePage.styles";
 
 export const HomePage = () => {
-  const [crosswords, setCrosswords] = useState([]);
+  const [crosswords, setCrosswords] = useState();
   const [gridMode, setGridMode] = useState(() =>
     Boolean(localStorage.getItem("grid-mode"))
   );
@@ -53,6 +53,8 @@ export const HomePage = () => {
     localStorage.setItem("grid-mode", newGridMode ? "true" : "");
     setGridMode(newGridMode);
   };
+
+  if (!crosswords) return <FullPageLoading />;
 
   return (
     <>
