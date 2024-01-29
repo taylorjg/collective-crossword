@@ -53,14 +53,14 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
     setSelectedCrosswordType(e.target.value);
   };
 
-  const onReset = () => {
-    setId("");
-    setIdToFetch("");
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
     setIdToFetch(id);
+  };
+
+  const onReset = () => {
+    setId("");
+    setIdToFetch("");
   };
 
   return (
@@ -98,14 +98,6 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
             Fetch
           </Button>
         </StyledRow>
-        <Button
-          size="small"
-          onClick={onReset}
-          style={{ position: "absolute", top: "16px", right: "16px" }}
-          disabled={!idToFetch}
-        >
-          Reset
-        </Button>
 
         {isLoading && <LinearProgress sx={{ mt: 2 }} />}
         {isError && <Error error={error} />}
@@ -117,6 +109,17 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
         isLoading={isLoading}
         onAddCrossword={onAddCrossword}
       />
+
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={onReset}
+        disabled={!idToFetch || isLoading}
+        color="error"
+        sx={{ mt: 4 }}
+      >
+        Reset
+      </Button>
     </StyledImportForm>
   );
 };

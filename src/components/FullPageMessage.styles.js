@@ -10,4 +10,6 @@ export const StyledFullPageMessage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: ${({ theme }) => theme.palette.background.default};
+  z-index: 1;
 `;

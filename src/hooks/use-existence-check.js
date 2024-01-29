@@ -35,6 +35,14 @@ export const useExistenceCheck = (crosswordResponse) => {
 
     const { isLoading, crossword } = crosswordResponse;
 
+    if (isLoading && result.existenceCheck !== ExistenceCheck.DontKnowYet) {
+      setResult({
+        existenceCheck: ExistenceCheck.DontKnowYet,
+        crosswordId: undefined,
+      });
+      return;
+    }
+
     if (
       !isLoading &&
       Boolean(crossword) &&

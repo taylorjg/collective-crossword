@@ -37,6 +37,12 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
     }
   };
 
+  const onReset = () => {
+    const id = puzList[0].id ?? "";
+    setSelectedPuzzleId(id);
+    setPuzzleToFetch();
+  };
+
   return (
     <StyledImportForm>
       <form autoComplete="off" onSubmit={onSubmit}>
@@ -84,6 +90,17 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
         isLoading={hookResult2.isLoading}
         onAddCrossword={onAddCrossword}
       />
+
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={onReset}
+        disabled={!puzzleToFetch || hookResult2.isLoading}
+        color="error"
+        sx={{ mt: 4 }}
+      >
+        Reset
+      </Button>
     </StyledImportForm>
   );
 };

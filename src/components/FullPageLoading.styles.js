@@ -11,4 +11,5 @@ export const StyledFullPageLoading = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${({ theme }) => theme.palette.background.default};
+  z-index: 1;
 `;
