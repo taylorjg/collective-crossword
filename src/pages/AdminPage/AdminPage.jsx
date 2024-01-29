@@ -8,11 +8,11 @@ import { useToast } from "@app/contexts";
 import { PrivateEyeTab, TheTelegraphTab } from "./tabs";
 
 export const AdminPage = () => {
-  const [value, setValue] = useState("1");
+  const [currentTab, setCurrentTab] = useState("1");
   const { showSuccess, showError } = useToast();
 
   const onChangeTab = (_, newValue) => {
-    setValue(newValue);
+    setCurrentTab(newValue);
   };
 
   const onAddCrossword = async (crossword) => {
@@ -28,7 +28,7 @@ export const AdminPage = () => {
   return (
     <Grid container>
       <Grid item xs={12} md={6} sx={{ mx: { xs: 2, md: "auto" } }}>
-        <TabContext value={value}>
+        <TabContext value={currentTab}>
           <TabList onChange={onChangeTab} variant="fullWidth">
             <Tab label="Private Eye" value="1" />
             <Tab label="The Telegraph" value="2" />

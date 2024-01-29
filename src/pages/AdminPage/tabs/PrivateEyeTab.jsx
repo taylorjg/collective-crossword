@@ -55,6 +55,7 @@ export const PrivateEyeTab = ({ onAddCrossword }) => {
             onChange={(e) => {
               setSelectedPuzzleId(e.target.value);
             }}
+            disabled={Boolean(puzzleToFetch)}
           >
             {puzList.map((puzzle) => {
               const { id, filename, unixTimestamp } = puzzle;

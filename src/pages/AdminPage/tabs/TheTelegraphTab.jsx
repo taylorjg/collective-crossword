@@ -59,6 +59,7 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
   };
 
   const onReset = () => {
+    setSelectedCrosswordType("cryptic-crossword");
     setId("");
     setIdToFetch("");
   };
@@ -73,6 +74,7 @@ export const TheTelegraphTab = ({ onAddCrossword }) => {
             size="small"
             value={selectedCrosswordType}
             onChange={onChangeCrosswordType}
+            disabled={Boolean(idToFetch)}
           >
             <MenuItem value="cryptic-crossword">Cryptic Crossword</MenuItem>
             <MenuItem value="toughie-crossword">Toughie Crossword</MenuItem>
