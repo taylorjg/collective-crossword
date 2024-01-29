@@ -37,7 +37,8 @@ export const HomePage = () => {
     if (currentTab === "1") crosswordType = CrosswordTypes.Cryptic;
     if (currentTab === "2") crosswordType = CrosswordTypes.Quick;
 
-    setCrosswords();
+    setCrosswords((currentValue) => (currentValue ? [] : currentValue));
+
     return listenForCrosswordChanges(onNext, crosswordType);
   }, [currentTab]);
 
