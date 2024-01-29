@@ -33,12 +33,13 @@ export const HomePage = () => {
       setCrosswords(localCrosswords);
     };
 
-    const unsubscribe = listenForCrosswordChanges(onNext);
+    let crosswordType;
+    if (currentTab === "1") crosswordType = CrosswordTypes.Cryptic;
+    if (currentTab === "2") crosswordType = CrosswordTypes.Quick;
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    setCrosswords();
+    return listenForCrosswordChanges(onNext, crosswordType);
+  }, [currentTab]);
 
   const onChangeTab = (_, newValue) => {
     setCurrentTab(newValue);
@@ -87,9 +88,7 @@ export const HomePage = () => {
         </TabList>
         <TabPanel value="1" sx={{ px: 0 }}>
           <CrosswordLayoutType
-            crosswords={crosswords.filter(
-              ({ crosswordType }) => crosswordType === CrosswordTypes.Cryptic
-            )}
+            crosswords={crosswords}
             isAdmin={isAdmin}
             onView={onView}
             onDelete={onDelete}
@@ -97,9 +96,7 @@ export const HomePage = () => {
         </TabPanel>
         <TabPanel value="2" sx={{ px: 0 }}>
           <CrosswordLayoutType
-            crosswords={crosswords.filter(
-              ({ crosswordType }) => crosswordType === CrosswordTypes.Quick
-            )}
+            crosswords={crosswords}
             isAdmin={isAdmin}
             onView={onView}
             onDelete={onDelete}
