@@ -9,6 +9,7 @@ import { useAuth } from "@app/contexts";
 import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
 import { FullPageLoading } from "@app/components";
 import { CrosswordTypes } from "@app/constants";
+import { ConfirmationModal } from "@app/components";
 
 import { CrosswordGrid } from "./CrosswordGrid";
 import { CrosswordList } from "./CrosswordList";
@@ -20,6 +21,7 @@ export const HomePage = () => {
   const [gridMode, setGridMode] = useState(() =>
     Boolean(localStorage.getItem("grid-mode"))
   );
+  const [crosswordIdToDelete, setCrosswordIdToDelete] = useState();
   const { user } = useAuth();
 
   const navigate = useNavigate();
@@ -51,7 +53,11 @@ export const HomePage = () => {
   };
 
   const onDelete = (id) => {
-    deleteCrossword(id);
+    setCrosswordIdToDelete(id);
+  };
+
+  const onConfirmDelete = () => {
+    deleteCrossword(crosswordIdToDelete);
   };
 
   const isAdmin = user?.isAdmin ?? false;
@@ -112,6 +118,13 @@ export const HomePage = () => {
           />
         </TabPanel>
       </TabContext>
+      <ConfirmationModal
+        open={Boolean(crosswordIdToDelete)}
+        onClose={() => setCrosswordIdToDelete()}
+        title="Are you sure ?"
+        message="This will permanently delete the crossword."
+        onOK={onConfirmDelete}
+      />
     </>
   );
 };
