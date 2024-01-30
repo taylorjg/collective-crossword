@@ -36,7 +36,7 @@ export const AboutModal = ({ open, onClose }) => {
           <Divider />
         </List>
       </DialogContent>
-      <DialogActions style={{ justifyContent: "space-between" }}>
+      <DialogActions sx={{ justifyContent: "space-between" }}>
         <IconButton onClick={onClickGitHubIcon}>
           <GitHubIcon />
         </IconButton>
