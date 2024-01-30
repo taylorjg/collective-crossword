@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Container } from "@mui/material";
 
 import { Header } from "./Header";
-import { Version } from "./Version";
+// import { Version } from "./Version";
 
 export const Layout = () => {
   return (
@@ -11,7 +11,7 @@ export const Layout = () => {
       <main>
         <Outlet />
       </main>
-      <Version />
+      {/* <Version /> */}
     </Container>
   );
 };
