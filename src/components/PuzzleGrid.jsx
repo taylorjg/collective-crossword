@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import PropTypes from "prop-types";
 
 import { noop, range } from "@app/utils";
@@ -24,6 +25,8 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
 
   const calculateX = (col) => col * SQUARE_WIDTH + GRID_LINE_HALF_THICKNESS;
   const calculateY = (row) => row * SQUARE_HEIGHT + GRID_LINE_HALF_THICKNESS;
+
+  const svgRef = useRef();
 
   const drawBackground = () => {
     return (
@@ -131,7 +134,7 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
   };
 
   const handleGridClick = (e) => {
-    const boundingClientRect = e.target.getBoundingClientRect();
+    const boundingClientRect = svgRef.current.getBoundingClientRect();
     const { clientX, clientY } = e;
     const x = clientX - boundingClientRect.x;
     const y = clientY - boundingClientRect.y;
@@ -146,6 +149,7 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
     <svg
       viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
       onClick={handleGridClick}
+      ref={svgRef}
     >
       {drawBackground()}
       {drawHorizontalGridLines()}
