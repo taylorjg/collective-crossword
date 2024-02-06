@@ -14,6 +14,10 @@ import {
 } from "./CrosswordPage.styles";
 
 export const LargeScreen = ({ crossword }) => {
+  const onCellClick = ({ row, col }) => {
+    console.log("[onCellClick]", { row, col });
+  };
+
   return (
     <Grid container>
       <Grid item xs={12} md={10} sx={{ mx: { xs: 2, md: "auto" } }}>
@@ -24,7 +28,7 @@ export const LargeScreen = ({ crossword }) => {
         {crossword.author && <div>Author: {crossword.author}</div>}
         <StyledPuzzle>
           <StyledPuzzleGrid>
-            <PuzzleGrid crossword={crossword} />
+            <PuzzleGrid crossword={crossword} onCellClick={onCellClick} />
           </StyledPuzzleGrid>
           <StyledClues>
             <Typography variant="h6">Across</Typography>

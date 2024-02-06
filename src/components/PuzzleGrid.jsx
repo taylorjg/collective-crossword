@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
-import { range } from "@app/utils";
+import { noop, range } from "@app/utils";
 
-export const PuzzleGrid = ({ crossword }) => {
+export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
   const VIEWBOX_WIDTH = 100;
   const VIEWBOX_HEIGHT = 100;
   const GRID_LINE_FULL_THICKNESS = 1 / 4;
@@ -130,8 +130,23 @@ export const PuzzleGrid = ({ crossword }) => {
     );
   };
 
+  const handleGridClick = (e) => {
+    const boundingClientRect = e.target.getBoundingClientRect();
+    const { clientX, clientY } = e;
+    const x = clientX - boundingClientRect.x;
+    const y = clientY - boundingClientRect.y;
+    const cellWidth = boundingClientRect.width / puzzleSize;
+    const cellHeight = boundingClientRect.height / puzzleSize;
+    const row = Math.floor(y / cellHeight);
+    const col = Math.floor(x / cellWidth);
+    onCellClick({ row, col });
+  };
+
   return (
-    <svg viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}>
+    <svg
+      viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+      onClick={handleGridClick}
+    >
       {drawBackground()}
       {drawHorizontalGridLines()}
       {drawVerticalGridLines()}
@@ -143,4 +158,5 @@ export const PuzzleGrid = ({ crossword }) => {
 
 PuzzleGrid.propTypes = {
   crossword: PropTypes.object.isRequired,
+  onCellClick: PropTypes.func,
 };

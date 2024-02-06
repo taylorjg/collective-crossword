@@ -10,11 +10,15 @@ import {
 } from "./SmallScreen.styles";
 
 export const SmallScreen = ({ crossword }) => {
+  const onCellClick = ({ row, col }) => {
+    console.log("[onCellClick]", { row, col });
+  };
+
   return (
     <StyledContent>
       <Toolbar />
       <StyledPuzzleGrid>
-        <PuzzleGrid crossword={crossword} />
+        <PuzzleGrid crossword={crossword} onCellClick={onCellClick} />
       </StyledPuzzleGrid>
       <StyledSingleClueArea>
         Single clues will appear here...
