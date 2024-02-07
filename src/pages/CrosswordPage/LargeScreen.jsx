@@ -27,6 +27,8 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
             <PuzzleGrid
               crossword={crossword}
               onCellClick={crosswordState.onCellClick}
+              selectedCells={crosswordState.selectedCells}
+              currentCell={crosswordState.currentCell}
             />
           </StyledPuzzleGrid>
           <StyledClues>

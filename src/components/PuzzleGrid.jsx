@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 
 import { noop, range } from "@app/utils";
 
-export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
+export const PuzzleGrid = ({
+  crossword,
+  onCellClick = noop,
+  selectedCells = [],
+  currentCell,
+}) => {
   const VIEWBOX_WIDTH = 100;
   const VIEWBOX_HEIGHT = 100;
   const GRID_LINE_FULL_THICKNESS = 1 / 4;
@@ -12,6 +17,9 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
   const BACKGROUND_COLOUR = "white";
   const GRID_LINE_COLOUR = "black";
   const BLOCK_COLOUR = "black";
+  const REGULAR_CELL_COLOUR = "#ffffff";
+  const SELECTED_CELL_COLOUR = "#ffe9e3"; // --salmon-1
+  const CURRENT_CELL_COLOUR = "#ffb5a1"; // --salmon-2
   const puzzleSize = crossword.grid[0].length;
 
   const SQUARE_WIDTH = (VIEWBOX_WIDTH - GRID_LINE_FULL_THICKNESS) / puzzleSize;
@@ -106,6 +114,50 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
     );
   };
 
+  const drawCells = () => {
+    return crossword.grid.flatMap((line, row) => {
+      const chs = Array.from(line);
+      return chs.flatMap((ch, col) => {
+        if (ch === ".") {
+          const cell = { row, col };
+          return [drawCell(cell)];
+        }
+        return [];
+      });
+    });
+  };
+
+  const isSameCell = (cell1, cell2) =>
+    cell1 && cell2 && cell1.row === cell2.row && cell1.col === cell2.col;
+
+  const drawCell = (cell) => {
+    const { row, col } = cell;
+    const x = calculateX(col);
+    const y = calculateY(row);
+
+    const isSelectedCell = selectedCells.find((selectedCell) =>
+      isSameCell(selectedCell, cell)
+    );
+    const isCurrentCell = isSameCell(currentCell, cell);
+
+    const fill = isCurrentCell
+      ? CURRENT_CELL_COLOUR
+      : isSelectedCell
+        ? SELECTED_CELL_COLOUR
+        : REGULAR_CELL_COLOUR;
+
+    return (
+      <rect
+        key={`cell-${row}-${col}`}
+        x={x}
+        y={y}
+        width={SQUARE_WIDTH}
+        height={SQUARE_HEIGHT}
+        fill={fill}
+      />
+    );
+  };
+
   const drawClueNumbers = () => {
     return [
       ...crossword.acrossClues.map((clue) => drawClueNumber(clue, "across")),
@@ -152,10 +204,11 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
       ref={svgRef}
     >
       {drawBackground()}
+      {drawBlocks()}
+      {drawCells()}
+      {drawClueNumbers()}
       {drawHorizontalGridLines()}
       {drawVerticalGridLines()}
-      {drawBlocks()}
-      {drawClueNumbers()}
     </svg>
   );
 };
@@ -163,4 +216,14 @@ export const PuzzleGrid = ({ crossword, onCellClick = noop }) => {
 PuzzleGrid.propTypes = {
   crossword: PropTypes.object.isRequired,
   onCellClick: PropTypes.func,
+  selectedCells: PropTypes.arrayOf(
+    PropTypes.shape({
+      row: PropTypes.number.isRequired,
+      col: PropTypes.number.isRequired,
+    })
+  ),
+  currentCell: PropTypes.shape({
+    row: PropTypes.number.isRequired,
+    col: PropTypes.number.isRequired,
+  }),
 };
