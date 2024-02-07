@@ -9,10 +9,15 @@ import { enhance } from "@app/transforms";
 import { UnsupportedViewport } from "./UnsupportedViewport";
 import { SmallScreen } from "./SmallScreen";
 import { LargeScreen } from "./LargeScreen";
+import { useCrosswordState } from "./use-crossword-state";
 
 export const CrosswordPage = () => {
   const [crossword, setCrossword] = useState();
   const [errorMessage, setErrorMessage] = useState();
+
+  const crosswordState = useCrosswordState(crossword);
+
+  console.log("crosswordState:", crosswordState);
 
   const { id } = useParams();
 
@@ -40,7 +45,10 @@ export const CrosswordPage = () => {
 
   if (errorMessage) return <FullPageMessage message={errorMessage} />;
   if (!crossword) return <FullPageMessage message="Fetching crossword..." />;
-  if (isLargeScreen) return <LargeScreen crossword={crossword} />;
+  if (isLargeScreen)
+    return (
+      <LargeScreen crossword={crossword} crosswordState={crosswordState} />
+    );
   if (isLandscape) return <UnsupportedViewport />;
-  return <SmallScreen crossword={crossword} />;
+  return <SmallScreen crossword={crossword} crosswordState={crosswordState} />;
 };

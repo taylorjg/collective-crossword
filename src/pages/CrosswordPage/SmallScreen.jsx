@@ -9,16 +9,15 @@ import {
   StyledSingleClueArea,
 } from "./SmallScreen.styles";
 
-export const SmallScreen = ({ crossword }) => {
-  const onCellClick = ({ row, col }) => {
-    console.log("[onCellClick]", { row, col });
-  };
-
+export const SmallScreen = ({ crossword, crosswordState }) => {
   return (
     <StyledContent>
       <Toolbar />
       <StyledPuzzleGrid>
-        <PuzzleGrid crossword={crossword} onCellClick={onCellClick} />
+        <PuzzleGrid
+          crossword={crossword}
+          onCellClick={crosswordState.onCellClick}
+        />
       </StyledPuzzleGrid>
       <StyledSingleClueArea>
         Single clues will appear here...
@@ -29,4 +28,5 @@ export const SmallScreen = ({ crossword }) => {
 
 SmallScreen.propTypes = {
   crossword: PropTypes.object.isRequired,
+  crosswordState: PropTypes.object.isRequired,
 };

@@ -13,11 +13,7 @@ import {
   StyledClueText,
 } from "./CrosswordPage.styles";
 
-export const LargeScreen = ({ crossword }) => {
-  const onCellClick = ({ row, col }) => {
-    console.log("[onCellClick]", { row, col });
-  };
-
+export const LargeScreen = ({ crossword, crosswordState }) => {
   return (
     <Grid container>
       <Grid item xs={12} md={10} sx={{ mx: { xs: 2, md: "auto" } }}>
@@ -28,7 +24,10 @@ export const LargeScreen = ({ crossword }) => {
         {crossword.author && <div>Author: {crossword.author}</div>}
         <StyledPuzzle>
           <StyledPuzzleGrid>
-            <PuzzleGrid crossword={crossword} onCellClick={onCellClick} />
+            <PuzzleGrid
+              crossword={crossword}
+              onCellClick={crosswordState.onCellClick}
+            />
           </StyledPuzzleGrid>
           <StyledClues>
             <Typography variant="h6">Across</Typography>
@@ -60,4 +59,5 @@ export const LargeScreen = ({ crossword }) => {
 
 LargeScreen.propTypes = {
   crossword: PropTypes.object.isRequired,
+  crosswordState: PropTypes.object.isRequired,
 };
