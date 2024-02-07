@@ -4,6 +4,7 @@ import { useMediaQuery } from "@mui/material";
 
 import { getCrosswordById } from "@app/firebase";
 import { FullPageMessage } from "@app/components";
+import { enhance } from "@app/transforms";
 
 import { UnsupportedViewport } from "./UnsupportedViewport";
 import { SmallScreen } from "./SmallScreen";
@@ -22,10 +23,13 @@ export const CrosswordPage = () => {
     const invokeGetCrossword = async () => {
       const docSnap = await getCrosswordById(id);
       if (docSnap.exists()) {
-        setCrossword({
+        const crossword = {
           id: docSnap.id,
           ...docSnap.data(),
-        });
+        };
+        const enhancedCrossword = enhance(crossword);
+        console.log(enhancedCrossword);
+        setCrossword(enhancedCrossword);
       } else {
         setErrorMessage("Failed to load specified crossword");
       }
