@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 export const useCrosswordState = (crossword) => {
-  const [highlightedCells, setHighlightedCells] = useState();
+  const [selectedCells, setSelectedCells] = useState();
   const [currentCell, setCurrentCell] = useState();
 
   const onCellClick = useCallback(
@@ -12,10 +12,10 @@ export const useCrosswordState = (crossword) => {
       const downCells = value?.down?.cells;
       const cells = acrossCells ?? downCells;
       if (cells) {
-        setHighlightedCells(cells);
+        setSelectedCells(cells);
         setCurrentCell({ row, col });
       } else {
-        setHighlightedCells();
+        setSelectedCells();
         setCurrentCell();
       }
     },
@@ -23,7 +23,7 @@ export const useCrosswordState = (crossword) => {
   );
 
   return {
-    highlightedCells,
+    selectedCells,
     currentCell,
     onCellClick,
   };
