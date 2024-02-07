@@ -18,7 +18,8 @@ export const PuzzleGrid = ({
   const GRID_LINE_COLOUR = "black";
   const BLOCK_COLOUR = "black";
   const REGULAR_CELL_COLOUR = "#ffffff";
-  const SELECTED_CELL_COLOUR = "#ffe9e3"; // --salmon-1
+  const SELECTED_CELLS_OUTLINE_COLOUR = "black";
+  const SELECTED_CELLS_COLOUR = "#ffe9e3"; // --salmon-1
   const CURRENT_CELL_COLOUR = "#ffb5a1"; // --salmon-2
   const puzzleSize = crossword.grid[0].length;
 
@@ -141,9 +142,9 @@ export const PuzzleGrid = ({
     const isCurrentCell = isSameCell(currentCell, cell);
 
     const fill = isCurrentCell
-      ? CURRENT_CELL_COLOUR
+      ? "url(#current-cell-pattern)"
       : isSelectedCell
-        ? SELECTED_CELL_COLOUR
+        ? SELECTED_CELLS_COLOUR
         : REGULAR_CELL_COLOUR;
 
     return (
@@ -185,6 +186,40 @@ export const PuzzleGrid = ({
     );
   };
 
+  const drawSelectedCellsOutline = () => {
+    if (selectedCells.length === 0) return;
+    const rows = selectedCells.map(({ row }) => row);
+    const cols = selectedCells.map(({ col }) => col);
+    const minRow = Math.min(...rows);
+    const maxRow = Math.max(...rows);
+    const minCol = Math.min(...cols);
+    const maxCol = Math.max(...cols);
+    const x = calculateX(minCol);
+    const y = calculateY(minRow);
+    const width = minCol === maxCol ? SQUARE_WIDTH : calculateX(maxCol + 1) - x;
+    const height =
+      minRow === maxRow ? SQUARE_HEIGHT : calculateY(maxRow + 1) - y;
+
+    return (
+      <g>
+        <clipPath id="selected-cells-outline-clip-path">
+          <rect x={x} y={y} width={width} height={height} />
+        </clipPath>
+        <rect
+          key="selected-cells-outline"
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          stroke={SELECTED_CELLS_OUTLINE_COLOUR}
+          strokeWidth={0.75}
+          fill="none"
+          clipPath="url(#selected-cells-outline-clip-path)"
+        />
+      </g>
+    );
+  };
+
   const handleGridClick = (e) => {
     const boundingClientRect = svgRef.current.getBoundingClientRect();
     const { clientX, clientY } = e;
@@ -203,9 +238,22 @@ export const PuzzleGrid = ({
       onClick={handleGridClick}
       ref={svgRef}
     >
+      <defs>
+        <pattern
+          id="current-cell-pattern"
+          patternUnits="userSpaceOnUse"
+          width="1"
+          height="1"
+          patternTransform="rotate(45)"
+        >
+          <line x1="0" y1="0" x2="0" y2="1" stroke={SELECTED_CELLS_COLOUR} />
+          <line x1="1" y1="0" x2="1" y2="1" stroke={CURRENT_CELL_COLOUR} />
+        </pattern>
+      </defs>
       {drawBackground()}
       {drawBlocks()}
       {drawCells()}
+      {drawSelectedCellsOutline()}
       {drawClueNumbers()}
       {drawHorizontalGridLines()}
       {drawVerticalGridLines()}
