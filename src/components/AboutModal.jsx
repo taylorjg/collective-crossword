@@ -27,13 +27,20 @@ export const AboutModal = ({ open, onClose }) => {
       <DialogContent>
         <List disablePadding dense>
           <ListItem>
-            <ListItemText primary="Author" secondary="Jonathan Taylor" />
+            <ListItemText primary="Written by" secondary="Jonathan Taylor" />
           </ListItem>
-          <Divider />
+          <Divider variant="middle" />
+          <ListItem>
+            <ListItemText
+              primary="Based on an idea by"
+              secondary="Simon Souter"
+            />
+          </ListItem>
+          <Divider variant="middle" />
           <ListItem>
             <ListItemText primary="Version" secondary={packageJson.version} />
           </ListItem>
-          <Divider />
+          <Divider variant="middle" />
         </List>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "space-between" }}>

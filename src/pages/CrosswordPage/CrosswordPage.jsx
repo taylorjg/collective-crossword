@@ -17,8 +17,6 @@ export const CrosswordPage = () => {
 
   const crosswordState = useCrosswordState(crossword);
 
-  console.log("crosswordState:", crosswordState);
-
   const { id } = useParams();
 
   const isLargeScreen = useMediaQuery("screen and (min-width: 720px)");
@@ -33,7 +31,6 @@ export const CrosswordPage = () => {
           ...docSnap.data(),
         };
         const enhancedCrossword = enhance(crossword);
-        console.log(enhancedCrossword);
         setCrossword(enhancedCrossword);
       } else {
         setErrorMessage("Failed to load specified crossword");
