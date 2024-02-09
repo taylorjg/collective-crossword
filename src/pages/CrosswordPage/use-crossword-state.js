@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 
-const isSameCell = (cell1, cell2) =>
-  cell1 && cell2 && cell1.row === cell2.row && cell1.col === cell2.col;
+import { isSameAsFirstCell, isSameCell } from "@app/utils";
 
 export const useCrosswordState = (crossword) => {
   // External
@@ -11,7 +10,7 @@ export const useCrosswordState = (crossword) => {
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
 
-  const onCellClick = useCallback(
+  const selectCell = useCallback(
     (cell) => {
       if (isSameCell(cell, currentCell) && toggleableClues) {
         if (selectedClue === toggleableClues.acrossClue) {
@@ -39,10 +38,10 @@ export const useCrosswordState = (crossword) => {
         setCurrentCell(cell);
         if (acrossClue && downClue) {
           let clueToUse = acrossClue;
-          if (isSameCell(cell, acrossClue.cells[0])) {
+          if (isSameAsFirstCell(acrossClue, cell)) {
             clueToUse = acrossClue;
           } else {
-            if (isSameCell(cell, downClue.cells[0])) {
+            if (isSameAsFirstCell(downClue, cell)) {
               clueToUse = downClue;
             }
           }
@@ -58,9 +57,14 @@ export const useCrosswordState = (crossword) => {
     [crossword, currentCell, selectedClue, toggleableClues]
   );
 
+  const selectClue = useCallback(() => {
+    //
+  }, []);
+
   return {
     currentCell,
     selectedClue,
-    onCellClick,
+    selectCell,
+    selectClue,
   };
 };

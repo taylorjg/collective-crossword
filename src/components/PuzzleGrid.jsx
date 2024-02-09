@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import PropTypes from "prop-types";
 
-import { noop, range } from "@app/utils";
+import { noop, range, isSameCell } from "@app/utils";
 
 export const PuzzleGrid = ({
   crossword,
-  onCellClick = noop,
+  selectCell = noop,
   currentCell,
   selectedCells = [],
   acrossAnswers = [],
@@ -131,9 +131,6 @@ export const PuzzleGrid = ({
       });
     });
   };
-
-  const isSameCell = (cell1, cell2) =>
-    cell1 && cell2 && cell1.row === cell2.row && cell1.col === cell2.col;
 
   const drawCell = (cell) => {
     const { row, col } = cell;
@@ -279,7 +276,7 @@ export const PuzzleGrid = ({
     const cellHeight = boundingClientRect.height / puzzleSize;
     const row = Math.floor(y / cellHeight);
     const col = Math.floor(x / cellWidth);
-    onCellClick({ row, col });
+    selectCell({ row, col });
   };
 
   return (
@@ -315,7 +312,7 @@ export const PuzzleGrid = ({
 
 PuzzleGrid.propTypes = {
   crossword: PropTypes.object.isRequired,
-  onCellClick: PropTypes.func,
+  selectCell: PropTypes.func,
   currentCell: PropTypes.shape({
     row: PropTypes.number.isRequired,
     col: PropTypes.number.isRequired,

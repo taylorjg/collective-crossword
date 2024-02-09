@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tab } from "@mui/material";
+import { IconButton, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
@@ -75,17 +75,13 @@ export const HomePage = () => {
   return (
     <>
       <StyledControls>
-        {gridMode ? (
-          <ListIcon
-            titleAccess="Switch to list view"
-            onClick={toggleGridMode}
-          />
-        ) : (
-          <GridViewIcon
-            titleAccess="Switch to grid view"
-            onClick={toggleGridMode}
-          />
-        )}
+        <IconButton onClick={toggleGridMode}>
+          {gridMode ? (
+            <ListIcon titleAccess="Switch to list view" />
+          ) : (
+            <GridViewIcon titleAccess="Switch to grid view" />
+          )}
+        </IconButton>
       </StyledControls>
       <TabContext value={currentTab}>
         <TabList onChange={onChangeTab} sx={{ mx: 2 }}>
