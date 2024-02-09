@@ -17,11 +17,11 @@ import {
 export const LargeScreen = ({ crossword, crosswordState }) => {
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (/[a-zA-Z]/.test(e.key)) {
+      if (/^[a-zA-Z]$/.test(e.key)) {
         crosswordState.enterLetter(e.key.toUpperCase());
       }
       if (e.key === "Backspace") {
-        // TODO: crosswordState.deleteLetter();
+        crosswordState.deleteLetter();
       }
     };
 

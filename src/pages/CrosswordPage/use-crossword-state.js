@@ -16,14 +16,14 @@ export const useCrosswordState = (crossword) => {
   const [downAnswers, setDownAnswers] = useState([]);
   const allCluesRef = useRef([]);
 
+  // Internal
+  const [toggleableClues, setToggleableClues] = useState();
+
   useEffect(() => {
     if (allCluesRef.current.length === 0 && crossword) {
       allCluesRef.current = [...crossword.acrossClues, ...crossword.downClues];
     }
   }, [crossword]);
-
-  // Internal
-  const [toggleableClues, setToggleableClues] = useState();
 
   const selectCell = useCallback(
     (cell) => {
@@ -71,58 +71,51 @@ export const useCrosswordState = (crossword) => {
   );
 
   const selectClue = useCallback((clue) => {
-    setCurrentCell(clue.cells[0]);
     setSelectedClue(clue);
+    setCurrentCell(clue.cells[0]);
     setToggleableClues();
   }, []);
 
-  // const findCurrentCellIndex = () => {
-  //   return selectedClue.cells.find((cell) => isSameCell(currentCell, cell));
-  // };
-
-  // const findSelectedClueIndex = () => {
-  //   return allCluesRef.current.findIndex((clue) => clue === selectedClue);
-  // };
-
-  const goToNextClue = useCallback(() => {
-    if (!selectedClue) return;
-    // const index = findSelectedClueIndex();
-    const index = allCluesRef.current.findIndex(
-      (clue) => clue === selectedClue
+  const findCurrentCellIndex = () => {
+    return selectedClue.cells.findIndex((cell) =>
+      isSameCell(currentCell, cell)
     );
+  };
+
+  const findSelectedClueIndex = () => {
+    return allCluesRef.current.findIndex((clue) => clue === selectedClue);
+  };
+
+  const wrapClueIndex = (index) => {
+    const lastIndex = allCluesRef.current.length - 1;
+    if (index < 0) return lastIndex;
+    if (index > lastIndex) return 0;
+    return index;
+  };
+
+  const goToNextClue = () => {
+    if (!selectedClue) return;
+    const index = findSelectedClueIndex();
     if (index < 0) return;
-    let newIndex = index + 1;
-    if (newIndex >= allCluesRef.current.length) {
-      newIndex = 0;
-    }
+    const newIndex = wrapClueIndex(index + 1);
     const newClue = allCluesRef.current[newIndex];
     setSelectedClue(newClue);
     setCurrentCell(newClue.cells[0]);
-  }, [selectedClue]);
+  };
 
   const goToPreviousClue = () => {
     if (!selectedClue) return;
-    // const index = findSelectedClueIndex();
-    const index = allCluesRef.current.findIndex(
-      (clue) => clue === selectedClue
-    );
+    const index = findSelectedClueIndex();
     if (index < 0) return;
-    let newIndex = index - 1;
-    if (newIndex < 0) {
-      newIndex = allCluesRef.current.length - 1;
-    }
+    const newIndex = wrapClueIndex(index - 1);
     const newClue = allCluesRef.current[newIndex];
     setSelectedClue(newClue);
     setCurrentCell(newClue.cells[0]);
-    // setSelectedClue(allCluesRef.current[newIndex]);
   };
 
-  const goToNextCell = useCallback(() => {
+  const goToNextCell = () => {
     if (!selectedClue) return;
-    // const index = findCurrentCellIndex();
-    const index = selectedClue.cells.findIndex((cell) =>
-      isSameCell(currentCell, cell)
-    );
+    const index = findCurrentCellIndex();
     if (index < 0) return;
     const lastIndex = selectedClue.cells.length - 1;
     if (index < lastIndex) {
@@ -130,22 +123,32 @@ export const useCrosswordState = (crossword) => {
     } else {
       goToNextClue();
     }
-  }, [currentCell, selectedClue, goToNextClue]);
+  };
 
-  const enterLetter = useCallback(
-    (letter) => {
-      if (!selectedClue) return;
-      // const index = findCurrentCellIndex();
-      const index = selectedClue.cells.findIndex((cell) =>
-        isSameCell(currentCell, cell)
-      );
-      if (index < 0) return;
-      // get (find or create) entry in acrossAnswers or downAnswers corresponding to selectedClue
-      // add letter at correct place within answer
-      goToNextCell();
-    },
-    [currentCell, selectedClue, goToNextCell]
-  );
+  const goToPreviousCell = () => {
+    if (!selectedClue) return;
+    const index = findCurrentCellIndex();
+    if (index < 0) return;
+    if (index > 0) {
+      setCurrentCell(selectedClue.cells[index - 1]);
+    }
+  };
+
+  const enterLetter = (letter) => {
+    if (!selectedClue) return;
+    const index = findSelectedClueIndex();
+    if (index < 0) return;
+    // TODO: other stuff...
+    goToNextCell();
+  };
+
+  const deleteLetter = () => {
+    if (!selectedClue) return;
+    const index = findSelectedClueIndex();
+    if (index < 0) return;
+    // TODO: other stuff...
+    goToPreviousCell();
+  };
 
   return {
     currentCell,
@@ -155,6 +158,7 @@ export const useCrosswordState = (crossword) => {
     selectCell,
     selectClue,
     enterLetter,
+    deleteLetter,
     goToNextClue,
     goToPreviousClue,
   };
