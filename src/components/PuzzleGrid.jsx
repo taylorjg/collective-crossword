@@ -168,7 +168,9 @@ export const PuzzleGrid = ({
   };
 
   const drawClueNumber = (clue, clueType) => {
-    const { clueNumber, row, col } = clue;
+    const { clueNumber } = clue;
+    const row = clue.row ?? clue.rowIndex;
+    const col = clue.col ?? clue.colIndex;
     const cx = calculateX(col) + (SQUARE_WIDTH / 16) * 1;
     const cy = calculateY(row) + (SQUARE_HEIGHT / 16) * 3;
 
