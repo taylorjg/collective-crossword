@@ -1,21 +1,23 @@
 import { useCallback, useState } from "react";
 
-export const useCrosswordState = (crossword) => {
-  const [selectedCells, setSelectedCells] = useState();
-  const [currentCell, setCurrentCell] = useState();
-  const [acrossCells, setAcrossCells] = useState();
-  const [downCells, setDownCells] = useState();
+const isSameCell = (cell1, cell2) =>
+  cell1 && cell2 && cell1.row === cell2.row && cell1.col === cell2.col;
 
-  const isSameCell = (cell1, cell2) =>
-    cell1 && cell2 && cell1.row === cell2.row && cell1.col === cell2.col;
+export const useCrosswordState = (crossword) => {
+  // External
+  const [currentCell, setCurrentCell] = useState();
+  const [selectedClue, setSelectedClue] = useState();
+
+  // Internal
+  const [toggleableClues, setToggleableClues] = useState();
 
   const onCellClick = useCallback(
     (cell) => {
-      if (isSameCell(cell, currentCell) && acrossCells && downCells) {
-        if (selectedCells === acrossCells) {
-          setSelectedCells(downCells);
+      if (isSameCell(cell, currentCell) && toggleableClues) {
+        if (selectedClue === toggleableClues.acrossClue) {
+          setSelectedClue(toggleableClues.downClue);
         } else {
-          setSelectedCells(acrossCells);
+          setSelectedClue(toggleableClues.acrossClue);
         }
         return;
       }
@@ -23,44 +25,42 @@ export const useCrosswordState = (crossword) => {
       const { row, col } = cell;
       const key = `${row}:${col}`;
       const value = crossword.cellsToCluesMap.get(key);
-      const across = value?.across;
-      const down = value?.down;
-      const cells = across?.cells ?? down?.cells;
+      const acrossClue = value?.across;
+      const downClue = value?.down;
+      const clue = acrossClue ?? downClue;
 
-      if (across && down) {
-        setAcrossCells(across.cells);
-        setDownCells(down.cells);
+      if (acrossClue && downClue) {
+        setToggleableClues({ acrossClue, downClue });
       } else {
-        setAcrossCells();
-        setDownCells();
+        setToggleableClues();
       }
 
-      if (cells) {
-        if (across && down) {
-          let cellsToUse = cells;
-          if (isSameCell(cell, across.cells[0])) {
-            cellsToUse = across.cells;
+      if (clue) {
+        setCurrentCell(cell);
+        if (acrossClue && downClue) {
+          let clueToUse = acrossClue;
+          if (isSameCell(cell, acrossClue.cells[0])) {
+            clueToUse = acrossClue;
           } else {
-            if (isSameCell(cell, down.cells[0])) {
-              cellsToUse = down.cells;
+            if (isSameCell(cell, downClue.cells[0])) {
+              clueToUse = downClue;
             }
           }
-          setSelectedCells(cellsToUse);
+          setSelectedClue(clueToUse);
         } else {
-          setSelectedCells(cells);
+          setSelectedClue(clue);
         }
-        setCurrentCell(cell);
       } else {
-        setSelectedCells();
         setCurrentCell();
+        setSelectedClue();
       }
     },
-    [crossword, selectedCells, currentCell, acrossCells, downCells]
+    [crossword, currentCell, selectedClue, toggleableClues]
   );
 
   return {
-    selectedCells,
     currentCell,
+    selectedClue,
     onCellClick,
   };
 };

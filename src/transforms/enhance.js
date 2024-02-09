@@ -37,7 +37,13 @@ const findEntry = (map, row, col) => {
 
 const makeCluesMapEntry = (entry, property) => {
   return entry
-    ? { [property]: { clueNumber: entry[0], cells: entry[1] } }
+    ? {
+        [property]: {
+          clueNumber: entry[0],
+          cells: entry[1],
+          clueType: property,
+        },
+      }
     : undefined;
 };
 
