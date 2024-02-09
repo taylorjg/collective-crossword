@@ -6,8 +6,10 @@ import { noop, range } from "@app/utils";
 export const PuzzleGrid = ({
   crossword,
   onCellClick = noop,
-  selectedCells = [],
   currentCell,
+  selectedCells = [],
+  acrossAnswers = [],
+  downAnswers = [],
 }) => {
   const VIEWBOX_WIDTH = 100;
   const VIEWBOX_HEIGHT = 100;
@@ -17,10 +19,11 @@ export const PuzzleGrid = ({
   const BACKGROUND_COLOUR = "white";
   const GRID_LINE_COLOUR = "black";
   const BLOCK_COLOUR = "black";
-  const REGULAR_CELL_COLOUR = "#ffffff";
   const SELECTED_CELLS_OUTLINE_COLOUR = "black";
-  const SELECTED_CELLS_COLOUR = "#ffe9e3"; // --salmon-1
-  const CURRENT_CELL_COLOUR = "#ffb5a1"; // --salmon-2
+  const REGULAR_CELL_COLOUR = "white";
+  const SELECTED_CELLS_COLOUR = "#ffe9e3";
+  const CURRENT_CELL_COLOUR = "#ffb5a1";
+
   const puzzleSize = crossword.grid[0].length;
 
   const SQUARE_WIDTH = (VIEWBOX_WIDTH - GRID_LINE_FULL_THICKNESS) / puzzleSize;
@@ -29,8 +32,9 @@ export const PuzzleGrid = ({
 
   const CLUE_NUMBER_COLOUR = "black";
   const CLUE_NUMBER_FONT_SIZE = SQUARE_WIDTH / 3.5;
-  // const LETTER_COLOUR = "black";
-  // const LETTER_FONT_SIZE = SQUARE_WIDTH / 1.5;
+
+  const LETTER_COLOUR = "black";
+  const LETTER_FONT_SIZE = SQUARE_WIDTH / 1.5;
 
   const calculateX = (col) => col * SQUARE_WIDTH + GRID_LINE_HALF_THICKNESS;
   const calculateY = (row) => row * SQUARE_HEIGHT + GRID_LINE_HALF_THICKNESS;
@@ -220,6 +224,52 @@ export const PuzzleGrid = ({
     );
   };
 
+  const drawAcrossAnswers = () => {
+    return acrossAnswers.flatMap(({ clueNumber, answer }) => {
+      const cells = crossword.acrossCluesToCellsMap.get(clueNumber);
+      const letters = Array.from(answer);
+      const indexes = range(letters.length);
+      return indexes.map((index) => {
+        const cell = cells[index];
+        const letter = letters[index];
+        return drawLetter(cell, letter, "across");
+      });
+    });
+  };
+
+  const drawDownAnswers = () => {
+    return downAnswers.flatMap(({ clueNumber, answer }) => {
+      const cells = crossword.downCluesToCellsMap.get(clueNumber);
+      const letters = Array.from(answer);
+      const indexes = range(letters.length);
+      return indexes.map((index) => {
+        const cell = cells[index];
+        const letter = letters[index];
+        return drawLetter(cell, letter, "down");
+      });
+    });
+  };
+
+  const drawLetter = (cell, letter, clueType) => {
+    const { row, col } = cell;
+    const cx = calculateX(col) + SQUARE_WIDTH / 2;
+    const cy = calculateY(row) + SQUARE_HEIGHT / 2;
+
+    return (
+      <text
+        key={`letter-${clueType}-${row}-${col}`}
+        x={cx}
+        y={cy}
+        fill={LETTER_COLOUR}
+        fontSize={LETTER_FONT_SIZE}
+        textAnchor="middle"
+        dominantBaseline="central"
+      >
+        {letter.toUpperCase()}
+      </text>
+    );
+  };
+
   const handleGridClick = (e) => {
     const boundingClientRect = svgRef.current.getBoundingClientRect();
     const { clientX, clientY } = e;
@@ -255,6 +305,8 @@ export const PuzzleGrid = ({
       {drawCells()}
       {drawSelectedCellsOutline()}
       {drawClueNumbers()}
+      {drawAcrossAnswers()}
+      {drawDownAnswers()}
       {drawHorizontalGridLines()}
       {drawVerticalGridLines()}
     </svg>
@@ -264,14 +316,26 @@ export const PuzzleGrid = ({
 PuzzleGrid.propTypes = {
   crossword: PropTypes.object.isRequired,
   onCellClick: PropTypes.func,
+  currentCell: PropTypes.shape({
+    row: PropTypes.number.isRequired,
+    col: PropTypes.number.isRequired,
+  }),
   selectedCells: PropTypes.arrayOf(
     PropTypes.shape({
       row: PropTypes.number.isRequired,
       col: PropTypes.number.isRequired,
     })
   ),
-  currentCell: PropTypes.shape({
-    row: PropTypes.number.isRequired,
-    col: PropTypes.number.isRequired,
-  }),
+  acrossAnswers: PropTypes.arrayOf(
+    PropTypes.shape({
+      clueNumber: PropTypes.number.isRequired,
+      answer: PropTypes.string.isRequired,
+    })
+  ),
+  downAnswers: PropTypes.arrayOf(
+    PropTypes.shape({
+      clueNumber: PropTypes.number.isRequired,
+      answer: PropTypes.string.isRequired,
+    })
+  ),
 };
