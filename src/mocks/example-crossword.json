@@ -1,0 +1,227 @@
+{
+  "id": "lH030P3JPQr3g6FARCkW",
+  "grid": [
+    ".......X.......",
+    ".X.X.X.X.X.X.X.",
+    "...............",
+    ".X.X.X.X.X.X.X.",
+    "....X.....X....",
+    ".X.X.X.X.X.X.X.",
+    ".......X.......",
+    "XX.X.XXXXX.X.XX",
+    ".......X.......",
+    ".X.X.X.X.X.X.X.",
+    "....X.....X....",
+    ".X.X.X.X.X.X.X.",
+    "...............",
+    ".X.X.X.X.X.X.X.",
+    ".......X......."
+  ],
+  "publishDate": 1705795200,
+  "timestamp": {
+    "seconds": 1706434101,
+    "nanoseconds": 685000000
+  },
+  "crypticType": "Prize Cryptic",
+  "author": "",
+  "publication": "The Telegraph",
+  "downClues": [
+    {
+      "clue": "Tragically, ape isn&#039;t living (7)",
+      "rowIndex": 0,
+      "clueNumber": 1,
+      "colIndex": 0
+    },
+    {
+      "clue": "Fifty, number on flier in Beds town (15)",
+      "clueNumber": 2,
+      "rowIndex": 0,
+      "colIndex": 2
+    },
+    {
+      "clueNumber": 3,
+      "colIndex": 4,
+      "clue": "Cast, surprisingly, does what it does? (4)",
+      "rowIndex": 0
+    },
+    {
+      "colIndex": 6,
+      "rowIndex": 0,
+      "clue": "Diverted, the late runner, say (7)",
+      "clueNumber": 4
+    },
+    {
+      "clue": "War zone landing leader of sorts in a stew (7)",
+      "rowIndex": 0,
+      "colIndex": 8,
+      "clueNumber": 5
+    },
+    {
+      "rowIndex": 0,
+      "colIndex": 10,
+      "clue": "Piece in hand, last of sixteen (4)",
+      "clueNumber": 6
+    },
+    {
+      "clueNumber": 7,
+      "colIndex": 12,
+      "clue": "Cataclysmic becoming hater after this? (15)",
+      "rowIndex": 0
+    },
+    {
+      "rowIndex": 0,
+      "clue": "One of those on motorbike, scared, I gathered (7)",
+      "colIndex": 14,
+      "clueNumber": 8
+    },
+    {
+      "rowIndex": 5,
+      "clue": "Lightweight or heavyweight dog? (5)",
+      "clueNumber": 13,
+      "colIndex": 4
+    },
+    {
+      "clueNumber": 14,
+      "rowIndex": 5,
+      "clue": "Walk for 31 days? (5)",
+      "colIndex": 10
+    },
+    {
+      "clue": "Papal office utterly deep, reportedly? (7)",
+      "colIndex": 0,
+      "clueNumber": 17,
+      "rowIndex": 8
+    },
+    {
+      "clueNumber": 18,
+      "clue": "Small hat for goalie (7)",
+      "colIndex": 6,
+      "rowIndex": 8
+    },
+    {
+      "clue": "Bond taking drink after hit (7)",
+      "clueNumber": 19,
+      "rowIndex": 8,
+      "colIndex": 8
+    },
+    {
+      "colIndex": 14,
+      "clueNumber": 20,
+      "clue": "Ending in school, professional student (7)",
+      "rowIndex": 8
+    },
+    {
+      "clueNumber": 24,
+      "colIndex": 4,
+      "rowIndex": 11,
+      "clue": "Chance of donkey derby success, initially (4)"
+    },
+    {
+      "rowIndex": 11,
+      "clue": "Shop I ran set up (4)",
+      "colIndex": 10,
+      "clueNumber": 25
+    }
+  ],
+  "url": "https://puzzlesdata.telegraph.co.uk/puzzles/prize-cryptic/prize-cryptic-34358.json",
+  "title": "Prize Cryptic No 3248",
+  "crosswordType": "Cryptic",
+  "acrossClues": [
+    {
+      "clueNumber": 1,
+      "colIndex": 0,
+      "rowIndex": 0,
+      "clue": "Middle Eastern queen, sweet little thing (7)"
+    },
+    {
+      "clue": "Unfortunate pals she mistreated (7)",
+      "rowIndex": 0,
+      "clueNumber": 5,
+      "colIndex": 8
+    },
+    {
+      "rowIndex": 2,
+      "clue": "Party wipe the floor for Labour? (15)",
+      "clueNumber": 9,
+      "colIndex": 0
+    },
+    {
+      "colIndex": 0,
+      "rowIndex": 4,
+      "clueNumber": 10,
+      "clue": "Answer letter from Nato? (4)"
+    },
+    {
+      "clue": "Rate part of system poorly (5)",
+      "clueNumber": 11,
+      "rowIndex": 4,
+      "colIndex": 5
+    },
+    {
+      "clueNumber": 12,
+      "rowIndex": 4,
+      "clue": "Dashing, little bird hasn&#039;t finished (4)",
+      "colIndex": 11
+    },
+    {
+      "clueNumber": 15,
+      "clue": "Couple knocking swine about in book (7)",
+      "colIndex": 0,
+      "rowIndex": 6
+    },
+    {
+      "clue": "Tutor confusing hectare and the acre! (7)",
+      "clueNumber": 16,
+      "rowIndex": 6,
+      "colIndex": 8
+    },
+    {
+      "clue": "Book that man prepares (7)",
+      "clueNumber": 17,
+      "colIndex": 0,
+      "rowIndex": 8
+    },
+    {
+      "clue": "Article edited for concert (7)",
+      "colIndex": 8,
+      "rowIndex": 8,
+      "clueNumber": 19
+    },
+    {
+      "colIndex": 0,
+      "clue": "Loaf, shiny finish, first cut (4)",
+      "rowIndex": 10,
+      "clueNumber": 21
+    },
+    {
+      "clue": "Sherry emptied, then pensioner grabbed bubbly! (5)",
+      "rowIndex": 10,
+      "clueNumber": 22,
+      "colIndex": 5
+    },
+    {
+      "clue": "Yankee, say, accompanying a Greek character (4)",
+      "rowIndex": 10,
+      "colIndex": 11,
+      "clueNumber": 23
+    },
+    {
+      "clue": "Joker, an impudent cad, so funny! (15)",
+      "colIndex": 0,
+      "rowIndex": 12,
+      "clueNumber": 26
+    },
+    {
+      "colIndex": 0,
+      "rowIndex": 14,
+      "clueNumber": 27,
+      "clue": "Change ensured for consumer (7)"
+    },
+    {
+      "rowIndex": 14,
+      "colIndex": 8,
+      "clue": "Heartless gang imprisoned by judge, one of those firing gun? (7)",
+      "clueNumber": 28
+    }
+  ]
+}

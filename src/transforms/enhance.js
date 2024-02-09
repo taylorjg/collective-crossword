@@ -82,6 +82,14 @@ export const enhance = (crossword) => {
 
   return {
     ...crossword,
+    acrossClues: crossword.acrossClues.map((clue) => ({
+      ...clue,
+      clueType: "across",
+    })),
+    downClues: crossword.downClues.map((clue) => ({
+      ...clue,
+      clueType: "down",
+    })),
     acrossCluesToCellsMap,
     downCluesToCellsMap,
     cellsToCluesMap,
