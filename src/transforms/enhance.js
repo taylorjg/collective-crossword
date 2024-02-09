@@ -57,7 +57,7 @@ export const enhance = (crossword) => {
   // down clue number to array of corresponding { row, col } cells
   const downCluesToCellsMap = new Map();
 
-  // "<row>:<col>" string to { across?: { clueNumber, cells }, down?: { clueNumber, cells} }
+  // "<row>:<col>" string to { across?: { clueNumber, cells, clueType }, down?: { clueNumber, cells, clueType } }
   const cellsToCluesMap = new Map();
 
   for (const clue of crossword.acrossClues) {

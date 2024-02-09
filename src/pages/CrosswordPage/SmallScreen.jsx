@@ -19,6 +19,8 @@ export const SmallScreen = ({ crossword, crosswordState }) => {
           currentCell={crosswordState.currentCell}
           selectedCells={crosswordState.selectedClue?.cells}
           selectCell={crosswordState.selectCell}
+          acrossAnswers={crosswordState.acrossAnswers}
+          downAnswers={crosswordState.downAnswers}
         />
       </StyledPuzzleGrid>
       <StyledSingleClueArea>

@@ -226,10 +226,11 @@ export const PuzzleGrid = ({
       const cells = crossword.acrossCluesToCellsMap.get(clueNumber);
       const letters = Array.from(answer);
       const indexes = range(letters.length);
-      return indexes.map((index) => {
+      return indexes.flatMap((index) => {
         const cell = cells[index];
         const letter = letters[index];
-        return drawLetter(cell, letter, "across");
+        if (letter === " ") return [];
+        return [drawLetter(cell, letter, "across")];
       });
     });
   };
@@ -239,10 +240,11 @@ export const PuzzleGrid = ({
       const cells = crossword.downCluesToCellsMap.get(clueNumber);
       const letters = Array.from(answer);
       const indexes = range(letters.length);
-      return indexes.map((index) => {
+      return indexes.flatMap((index) => {
         const cell = cells[index];
         const letter = letters[index];
-        return drawLetter(cell, letter, "down");
+        if (letter === " ") return [];
+        return [drawLetter(cell, letter, "down")];
       });
     });
   };
