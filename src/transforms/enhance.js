@@ -24,80 +24,75 @@ const findDownCells = (grid, row, col) => {
   return cells;
 };
 
-const findEntry = (map, row, col) => {
-  for (const entry of map.entries()) {
-    const [, cells] = entry;
-    for (const cell of cells) {
+const findClueByRowCol = (clues, row, col) => {
+  for (const clue of clues) {
+    for (const cell of clue.cells) {
       if (cell.row === row && cell.col === col) {
-        return entry;
+        return clue;
       }
     }
   }
-};
-
-const makeCluesMapEntry = (entry, property) => {
-  return entry
-    ? {
-        [property]: {
-          clueNumber: entry[0],
-          cells: entry[1],
-          clueType: property,
-        },
-      }
-    : undefined;
 };
 
 export const enhance = (crossword) => {
   const numRows = crossword.grid.length;
   const numCols = crossword.grid[0].length;
 
-  // across clue number to array of corresponding { row, col } cells
-  const acrossCluesToCellsMap = new Map();
-
-  // down clue number to array of corresponding { row, col } cells
-  const downCluesToCellsMap = new Map();
-
-  // "<row>:<col>" string to { across?: { clueNumber, cells, clueType }, down?: { clueNumber, cells, clueType } }
+  // "<row>:<col>" string to { acrossClue?, downClue? }
   const cellsToCluesMap = new Map();
 
-  for (const clue of crossword.acrossClues) {
-    const { clueNumber, rowIndex, colIndex } = clue;
-    const cells = findAcrossCells(crossword.grid, rowIndex, colIndex);
-    acrossCluesToCellsMap.set(clueNumber, cells);
-  }
+  const acrossCluesEnhanced = crossword.acrossClues.map((clue) => {
+    const { rowIndex: row, colIndex: col, ...rest } = clue;
 
-  for (const clue of crossword.downClues) {
-    const { clueNumber, rowIndex, colIndex } = clue;
-    const cells = findDownCells(crossword.grid, rowIndex, colIndex);
-    downCluesToCellsMap.set(clueNumber, cells);
-  }
+    return {
+      ...rest,
+      row,
+      col,
+      clueType: "across",
+      cells: findAcrossCells(crossword.grid, row, col),
+    };
+  });
+
+  const downCluesEnhanced = crossword.downClues.map((clue) => {
+    const { rowIndex: row, colIndex: col, ...rest } = clue;
+
+    return {
+      ...rest,
+      row,
+      col,
+      clueType: "down",
+      cells: findDownCells(crossword.grid, row, col),
+    };
+  });
 
   for (const row of range(numRows)) {
     for (const col of range(numCols)) {
       if (crossword.grid[row][col] === ".") {
-        let acrossCluesEntry = findEntry(acrossCluesToCellsMap, row, col);
-        let downCluesEntry = findEntry(downCluesToCellsMap, row, col);
-        const maybeAcross = makeCluesMapEntry(acrossCluesEntry, "across");
-        const maybeDown = makeCluesMapEntry(downCluesEntry, "down");
+        const acrossClue = findClueByRowCol(acrossCluesEnhanced, row, col);
+        const downClue = findClueByRowCol(downCluesEnhanced, row, col);
+        const maybeAcrossClue = acrossClue ? { acrossClue } : undefined;
+        const maybeDownClue = downClue ? { downClue } : undefined;
         const key = `${row}:${col}`;
-        const value = { ...maybeAcross, ...maybeDown };
+        const value = { ...maybeAcrossClue, ...maybeDownClue };
         cellsToCluesMap.set(key, value);
       }
     }
   }
 
+  const acrossCluesMap = new Map(
+    acrossCluesEnhanced.map((clue) => [clue.clueNumber, clue])
+  );
+
+  const downCluesMap = new Map(
+    downCluesEnhanced.map((clue) => [clue.clueNumber, clue])
+  );
+
   return {
     ...crossword,
-    acrossClues: crossword.acrossClues.map((clue) => ({
-      ...clue,
-      clueType: "across",
-    })),
-    downClues: crossword.downClues.map((clue) => ({
-      ...clue,
-      clueType: "down",
-    })),
-    acrossCluesToCellsMap,
-    downCluesToCellsMap,
+    acrossClues: acrossCluesEnhanced,
+    downClues: downCluesEnhanced,
+    acrossCluesMap,
+    downCluesMap,
     cellsToCluesMap,
   };
 };

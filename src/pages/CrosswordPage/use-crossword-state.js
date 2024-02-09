@@ -31,9 +31,7 @@ export const useCrosswordState = (crossword) => {
 
       const { row, col } = cell;
       const key = `${row}:${col}`;
-      const value = crossword.cellsToCluesMap.get(key);
-      const acrossClue = value?.across;
-      const downClue = value?.down;
+      const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key) ?? {};
       const clue = acrossClue ?? downClue;
 
       if (acrossClue && downClue) {

@@ -168,7 +168,7 @@ export const PuzzleGrid = ({
   };
 
   const drawClueNumber = (clue, clueType) => {
-    const { clueNumber, rowIndex: row, colIndex: col } = clue;
+    const { clueNumber, row, col } = clue;
     const cx = calculateX(col) + (SQUARE_WIDTH / 16) * 1;
     const cy = calculateY(row) + (SQUARE_HEIGHT / 16) * 3;
 
@@ -223,7 +223,7 @@ export const PuzzleGrid = ({
 
   const drawAcrossAnswers = () => {
     return acrossAnswers.flatMap(({ clueNumber, answer }) => {
-      const cells = crossword.acrossCluesToCellsMap.get(clueNumber);
+      const { cells } = crossword.acrossCluesMap.get(clueNumber);
       const letters = Array.from(answer);
       const indexes = range(letters.length);
       return indexes.flatMap((index) => {
@@ -237,7 +237,7 @@ export const PuzzleGrid = ({
 
   const drawDownAnswers = () => {
     return downAnswers.flatMap(({ clueNumber, answer }) => {
-      const cells = crossword.downCluesToCellsMap.get(clueNumber);
+      const { cells } = crossword.downCluesMap.get(clueNumber);
       const letters = Array.from(answer);
       const indexes = range(letters.length);
       return indexes.flatMap((index) => {
