@@ -31,7 +31,6 @@ export const CrosswordPage = () => {
           ...docSnap.data(),
         };
         const enhancedCrossword = enhance(crossword);
-        console.log(enhancedCrossword);
         setCrossword(enhancedCrossword);
       } else {
         setErrorMessage("Failed to load specified crossword");

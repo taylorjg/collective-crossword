@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Grid, Typography } from "@mui/material";
 
@@ -14,6 +15,23 @@ import {
 } from "./CrosswordPage.styles";
 
 export const LargeScreen = ({ crossword, crosswordState }) => {
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (/[a-zA-Z]/.test(e.key)) {
+        crosswordState.enterLetter(e.key.toUpperCase());
+      }
+      if (e.key === "Backspace") {
+        // TODO: crosswordState.deleteLetter();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [crosswordState]);
+
   return (
     <Grid container>
       <Grid item xs={12} md={10} sx={{ mx: { xs: 2, md: "auto" } }}>

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { isSameAsFirstCell, isSameCell } from "@app/utils";
 
@@ -14,6 +14,13 @@ export const useCrosswordState = (crossword) => {
   const [selectedClue, setSelectedClue] = useState();
   const [acrossAnswers, setAcrossAnswers] = useState([]);
   const [downAnswers, setDownAnswers] = useState([]);
+  const allCluesRef = useRef([]);
+
+  useEffect(() => {
+    if (allCluesRef.current.length === 0 && crossword) {
+      allCluesRef.current = [...crossword.acrossClues, ...crossword.downClues];
+    }
+  }, [crossword]);
 
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
@@ -69,22 +76,53 @@ export const useCrosswordState = (crossword) => {
     setToggleableClues();
   }, []);
 
-  const findCurrentCellIndex = () => {
-    return selectedClue.cells.find((cell) => isSameCell(currentCell, cell));
-  };
+  // const findCurrentCellIndex = () => {
+  //   return selectedClue.cells.find((cell) => isSameCell(currentCell, cell));
+  // };
 
-  const enterLetter = (/* letter */) => {
+  // const findSelectedClueIndex = () => {
+  //   return allCluesRef.current.findIndex((clue) => clue === selectedClue);
+  // };
+
+  const goToNextClue = useCallback(() => {
     if (!selectedClue) return;
-    const index = findCurrentCellIndex();
+    // const index = findSelectedClueIndex();
+    const index = allCluesRef.current.findIndex(
+      (clue) => clue === selectedClue
+    );
     if (index < 0) return;
-    // get (find or create) entry in acrossAnswers or downAnswers corresponding to selectedClue
-    // add letter at correct place within answer
-    goToNextCell();
+    let newIndex = index + 1;
+    if (newIndex >= allCluesRef.current.length) {
+      newIndex = 0;
+    }
+    const newClue = allCluesRef.current[newIndex];
+    setSelectedClue(newClue);
+    setCurrentCell(newClue.cells[0]);
+  }, [selectedClue]);
+
+  const goToPreviousClue = () => {
+    if (!selectedClue) return;
+    // const index = findSelectedClueIndex();
+    const index = allCluesRef.current.findIndex(
+      (clue) => clue === selectedClue
+    );
+    if (index < 0) return;
+    let newIndex = index - 1;
+    if (newIndex < 0) {
+      newIndex = allCluesRef.current.length - 1;
+    }
+    const newClue = allCluesRef.current[newIndex];
+    setSelectedClue(newClue);
+    setCurrentCell(newClue.cells[0]);
+    // setSelectedClue(allCluesRef.current[newIndex]);
   };
 
-  const goToNextCell = () => {
+  const goToNextCell = useCallback(() => {
     if (!selectedClue) return;
-    const index = findCurrentCellIndex();
+    // const index = findCurrentCellIndex();
+    const index = selectedClue.cells.findIndex((cell) =>
+      isSameCell(currentCell, cell)
+    );
     if (index < 0) return;
     const lastIndex = selectedClue.cells.length - 1;
     if (index < lastIndex) {
@@ -92,23 +130,22 @@ export const useCrosswordState = (crossword) => {
     } else {
       goToNextClue();
     }
-  };
+  }, [currentCell, selectedClue, goToNextClue]);
 
-  const goToNextClue = () => {
-    if (!selectedClue) return;
-    // if selectedClue is an across clue, go to next across clue
-    // if selectedClue is a down clue, go to next down clue
-    // if run off end of across clues, go to first down clue
-    // if run off end of down clues, go to first across clue
-  };
-
-  const goToPreviousClue = () => {
-    if (!selectedClue) return;
-    // if selectedClue is an across clue, go to previous across clue
-    // if selectedClue is a down clue, go to previous down clue
-    // if run off beginning of across clues, go to last down clue
-    // if run off beginning of down clues, go to last across clue
-  };
+  const enterLetter = useCallback(
+    (letter) => {
+      if (!selectedClue) return;
+      // const index = findCurrentCellIndex();
+      const index = selectedClue.cells.findIndex((cell) =>
+        isSameCell(currentCell, cell)
+      );
+      if (index < 0) return;
+      // get (find or create) entry in acrossAnswers or downAnswers corresponding to selectedClue
+      // add letter at correct place within answer
+      goToNextCell();
+    },
+    [currentCell, selectedClue, goToNextCell]
+  );
 
   return {
     currentCell,
