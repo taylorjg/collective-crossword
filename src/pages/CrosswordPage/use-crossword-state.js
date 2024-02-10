@@ -2,18 +2,20 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { isSameAsFirstCell, isSameCell } from "@app/utils";
 
-const setLetterAtIndex = (letters, letter, index) => {
-  const arr = Array.from(letters);
-  arr[index] = letter;
-  return arr.join("");
-};
+// const setLetterAtIndex = (letters, letter, index) => {
+//   const arr = Array.from(letters);
+//   arr[index] = letter;
+//   return arr.join("");
+// };
 
 export const useCrosswordState = (crossword) => {
   // External
   const [currentCell, setCurrentCell] = useState();
   const [selectedClue, setSelectedClue] = useState();
-  const [acrossAnswers, setAcrossAnswers] = useState([]);
-  const [downAnswers, setDownAnswers] = useState([]);
+  // const [acrossAnswers, setAcrossAnswers] = useState([]);
+  // const [downAnswers, setDownAnswers] = useState([]);
+  const [acrossAnswers] = useState([]);
+  const [downAnswers] = useState([]);
   const allCluesRef = useRef([]);
 
   // Internal
@@ -134,7 +136,7 @@ export const useCrosswordState = (crossword) => {
     }
   };
 
-  const enterLetter = (letter) => {
+  const enterLetter = (/* letter */) => {
     if (!selectedClue) return;
     const index = findSelectedClueIndex();
     if (index < 0) return;

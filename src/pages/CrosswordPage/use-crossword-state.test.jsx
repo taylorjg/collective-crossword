@@ -28,109 +28,147 @@ describe("useCrosswordState tests", () => {
     expect(crosswordState.selectedClue).toBeUndefined();
   });
 
-  it("click on cell of an across-only clue", () => {
-    let crosswordState;
-    const onCrosswordState = (arg) => {
-      crosswordState = arg;
-    };
-    renderComponent({ crossword, onCrosswordState });
+  describe("selectCell", () => {
+    it("click on cell of an across-only clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
 
-    expect(crosswordState).toBeDefined();
-    expect(crosswordState.currentCell).toBeUndefined();
-    expect(crosswordState.selectedClue).toBeUndefined();
+      expect(crosswordState).toBeDefined();
+      expect(crosswordState.currentCell).toBeUndefined();
+      expect(crosswordState.selectedClue).toBeUndefined();
 
-    act(() => {
-      crosswordState.selectCell({ row: 4, col: 11 });
+      act(() => {
+        crosswordState.selectCell({ row: 4, col: 11 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 4, col: 11 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 12,
+        clueType: "across",
+      });
+
+      act(() => {
+        crosswordState.selectCell({ row: 4, col: 11 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 4, col: 11 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 12,
+        clueType: "across",
+      });
     });
 
-    expect(crosswordState.currentCell).toEqual({ row: 4, col: 11 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 12,
-      clueType: "across",
+    it("click on cell of a down-only clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      expect(crosswordState).toBeDefined();
+      expect(crosswordState.currentCell).toBeUndefined();
+      expect(crosswordState.selectedClue).toBeUndefined();
+
+      act(() => {
+        crosswordState.selectCell({ row: 7, col: 4 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 7, col: 4 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 13,
+        clueType: "down",
+      });
+
+      act(() => {
+        crosswordState.selectCell({ row: 7, col: 4 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 7, col: 4 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 13,
+        clueType: "down",
+      });
     });
 
-    act(() => {
-      crosswordState.selectCell({ row: 4, col: 11 });
-    });
+    it("click on cell of an across and down clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
 
-    expect(crosswordState.currentCell).toEqual({ row: 4, col: 11 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 12,
-      clueType: "across",
+      expect(crosswordState).toBeDefined();
+      expect(crosswordState.currentCell).toBeUndefined();
+      expect(crosswordState.selectedClue).toBeUndefined();
+
+      act(() => {
+        crosswordState.selectCell({ row: 2, col: 10 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 9,
+        clueType: "across",
+      });
+
+      act(() => {
+        crosswordState.selectCell({ row: 2, col: 10 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 6,
+        clueType: "down",
+      });
+
+      act(() => {
+        crosswordState.selectCell({ row: 2, col: 10 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 9,
+        clueType: "across",
+      });
     });
   });
 
-  it("click on cell of a down-only clue", () => {
-    let crosswordState;
-    const onCrosswordState = (arg) => {
-      crosswordState = arg;
-    };
-    renderComponent({ crossword, onCrosswordState });
-
-    expect(crosswordState).toBeDefined();
-    expect(crosswordState.currentCell).toBeUndefined();
-    expect(crosswordState.selectedClue).toBeUndefined();
-
-    act(() => {
-      crosswordState.selectCell({ row: 7, col: 4 });
-    });
-
-    expect(crosswordState.currentCell).toEqual({ row: 7, col: 4 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 13,
-      clueType: "down",
-    });
-
-    act(() => {
-      crosswordState.selectCell({ row: 7, col: 4 });
-    });
-
-    expect(crosswordState.currentCell).toEqual({ row: 7, col: 4 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 13,
-      clueType: "down",
-    });
+  describe("selectClue", () => {
+    // TODO
   });
 
-  it("click on cell of an across and down clue", () => {
-    let crosswordState;
-    const onCrosswordState = (arg) => {
-      crosswordState = arg;
-    };
-    renderComponent({ crossword, onCrosswordState });
+  describe("tabToNextClue", () => {
+    // TODO
+  });
 
-    expect(crosswordState).toBeDefined();
-    expect(crosswordState.currentCell).toBeUndefined();
-    expect(crosswordState.selectedClue).toBeUndefined();
+  describe("tabToPreviousClue", () => {
+    // TODO
+  });
 
-    act(() => {
-      crosswordState.selectCell({ row: 2, col: 10 });
-    });
+  describe("arrowLeftToCell", () => {
+    // TODO
+  });
 
-    expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 9,
-      clueType: "across",
-    });
+  describe("arrowRightToCell", () => {
+    // TODO
+  });
 
-    act(() => {
-      crosswordState.selectCell({ row: 2, col: 10 });
-    });
+  describe("arrowUpToCell", () => {
+    // TODO
+  });
 
-    expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 6,
-      clueType: "down",
-    });
+  describe("arrowDownToCell", () => {
+    // TODO
+  });
 
-    act(() => {
-      crosswordState.selectCell({ row: 2, col: 10 });
-    });
+  describe("enterLetter", () => {
+    // TODO
+  });
 
-    expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
-    expect(crosswordState.selectedClue).toMatchObject({
-      clueNumber: 9,
-      clueType: "across",
-    });
+  describe("deleteLetter", () => {
+    // TODO
   });
 });
