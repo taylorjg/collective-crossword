@@ -23,6 +23,8 @@ export const StyledClues = styled.div`
 export const StyledClue = styled.div`
   display: grid;
   grid-template-columns: 2rem 1fr;
+  color: ${({ selected, theme }) =>
+    selected ? theme.palette.primary.dark : "unset"};
 `;
 
 export const StyledClueNumber = styled.div`
@@ -30,9 +32,5 @@ export const StyledClueNumber = styled.div`
 `;
 
 export const StyledClueText = styled.div`
-  //
-`;
-
-export const StyledClueLength = styled.div`
   //
 `;

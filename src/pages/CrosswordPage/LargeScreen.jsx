@@ -54,8 +54,13 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
           <StyledClues>
             <Typography variant="h6">Across</Typography>
             {crossword.acrossClues.map((clue) => {
+              const selected = clue === crosswordState.selectedClue;
               return (
-                <StyledClue key={`across-clue-${clue.clueNumber}`}>
+                <StyledClue
+                  key={`across-clue-${clue.clueNumber}`}
+                  selected={selected}
+                  onClick={() => crosswordState.selectClue(clue)}
+                >
                   <StyledClueNumber>{clue.clueNumber}</StyledClueNumber>
                   <StyledClueText>{clue.clue}</StyledClueText>
                 </StyledClue>
@@ -65,8 +70,13 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
           <StyledClues>
             <Typography variant="h6">Down</Typography>
             {crossword.downClues.map((clue) => {
+              const selected = clue === crosswordState.selectedClue;
               return (
-                <StyledClue key={`down-clue-${clue.clueNumber}`}>
+                <StyledClue
+                  key={`down-clue-${clue.clueNumber}`}
+                  selected={selected}
+                  onClick={() => crosswordState.selectClue(clue)}
+                >
                   <StyledClueNumber>{clue.clueNumber}</StyledClueNumber>
                   <StyledClueText>{clue.clue}</StyledClueText>
                 </StyledClue>
