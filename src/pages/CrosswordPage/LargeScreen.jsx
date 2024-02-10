@@ -23,6 +23,26 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
       if (e.key === "Backspace") {
         crosswordState.deleteLetter();
       }
+      if (e.key === "Tab") {
+        e.preventDefault();
+        if (e.shiftKey) {
+          crosswordState.navigateToPreviousClue();
+        } else {
+          crosswordState.navigateToNextClue();
+        }
+      }
+      if (e.key === "ArrowLeft") {
+        crosswordState.navigateLeft();
+      }
+      if (e.key === "ArrowRight") {
+        crosswordState.navigateRight();
+      }
+      if (e.key === "ArrowUp") {
+        crosswordState.navigateUp();
+      }
+      if (e.key === "ArrowDown") {
+        crosswordState.navigateDown();
+      }
     };
 
     document.addEventListener("keydown", onKeyDown);

@@ -152,6 +152,74 @@ export const useCrosswordState = (crossword) => {
     goToPreviousCell();
   };
 
+  const navigateLeft = () => {
+    if (!currentCell || !selectedClue) return;
+    const validOptions = crossword.acrossClues
+      .filter((clue) => clue.row === currentCell.row)
+      .flatMap((clue) => clue.cells.map((cell) => [cell.col, clue]));
+    const oldIndex = validOptions.findIndex(([col]) => col === currentCell.col);
+    if (oldIndex < 0) return;
+    const wrapIndex = (index) => {
+      if (index < 0) return validOptions.length - 1;
+      return index;
+    };
+    const newIndex = wrapIndex(oldIndex - 1);
+    const [newCol, newClue] = validOptions[newIndex];
+    setCurrentCell({ ...currentCell, col: newCol });
+    if (newClue !== selectedClue) setSelectedClue(newClue);
+  };
+
+  const navigateRight = () => {
+    if (!currentCell || !selectedClue) return;
+    const validOptions = crossword.acrossClues
+      .filter((clue) => clue.row === currentCell.row)
+      .flatMap((clue) => clue.cells.map((cell) => [cell.col, clue]));
+    const oldIndex = validOptions.findIndex(([col]) => col === currentCell.col);
+    if (oldIndex < 0) return;
+    const wrapIndex = (index) => {
+      if (index >= validOptions.length) return 0;
+      return index;
+    };
+    const newIndex = wrapIndex(oldIndex + 1);
+    const [newCol, newClue] = validOptions[newIndex];
+    setCurrentCell({ ...currentCell, col: newCol });
+    if (newClue !== selectedClue) setSelectedClue(newClue);
+  };
+
+  const navigateUp = () => {
+    if (!currentCell || !selectedClue) return;
+    const validOptions = crossword.downClues
+      .filter((clue) => clue.col === currentCell.col)
+      .flatMap((clue) => clue.cells.map((cell) => [cell.row, clue]));
+    const oldIndex = validOptions.findIndex(([row]) => row === currentCell.row);
+    if (oldIndex < 0) return;
+    const wrapIndex = (index) => {
+      if (index < 0) return validOptions.length - 1;
+      return index;
+    };
+    const newIndex = wrapIndex(oldIndex - 1);
+    const [newRow, newClue] = validOptions[newIndex];
+    setCurrentCell({ ...currentCell, row: newRow });
+    if (newClue !== selectedClue) setSelectedClue(newClue);
+  };
+
+  const navigateDown = () => {
+    if (!currentCell || !selectedClue) return;
+    const validOptions = crossword.downClues
+      .filter((clue) => clue.col === currentCell.col)
+      .flatMap((clue) => clue.cells.map((cell) => [cell.row, clue]));
+    const oldIndex = validOptions.findIndex(([row]) => row === currentCell.row);
+    if (oldIndex < 0) return;
+    const wrapIndex = (index) => {
+      if (index >= validOptions.length) return 0;
+      return index;
+    };
+    const newIndex = wrapIndex(oldIndex + 1);
+    const [newRow, newClue] = validOptions[newIndex];
+    setCurrentCell({ ...currentCell, row: newRow });
+    if (newClue !== selectedClue) setSelectedClue(newClue);
+  };
+
   return {
     currentCell,
     selectedClue,
@@ -161,7 +229,11 @@ export const useCrosswordState = (crossword) => {
     selectClue,
     enterLetter,
     deleteLetter,
-    goToNextClue,
-    goToPreviousClue,
+    navigateToNextClue: goToNextClue,
+    navigateToPreviousClue: goToPreviousClue,
+    navigateLeft,
+    navigateRight,
+    navigateUp,
+    navigateDown,
   };
 };

@@ -137,31 +137,46 @@ describe("useCrosswordState tests", () => {
   });
 
   describe("selectClue", () => {
-    // TODO
+    // select an across clue
+    // select a down clue
   });
 
-  describe("tabToNextClue", () => {
-    // TODO
+  describe("navigateToNextClue", () => {
+    // across to next across
+    // down to next down
+    // last across to first down
+    // last down to first across
   });
 
-  describe("tabToPreviousClue", () => {
-    // TODO
+  describe("navigateToPreviousClue", () => {
+    // across to previous across
+    // down to previous down
+    // first across to last down
+    // first down to last across
   });
 
-  describe("arrowLeftToCell", () => {
-    // TODO
+  describe("navigateLeft", () => {
+    // previous col is within same clue
+    // previous col is end of previous clue on row
+    // previous col wraps to end of last clue on row
   });
 
-  describe("arrowRightToCell", () => {
-    // TODO
+  describe("navigateRight", () => {
+    // next col is within same clue
+    // next col is start of next clue on row
+    // next col wraps to start of first clue on row
   });
 
-  describe("arrowUpToCell", () => {
-    // TODO
+  describe("navigateUp", () => {
+    // previous row is within same clue
+    // previous row is end of previous clue on col
+    // previous row wraps to end of last clue on col
   });
 
-  describe("arrowDownToCell", () => {
-    // TODO
+  describe("navigateDown", () => {
+    // next row is within same clue
+    // next row is start of next clue on col
+    // next row wraps to start of first clue on col
   });
 
   describe("enterLetter", () => {
