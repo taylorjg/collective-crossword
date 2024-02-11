@@ -44,7 +44,7 @@ export const AboutModal = ({ open, onClose }) => {
         </List>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "space-between" }}>
-        <IconButton onClick={onClickGitHubIcon}>
+        <IconButton onClick={onClickGitHubIcon} title="View repo on github.com">
           <GitHubIcon />
         </IconButton>
         <Button onClick={onClose}>Close</Button>

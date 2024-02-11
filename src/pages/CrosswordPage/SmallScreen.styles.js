@@ -18,9 +18,10 @@ export const StyledPuzzleGrid = styled.div`
   line-height: 0;
 `;
 
-export const StyledSingleClueArea = styled.div`
+export const StyledBottomArea = styled.div`
   flex-grow: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
 `;

@@ -14,6 +14,14 @@ import { CrosswordAvatar } from "./CrosswordAvatar";
 import { StyledThumbnailGrid } from "./CrosswordGridItem.styles";
 
 export const CrosswordGridItem = ({ crossword, isAdmin, onView, onDelete }) => {
+  const handleViewCrossword = () => {
+    onView(crossword.id);
+  };
+
+  const handleDeleteCrossword = () => {
+    onDelete(crossword.id);
+  };
+
   return (
     <Card square variant="outlined">
       <CardHeader
@@ -27,9 +35,15 @@ export const CrosswordGridItem = ({ crossword, isAdmin, onView, onDelete }) => {
         </StyledThumbnailGrid>
       </CardContent>
       <CardActions>
-        <Button onClick={() => onView(crossword.id)}>View</Button>
+        <Button onClick={handleViewCrossword} title="View crossword">
+          View
+        </Button>
         {isAdmin && (
-          <Button color="error" onClick={() => onDelete(crossword.id)}>
+          <Button
+            onClick={handleDeleteCrossword}
+            title="Delete crossword"
+            color="error"
+          >
             Delete
           </Button>
         )}

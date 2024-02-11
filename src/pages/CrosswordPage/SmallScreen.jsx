@@ -3,13 +3,18 @@ import { Toolbar } from "@mui/material";
 
 import { PuzzleGrid } from "@app/components";
 
+import { MiniClues } from "./MiniClues";
+import { MiniKeyboard } from "./MiniKeyboard";
+
 import {
   StyledContent,
   StyledPuzzleGrid,
-  StyledSingleClueArea,
+  StyledBottomArea,
 } from "./SmallScreen.styles";
 
 export const SmallScreen = ({ crossword, crosswordState }) => {
+  const showMiniKeyboard = "ontouchstart" in document.documentElement;
+
   return (
     <StyledContent>
       <Toolbar />
@@ -23,9 +28,19 @@ export const SmallScreen = ({ crossword, crosswordState }) => {
           downAnswers={crosswordState.downAnswers}
         />
       </StyledPuzzleGrid>
-      <StyledSingleClueArea>
-        Single clues will appear here...
-      </StyledSingleClueArea>
+      <StyledBottomArea>
+        <MiniClues
+          selectedClue={crosswordState.selectedClue}
+          onNextClue={crosswordState.navigateToNextClue}
+          onPreviousClue={crosswordState.navigateToPreviousClue}
+        />
+        {showMiniKeyboard && (
+          <MiniKeyboard
+            onLetterEntered={crosswordState.enterLetter}
+            onDeleteLetter={crosswordState.deleteLetter}
+          />
+        )}
+      </StyledBottomArea>
     </StyledContent>
   );
 };

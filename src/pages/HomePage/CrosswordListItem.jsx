@@ -13,18 +13,23 @@ import { formatDate } from "@app/utils";
 import { CrosswordAvatar } from "./CrosswordAvatar";
 
 export const CrosswordListItem = ({ crossword, isAdmin, onView, onDelete }) => {
-  const handleViewClick = () => {
+  const handleViewCrossword = () => {
     onView(crossword.id);
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteCrossword = () => {
     onDelete(crossword.id);
   };
 
   const maybeSecondaryAction = isAdmin
     ? {
         secondaryAction: (
-          <IconButton edge="end" color="error" onClick={handleDeleteClick}>
+          <IconButton
+            edge="end"
+            color="error"
+            onClick={handleDeleteCrossword}
+            title="Delete crossword"
+          >
             <DeleteIcon />
           </IconButton>
         ),
@@ -33,7 +38,7 @@ export const CrosswordListItem = ({ crossword, isAdmin, onView, onDelete }) => {
 
   return (
     <ListItem disablePadding {...maybeSecondaryAction}>
-      <ListItemButton onClick={handleViewClick}>
+      <ListItemButton onClick={handleViewCrossword}>
         <ListItemAvatar>
           <CrosswordAvatar crossword={crossword} />
         </ListItemAvatar>
