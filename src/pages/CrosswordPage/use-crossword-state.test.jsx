@@ -16,6 +16,56 @@ const renderComponent = (props) => {
   return render(<TestComponent {...props} />);
 };
 
+const testHelperNavigation = ({
+  fromCell,
+  fromClue,
+  toCell,
+  toClue,
+  action,
+  optionalPrologue,
+  optionalEpilogue,
+}) => {
+  let crosswordState;
+  const onCrosswordState = (arg) => {
+    crosswordState = arg;
+  };
+  renderComponent({ crossword, onCrosswordState });
+
+  if (optionalPrologue?.action) {
+    act(() => {
+      optionalPrologue.action(crosswordState);
+    });
+
+    if (optionalPrologue.assertions) {
+      optionalPrologue.assertions(crosswordState);
+    }
+  }
+
+  act(() => {
+    crosswordState.selectCell(fromCell);
+  });
+
+  expect(crosswordState.currentCell).toEqual(fromCell);
+  expect(crosswordState.selectedClue).toMatchObject(fromClue);
+
+  act(() => {
+    action(crosswordState);
+  });
+
+  expect(crosswordState.currentCell).toEqual(toCell);
+  expect(crosswordState.selectedClue).toMatchObject(toClue);
+
+  if (optionalEpilogue?.action) {
+    act(() => {
+      optionalEpilogue.action(crosswordState);
+    });
+
+    if (optionalEpilogue.assertions) {
+      optionalEpilogue.assertions(crosswordState);
+    }
+  }
+};
+
 describe("useCrosswordState tests", () => {
   it("initial crosswordState", () => {
     let crosswordState;
@@ -30,108 +80,46 @@ describe("useCrosswordState tests", () => {
 
   describe("selectCell", () => {
     it("click on cell of an across-only clue", () => {
-      let crosswordState;
-      const onCrosswordState = (arg) => {
-        crosswordState = arg;
-      };
-      renderComponent({ crossword, onCrosswordState });
-
-      expect(crosswordState).toBeDefined();
-      expect(crosswordState.currentCell).toBeUndefined();
-      expect(crosswordState.selectedClue).toBeUndefined();
-
-      act(() => {
-        crosswordState.selectCell({ row: 4, col: 11 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 4, col: 11 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 12,
-        clueType: "across",
-      });
-
-      act(() => {
-        crosswordState.selectCell({ row: 4, col: 11 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 4, col: 11 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 12,
-        clueType: "across",
+      const cell = { row: 4, col: 11 };
+      const clue = { clueNumber: 12, clueType: "across" };
+      testHelperNavigation({
+        fromCell: cell,
+        fromClue: clue,
+        toCell: cell,
+        toClue: clue,
+        action: (crosswordState) => crosswordState.selectCell(cell),
       });
     });
 
     it("click on cell of a down-only clue", () => {
-      let crosswordState;
-      const onCrosswordState = (arg) => {
-        crosswordState = arg;
-      };
-      renderComponent({ crossword, onCrosswordState });
-
-      expect(crosswordState).toBeDefined();
-      expect(crosswordState.currentCell).toBeUndefined();
-      expect(crosswordState.selectedClue).toBeUndefined();
-
-      act(() => {
-        crosswordState.selectCell({ row: 7, col: 4 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 7, col: 4 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 13,
-        clueType: "down",
-      });
-
-      act(() => {
-        crosswordState.selectCell({ row: 7, col: 4 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 7, col: 4 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 13,
-        clueType: "down",
+      const cell = { row: 7, col: 4 };
+      const clue = { clueNumber: 13, clueType: "down" };
+      testHelperNavigation({
+        fromCell: cell,
+        fromClue: clue,
+        toCell: cell,
+        toClue: clue,
+        action: (crosswordState) => crosswordState.selectCell(cell),
       });
     });
 
     it("click on cell of an across and down clue", () => {
-      let crosswordState;
-      const onCrosswordState = (arg) => {
-        crosswordState = arg;
-      };
-      renderComponent({ crossword, onCrosswordState });
-
-      expect(crosswordState).toBeDefined();
-      expect(crosswordState.currentCell).toBeUndefined();
-      expect(crosswordState.selectedClue).toBeUndefined();
-
-      act(() => {
-        crosswordState.selectCell({ row: 2, col: 10 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 9,
-        clueType: "across",
-      });
-
-      act(() => {
-        crosswordState.selectCell({ row: 2, col: 10 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 6,
-        clueType: "down",
-      });
-
-      act(() => {
-        crosswordState.selectCell({ row: 2, col: 10 });
-      });
-
-      expect(crosswordState.currentCell).toEqual({ row: 2, col: 10 });
-      expect(crosswordState.selectedClue).toMatchObject({
-        clueNumber: 9,
-        clueType: "across",
+      const cell = { row: 2, col: 10 };
+      const fromClue = { clueNumber: 9, clueType: "across" };
+      const toClue = { clueNumber: 6, clueType: "down" };
+      testHelperNavigation({
+        fromCell: cell,
+        fromClue,
+        toCell: cell,
+        toClue,
+        action: (crosswordState) => crosswordState.selectCell(cell),
+        optionalEpilogue: {
+          action: (crosswordState) => crosswordState.selectCell(cell),
+          assertions: (crosswordState) => {
+            expect(crosswordState.currentCell).toEqual(cell);
+            expect(crosswordState.selectedClue).toMatchObject(fromClue);
+          },
+        },
       });
     });
   });
@@ -142,41 +130,219 @@ describe("useCrosswordState tests", () => {
   });
 
   describe("navigateToNextClue", () => {
-    // across to next across
-    // down to next down
-    // last across to first down
-    // last down to first across
+    it("across to next across", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 3 },
+        fromClue: { clueNumber: 1, clueType: "across" },
+        toCell: { row: 0, col: 8 },
+        toClue: { clueNumber: 5, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateToNextClue(),
+      });
+    });
+
+    it("down to next down", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 10 },
+        fromClue: { clueNumber: 6, clueType: "down" },
+        toCell: { row: 0, col: 12 },
+        toClue: { clueNumber: 7, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateToNextClue(),
+      });
+    });
+
+    it("last across to first down", () => {
+      testHelperNavigation({
+        fromCell: { row: 14, col: 8 },
+        fromClue: { clueNumber: 28, clueType: "across" },
+        toCell: { row: 0, col: 0 },
+        toClue: { clueNumber: 1, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateToNextClue(),
+      });
+    });
+
+    it("last down to first across", () => {
+      testHelperNavigation({
+        fromCell: { row: 11, col: 10 },
+        fromClue: { clueNumber: 25, clueType: "down" },
+        toCell: { row: 0, col: 0 },
+        toClue: { clueNumber: 1, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateToNextClue(),
+      });
+    });
   });
 
   describe("navigateToPreviousClue", () => {
-    // across to previous across
-    // down to previous down
-    // first across to last down
-    // first down to last across
+    it("across to previous across", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 9 },
+        fromClue: { clueNumber: 5, clueType: "across" },
+        toCell: { row: 0, col: 0 },
+        toClue: { clueNumber: 1, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateToPreviousClue(),
+      });
+    });
+
+    it("down to previous down", () => {
+      testHelperNavigation({
+        fromCell: { row: 7, col: 10 },
+        fromClue: { clueNumber: 14, clueType: "down" },
+        toCell: { row: 5, col: 4 },
+        toClue: { clueNumber: 13, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateToPreviousClue(),
+      });
+    });
+
+    it("first across to last down", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 1 },
+        fromClue: { clueNumber: 1, clueType: "across" },
+        toCell: { row: 11, col: 10 },
+        toClue: { clueNumber: 25, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateToPreviousClue(),
+      });
+    });
+
+    it("first down to last across", () => {
+      testHelperNavigation({
+        fromCell: { row: 1, col: 0 },
+        fromClue: { clueNumber: 1, clueType: "down" },
+        toCell: { row: 14, col: 8 },
+        toClue: { clueNumber: 28, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateToPreviousClue(),
+      });
+    });
   });
 
   describe("navigateLeft", () => {
-    // previous col is within same clue
-    // previous col is end of previous clue on row
-    // previous col wraps to end of last clue on row
+    it("previous col is within same clue", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 3 },
+        fromClue: { clueNumber: 1, clueType: "across" },
+        toCell: { row: 0, col: 2 },
+        toClue: { clueNumber: 1, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateLeft(),
+      });
+    });
+
+    it("previous col is end of previous clue on row", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 8 },
+        fromClue: { clueNumber: 5, clueType: "across" },
+        toCell: { row: 0, col: 6 },
+        toClue: { clueNumber: 1, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateLeft(),
+      });
+    });
+
+    it("previous col wraps to end of last clue on row", () => {
+      testHelperNavigation({
+        fromCell: { row: 4, col: 0 },
+        fromClue: { clueNumber: 10, clueType: "across" },
+        toCell: { row: 4, col: 14 },
+        toClue: { clueNumber: 12, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateLeft(),
+      });
+    });
   });
 
   describe("navigateRight", () => {
-    // next col is within same clue
-    // next col is start of next clue on row
-    // next col wraps to start of first clue on row
+    it("next col is within same clue", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 3 },
+        fromClue: { clueNumber: 1, clueType: "across" },
+        toCell: { row: 0, col: 4 },
+        toClue: { clueNumber: 1, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateRight(),
+      });
+    });
+
+    it("next col is start of next clue on row", () => {
+      testHelperNavigation({
+        fromCell: { row: 4, col: 3 },
+        fromClue: { clueNumber: 10, clueType: "across" },
+        toCell: { row: 4, col: 5 },
+        toClue: { clueNumber: 11, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateRight(),
+      });
+    });
+
+    it("next col wraps to start of first clue on row", () => {
+      testHelperNavigation({
+        fromCell: { row: 4, col: 14 },
+        fromClue: { clueNumber: 12, clueType: "across" },
+        toCell: { row: 4, col: 0 },
+        toClue: { clueNumber: 10, clueType: "across" },
+        action: (crosswordState) => crosswordState.navigateRight(),
+      });
+    });
   });
 
   describe("navigateUp", () => {
-    // previous row is within same clue
-    // previous row is end of previous clue on col
-    // previous row wraps to end of last clue on col
+    it("previous row is within same clue", () => {
+      testHelperNavigation({
+        fromCell: { row: 7, col: 10 },
+        fromClue: { clueNumber: 14, clueType: "down" },
+        toCell: { row: 6, col: 10 },
+        toClue: { clueNumber: 14, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateUp(),
+      });
+    });
+
+    it("previous row is end of previous clue on col", () => {
+      testHelperNavigation({
+        fromCell: { row: 5, col: 10 },
+        fromClue: { clueNumber: 14, clueType: "down" },
+        toCell: { row: 3, col: 10 },
+        toClue: { clueNumber: 6, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateUp(),
+      });
+    });
+
+    it("previous row wraps to end of last clue on col", () => {
+      testHelperNavigation({
+        fromCell: { row: 0, col: 10 },
+        fromClue: { clueNumber: 6, clueType: "down" },
+        toCell: { row: 14, col: 10 },
+        toClue: { clueNumber: 25, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateUp(),
+      });
+    });
   });
 
   describe("navigateDown", () => {
-    // next row is within same clue
-    // next row is start of next clue on col
-    // next row wraps to start of first clue on col
+    it("next row is within same clue", () => {
+      testHelperNavigation({
+        fromCell: { row: 1, col: 10 },
+        fromClue: { clueNumber: 6, clueType: "down" },
+        toCell: { row: 2, col: 10 },
+        toClue: { clueNumber: 6, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateDown(),
+      });
+    });
+
+    it("next row is start of next clue on col", () => {
+      testHelperNavigation({
+        fromCell: { row: 3, col: 10 },
+        fromClue: { clueNumber: 6, clueType: "down" },
+        toCell: { row: 5, col: 10 },
+        toClue: { clueNumber: 14, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateDown(),
+      });
+    });
+
+    it("next row wraps to start of first clue on col", () => {
+      const fromCell = { row: 14, col: 10 };
+      testHelperNavigation({
+        optionalPrologue: {
+          action: (crosswordState) => crosswordState.selectCell(fromCell),
+        },
+        fromCell,
+        fromClue: { clueNumber: 25, clueType: "down" },
+        toCell: { row: 0, col: 10 },
+        toClue: { clueNumber: 6, clueType: "down" },
+        action: (crosswordState) => crosswordState.navigateDown(),
+      });
+    });
   });
 
   describe("enterLetter", () => {

@@ -22,5 +22,9 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
+    "vitest/expect-expect": [
+      "error",
+      { assertFunctionNames: ["expect", "testHelper*"] },
+    ],
   },
 };
