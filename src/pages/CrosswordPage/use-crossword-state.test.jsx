@@ -2,6 +2,7 @@ import { act, render } from "@testing-library/react";
 
 import { enhance } from "@app/transforms";
 import exampleCrossword from "@app/mocks/example-crossword.json";
+import { range } from "@app/utils";
 
 import { useCrosswordState } from "./use-crossword-state";
 
@@ -125,8 +126,39 @@ describe("useCrosswordState tests", () => {
   });
 
   describe("selectClue", () => {
-    // select an across clue
-    // select a down clue
+    it("select an across clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      const clue = crossword.acrossClues[1];
+
+      act(() => {
+        crosswordState.selectClue(clue);
+      });
+
+      expect(crosswordState.currentCell).toEqual(clue.cells[0]);
+      expect(crosswordState.selectedClue).toBe(clue);
+    });
+
+    it("select a down clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      const clue = crossword.downClues[1];
+
+      act(() => {
+        crosswordState.selectClue(clue);
+      });
+
+      expect(crosswordState.currentCell).toEqual(clue.cells[0]);
+      expect(crosswordState.selectedClue).toBe(clue);
+    });
   });
 
   describe("navigateToNextClue", () => {
@@ -346,10 +378,115 @@ describe("useCrosswordState tests", () => {
   });
 
   describe("enterLetter", () => {
-    // TODO
+    it("advances within same clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      const clue = crossword.acrossClues[0];
+
+      act(() => {
+        crosswordState.selectClue(clue);
+      });
+
+      expect(crosswordState.currentCell).toBe(clue.cells[0]);
+      expect(crosswordState.selectedClue).toBe(clue);
+
+      act(() => {
+        crosswordState.enterLetter("A");
+      });
+
+      expect(crosswordState.currentCell).toBe(clue.cells[1]);
+      expect(crosswordState.selectedClue).toBe(clue);
+    });
+
+    it("advances to next clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      const clue = crossword.acrossClues[0];
+      const nextClue = crossword.acrossClues[1];
+
+      act(() => {
+        crosswordState.selectClue(clue);
+      });
+
+      const letters = "ABCDEFG";
+
+      for (const index of range(clue.cells.length)) {
+        expect(crosswordState.currentCell).toBe(clue.cells[index]);
+        expect(crosswordState.selectedClue).toBe(clue);
+
+        act(() => {
+          crosswordState.enterLetter(letters[index]);
+        });
+      }
+
+      expect(crosswordState.currentCell).toBe(nextClue.cells[0]);
+      expect(crosswordState.selectedClue).toBe(nextClue);
+    });
   });
 
   describe("deleteLetter", () => {
-    // TODO
+    it("goes to previous cell in same clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      act(() => {
+        crosswordState.selectCell({ row: 0, col: 3 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 0, col: 3 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 1,
+        clueType: "across",
+      });
+
+      act(() => {
+        crosswordState.deleteLetter();
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 0, col: 2 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 1,
+        clueType: "across",
+      });
+    });
+
+    it("stops at start of clue", () => {
+      let crosswordState;
+      const onCrosswordState = (arg) => {
+        crosswordState = arg;
+      };
+      renderComponent({ crossword, onCrosswordState });
+
+      act(() => {
+        crosswordState.selectCell({ row: 0, col: 0 });
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 0, col: 0 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 1,
+        clueType: "across",
+      });
+
+      act(() => {
+        crosswordState.deleteLetter();
+      });
+
+      expect(crosswordState.currentCell).toEqual({ row: 0, col: 0 });
+      expect(crosswordState.selectedClue).toMatchObject({
+        clueNumber: 1,
+        clueType: "across",
+      });
+    });
   });
 });

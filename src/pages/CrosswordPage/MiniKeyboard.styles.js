@@ -19,7 +19,7 @@ export const StyledLetterKey = styled.div`
   border-radius: 0.5rem;
   text-align: center;
   font-weight: 700;
-  font-size: 2.2rem;
+  font-size: 2rem;
   line-height: 2.2rem;
 `;
 
