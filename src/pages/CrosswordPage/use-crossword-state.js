@@ -16,14 +16,22 @@ export const useCrosswordState = (crossword) => {
   // const [downAnswers, setDownAnswers] = useState([]);
   const [acrossAnswers] = useState([]);
   const [downAnswers] = useState([]);
-  const allCluesRef = useRef([]);
 
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
+  const allCluesRef = useRef([]);
 
   useEffect(() => {
-    if (allCluesRef.current.length === 0 && crossword) {
-      allCluesRef.current = [...crossword.acrossClues, ...crossword.downClues];
+    if (crossword) {
+      const firstClue = crossword.acrossClues[0];
+      setCurrentCell(firstClue.cells[0]);
+      setSelectedClue(firstClue);
+      if (allCluesRef.current.length === 0) {
+        allCluesRef.current = [
+          ...crossword.acrossClues,
+          ...crossword.downClues,
+        ];
+      }
     }
   }, [crossword]);
 
@@ -64,9 +72,6 @@ export const useCrosswordState = (crossword) => {
         } else {
           setSelectedClue(clue);
         }
-      } else {
-        setCurrentCell();
-        setSelectedClue();
       }
     },
     [crossword, currentCell, selectedClue, toggleableClues]
@@ -140,7 +145,7 @@ export const useCrosswordState = (crossword) => {
     if (!selectedClue) return;
     const index = findSelectedClueIndex();
     if (index < 0) return;
-    // TODO: other stuff...
+    // TODO
     goToNextCell();
   };
 
@@ -148,7 +153,7 @@ export const useCrosswordState = (crossword) => {
     if (!selectedClue) return;
     const index = findSelectedClueIndex();
     if (index < 0) return;
-    // TODO: other stuff...
+    // TODO
     goToPreviousCell();
   };
 

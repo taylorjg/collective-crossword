@@ -13,7 +13,9 @@ export const MiniClues = ({ selectedClue, onNextClue, onPreviousClue }) => {
           <ArrowBackIosNewIcon />
         </IconButton>
       </StyledNav>
-      <StyledClue>{selectedClue?.clue ?? "CLUE WILL GO HERE"}</StyledClue>
+      <StyledClue
+        dangerouslySetInnerHTML={{ __html: selectedClue?.clue ?? "" }}
+      />
       <StyledNav onClick={onNextClue}>
         <IconButton>
           <ArrowForwardIosIcon />

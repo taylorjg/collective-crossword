@@ -14,4 +14,5 @@ export const StyledNav = styled.div`
 export const StyledClue = styled.div`
   display: grid;
   place-content: center;
+  text-align: center;
 `;

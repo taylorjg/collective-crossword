@@ -82,7 +82,11 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
                   onClick={() => crosswordState.selectClue(clue)}
                 >
                   <StyledClueNumber>{clue.clueNumber}</StyledClueNumber>
-                  <StyledClueText>{clue.clue}</StyledClueText>
+                  <StyledClueText
+                    dangerouslySetInnerHTML={{
+                      __html: clue.clue,
+                    }}
+                  />
                 </StyledClue>
               );
             })}
@@ -98,7 +102,11 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
                   onClick={() => crosswordState.selectClue(clue)}
                 >
                   <StyledClueNumber>{clue.clueNumber}</StyledClueNumber>
-                  <StyledClueText>{clue.clue}</StyledClueText>
+                  <StyledClueText
+                    dangerouslySetInnerHTML={{
+                      __html: clue.clue,
+                    }}
+                  />
                 </StyledClue>
               );
             })}

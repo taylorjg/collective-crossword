@@ -74,9 +74,10 @@ describe("useCrosswordState tests", () => {
       crosswordState = arg;
     };
     renderComponent({ crossword, onCrosswordState });
-    expect(crosswordState).toBeDefined();
-    expect(crosswordState.currentCell).toBeUndefined();
-    expect(crosswordState.selectedClue).toBeUndefined();
+
+    const firstClue = crossword.acrossClues[0];
+    expect(crosswordState.currentCell).toBe(firstClue.cells[0]);
+    expect(crosswordState.selectedClue).toBe(firstClue);
   });
 
   describe("selectCell", () => {
