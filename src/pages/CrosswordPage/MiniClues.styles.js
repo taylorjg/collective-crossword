@@ -9,7 +9,6 @@ export const StyledMiniClues = styled.div`
 export const StyledNav = styled.div`
   display: grid;
   place-content: center;
-  padding: 0.5rem;
 `;
 
 export const StyledClue = styled.div`

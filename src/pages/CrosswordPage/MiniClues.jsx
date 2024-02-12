@@ -6,7 +6,6 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { StyledMiniClues, StyledNav, StyledClue } from "./MiniClues.styles";
 
 export const MiniClues = ({ selectedClue, onNextClue, onPreviousClue }) => {
-  console.log({ selectedClue, onNextClue, onPreviousClue });
   return (
     <StyledMiniClues>
       <StyledNav onClick={onPreviousClue}>
