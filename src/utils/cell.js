@@ -6,3 +6,6 @@ export const isSameAsFirstCell = ({ cells }, cell) =>
 
 export const isSameAsLastCell = ({ cells }, cell) =>
   isSameCell(cells[cells.length - 1], cell);
+
+export const findCellIndex = (cells, cellToLookFor) =>
+  cells.findIndex((cell) => isSameCell(cell, cellToLookFor));

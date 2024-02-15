@@ -1,19 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { listenForCrosswordAnswers } from "@app/firebase";
-import { isSameAsFirstCell, isSameCell } from "@app/utils";
+import { findCellIndex, isSameAsFirstCell, isSameCell } from "@app/utils";
 
-// const setLetterAtIndex = (letters, letter, index) => {
-//   const arr = Array.from(letters);
-//   arr[index] = letter;
-//   return arr.join("");
-// };
+const setLetterAtIndex = (letters, letter, index) => {
+  const arr = Array.from(letters);
+  arr[index] = letter;
+  return arr.join("");
+};
 
-export const useCrosswordState = (crossword) => {
+export const useCrosswordState = (crossword, answers, isSignedIn) => {
   // External
   const [currentCell, setCurrentCell] = useState();
   const [selectedClue, setSelectedClue] = useState();
-  const [answers, setAnswers] = useState([]);
+  const [partialAnswers, setPartialAnswers] = useState([]);
 
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
@@ -33,20 +32,6 @@ export const useCrosswordState = (crossword) => {
     }
   }, [crossword]);
 
-  useEffect(() => {
-    const onNext = (querySnapshot) => {
-      const localAnswers = [];
-      querySnapshot.forEach((doc) => {
-        localAnswers.push({ id: doc.id, ...doc.data() });
-      });
-      setAnswers(localAnswers);
-    };
-
-    if (crossword) {
-      return listenForCrosswordAnswers(crossword.id, onNext);
-    }
-  }, [crossword]);
-
   const selectCell = useCallback(
     (cell) => {
       if (isSameCell(cell, currentCell) && toggleableClues) {
@@ -58,8 +43,7 @@ export const useCrosswordState = (crossword) => {
         return;
       }
 
-      const { row, col } = cell;
-      const key = `${row}:${col}`;
+      const key = `${cell.row}:${cell.col}`;
       const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key) ?? {};
       const clue = acrossClue ?? downClue;
 
@@ -96,9 +80,7 @@ export const useCrosswordState = (crossword) => {
   }, []);
 
   const findCurrentCellIndex = () => {
-    return selectedClue.cells.findIndex((cell) =>
-      isSameCell(currentCell, cell)
-    );
+    return findCellIndex(selectedClue.cells, currentCell);
   };
 
   const findSelectedClueIndex = () => {
@@ -153,15 +135,76 @@ export const useCrosswordState = (crossword) => {
     }
   };
 
-  const enterLetter = (/* letter */) => {
+  const findAnswerForClue = (clue) => {
+    return answers.find(
+      (answer) =>
+        answer.clueNumber === clue.clueNumber &&
+        answer.clueType === clue.clueType
+    );
+  };
+
+  const initCurrentPartialAnswer = () => {
+    const partialAnswerLetters = selectedClue.cells.map((cell) => {
+      const key = `${cell.row}:${cell.col}`;
+      const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key);
+      const otherClue =
+        selectedClue.clueType === "across" ? downClue : acrossClue;
+      if (otherClue) {
+        const answer = findAnswerForClue(otherClue);
+        if (answer) {
+          const index = findCellIndex(otherClue.cells, cell);
+          const letters = Array.from(answer.answer);
+          return letters[index];
+        }
+      }
+      return " ";
+    });
+    const answer = partialAnswerLetters.join(" ");
+
+    return {
+      clueNumber: selectedClue.clueNumber,
+      clueType: selectedClue.clueType,
+      answer,
+    };
+  };
+
+  const getCurrentPartialAnswer = () => {
+    const currentPartialAnswer = partialAnswers.find(
+      (partialAnswer) =>
+        partialAnswer.clueNumber === selectedClue.clueNumber &&
+        partialAnswer.clueType === selectedClue.clueType
+    );
+    return currentPartialAnswer ?? initCurrentPartialAnswer();
+  };
+
+  const enterLetter = (letter) => {
+    if (!isSignedIn) return;
     if (!selectedClue) return;
-    const index = findSelectedClueIndex();
+    const index = findCurrentCellIndex();
     if (index < 0) return;
-    // TODO
+    const partialAnswer = getCurrentPartialAnswer();
+    const oldAnswer = partialAnswer.answer;
+    const newAnswer = setLetterAtIndex(oldAnswer, letter, index);
+    const newPartialAnswer = { ...partialAnswer, answer: newAnswer };
+    const isComplete = !newAnswer.includes(" ");
+    setPartialAnswers((currentPartialAnswers) => {
+      const otherPartialAnswers = currentPartialAnswers.filter(
+        (partialAnswer) =>
+          partialAnswer.clueNumber !== selectedClue.clueNumber ||
+          partialAnswer.clueType !== selectedClue.clueType
+      );
+      if (isComplete) return otherPartialAnswers;
+      return [...otherPartialAnswers, newPartialAnswer];
+    });
+
+    // if isComplete then fire a callback for outside code to save this new answer:
+    //   onSaveAnswer(newPartialAnswer);
+
     goToNextCell();
   };
 
   const deleteLetter = () => {
+    if (!isSignedIn) return;
     if (!selectedClue) return;
     const index = findSelectedClueIndex();
     if (index < 0) return;
@@ -241,6 +284,7 @@ export const useCrosswordState = (crossword) => {
     currentCell,
     selectedClue,
     answers,
+    partialAnswers,
     selectCell,
     selectClue,
     enterLetter,

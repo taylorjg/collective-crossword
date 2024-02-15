@@ -8,6 +8,7 @@ export const PuzzleGrid = ({
   currentCell,
   selectedCells = [],
   answers = [],
+  partialAnswers = [],
   selectCell = noop,
 }) => {
   const VIEWBOX_WIDTH = 100;
@@ -222,7 +223,7 @@ export const PuzzleGrid = ({
     );
   };
 
-  const drawAnswers = () => {
+  const drawAnswers = (answers) => {
     return answers.flatMap(({ clueNumber, clueType, answer }) => {
       const cluesMap =
         clueType === "across"
@@ -298,7 +299,8 @@ export const PuzzleGrid = ({
       {drawCells()}
       {drawSelectedCellsOutline()}
       {drawClueNumbers()}
-      {drawAnswers()}
+      {drawAnswers(answers)}
+      {drawAnswers(partialAnswers)}
       {drawHorizontalGridLines()}
       {drawVerticalGridLines()}
     </svg>
@@ -318,6 +320,13 @@ PuzzleGrid.propTypes = {
     })
   ),
   answers: PropTypes.arrayOf(
+    PropTypes.shape({
+      clueNumber: PropTypes.number.isRequired,
+      clueType: PropTypes.string.isRequired,
+      answer: PropTypes.string.isRequired,
+    })
+  ),
+  partialAnswers: PropTypes.arrayOf(
     PropTypes.shape({
       clueNumber: PropTypes.number.isRequired,
       clueType: PropTypes.string.isRequired,

@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMediaQuery } from "@mui/material";
 
-import { getCrosswordById } from "@app/firebase";
+import { getCrosswordById, listenForCrosswordAnswers } from "@app/firebase";
 import { FullPageMessage } from "@app/components";
 import { enhance } from "@app/transforms";
+import { useAuth } from "@app/contexts";
 
 import { UnsupportedViewport } from "./UnsupportedViewport";
 import { SmallScreen } from "./SmallScreen";
@@ -13,9 +14,12 @@ import { useCrosswordState } from "./use-crossword-state";
 
 export const CrosswordPage = () => {
   const [crossword, setCrossword] = useState();
+  const [answers, setAnswers] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
+  const { user } = useAuth();
+  const isSignedIn = Boolean(user);
 
-  const crosswordState = useCrosswordState(crossword);
+  const crosswordState = useCrosswordState(crossword, answers, isSignedIn);
 
   const { id } = useParams();
 
@@ -38,6 +42,18 @@ export const CrosswordPage = () => {
     };
 
     invokeGetCrossword();
+  }, [id]);
+
+  useEffect(() => {
+    const onNext = (querySnapshot) => {
+      const localAnswers = [];
+      querySnapshot.forEach((doc) => {
+        localAnswers.push({ id: doc.id, ...doc.data() });
+      });
+      setAnswers(localAnswers);
+    };
+
+    return listenForCrosswordAnswers(id, onNext);
   }, [id]);
 
   if (errorMessage) return <FullPageMessage message={errorMessage} />;

@@ -8,13 +8,30 @@ import { useCrosswordState } from "./use-crossword-state";
 
 const crossword = enhance(exampleCrossword);
 
-const TestComponent = ({ crossword, onCrosswordState }) => {
-  const crosswordState = useCrosswordState(crossword);
+const TestComponent = ({
+  crossword,
+  answers,
+  isSignedIn,
+  onCrosswordState,
+}) => {
+  const crosswordState = useCrosswordState(crossword, answers, isSignedIn);
   onCrosswordState(crosswordState);
 };
 
-const renderComponent = (props) => {
-  return render(<TestComponent {...props} />);
+const renderComponent = ({
+  crossword,
+  answers = [],
+  isSignedIn = true,
+  onCrosswordState,
+}) => {
+  return render(
+    <TestComponent
+      crossword={crossword}
+      answers={answers}
+      isSignedIn={isSignedIn}
+      onCrosswordState={onCrosswordState}
+    />
+  );
 };
 
 const testHelperNavigation = ({
