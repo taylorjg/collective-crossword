@@ -66,9 +66,8 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
               crossword={crossword}
               currentCell={crosswordState.currentCell}
               selectedCells={crosswordState.selectedClue?.cells}
+              answers={crosswordState.answers}
               selectCell={crosswordState.selectCell}
-              acrossAnswers={crosswordState.acrossAnswers}
-              downAnswers={crosswordState.downAnswers}
             />
           </StyledPuzzleGrid>
           <StyledClues>

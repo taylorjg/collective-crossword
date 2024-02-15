@@ -69,7 +69,7 @@ export const deleteCrossword = async (id) => {
   return deleteDoc(docRef);
 };
 
-export const listenForCrosswordChanges = (onNext, crosswordType) => {
+export const getCrosswords = async (crosswordType) => {
   const collectionRef = collection(db, "crosswords");
   const q = crosswordType
     ? query(
@@ -78,7 +78,12 @@ export const listenForCrosswordChanges = (onNext, crosswordType) => {
         orderBy("timestamp")
       )
     : query(collectionRef, orderBy("timestamp"));
-  return onSnapshot(q, onNext);
+  return getDocs(q);
+};
+
+export const listenForCrosswordAnswers = (crosswordId, onNext) => {
+  const collectionRef = collection(db, "crosswords", crosswordId, "answers");
+  return onSnapshot(collectionRef, onNext);
 };
 
 const functions = getFunctions(app);

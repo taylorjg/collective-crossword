@@ -6,7 +6,7 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
 
 import { useAuth } from "@app/contexts";
-import { deleteCrossword, listenForCrosswordChanges } from "@app/firebase";
+import { getCrosswords, deleteCrossword } from "@app/firebase";
 import { FullPageLoading } from "@app/components";
 import { CrosswordTypes } from "@app/constants";
 import { ConfirmationModal } from "@app/components";
@@ -27,7 +27,12 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onNext = (querySnapshot) => {
+    const getCrosswordsAsync = async () => {
+      let crosswordType;
+      if (currentTab === "1") crosswordType = CrosswordTypes.Cryptic;
+      if (currentTab === "2") crosswordType = CrosswordTypes.Quick;
+
+      const querySnapshot = await getCrosswords(crosswordType);
       const localCrosswords = [];
       querySnapshot.forEach((doc) => {
         localCrosswords.push({ id: doc.id, ...doc.data() });
@@ -35,13 +40,7 @@ export const HomePage = () => {
       setCrosswords(localCrosswords);
     };
 
-    let crosswordType;
-    if (currentTab === "1") crosswordType = CrosswordTypes.Cryptic;
-    if (currentTab === "2") crosswordType = CrosswordTypes.Quick;
-
-    setCrosswords((currentValue) => (currentValue ? [] : currentValue));
-
-    return listenForCrosswordChanges(onNext, crosswordType);
+    getCrosswordsAsync();
   }, [currentTab]);
 
   const onChangeTab = (_, newValue) => {

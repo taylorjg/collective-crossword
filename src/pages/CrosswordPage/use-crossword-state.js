@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { listenForCrosswordAnswers } from "@app/firebase";
 import { isSameAsFirstCell, isSameCell } from "@app/utils";
 
 // const setLetterAtIndex = (letters, letter, index) => {
@@ -12,10 +13,7 @@ export const useCrosswordState = (crossword) => {
   // External
   const [currentCell, setCurrentCell] = useState();
   const [selectedClue, setSelectedClue] = useState();
-  // const [acrossAnswers, setAcrossAnswers] = useState([]);
-  // const [downAnswers, setDownAnswers] = useState([]);
-  const [acrossAnswers] = useState([]);
-  const [downAnswers] = useState([]);
+  const [answers, setAnswers] = useState([]);
 
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
@@ -32,6 +30,20 @@ export const useCrosswordState = (crossword) => {
           ...crossword.downClues,
         ];
       }
+    }
+  }, [crossword]);
+
+  useEffect(() => {
+    const onNext = (querySnapshot) => {
+      const localAnswers = [];
+      querySnapshot.forEach((doc) => {
+        localAnswers.push({ id: doc.id, ...doc.data() });
+      });
+      setAnswers(localAnswers);
+    };
+
+    if (crossword) {
+      return listenForCrosswordAnswers(crossword.id, onNext);
     }
   }, [crossword]);
 
@@ -228,8 +240,7 @@ export const useCrosswordState = (crossword) => {
   return {
     currentCell,
     selectedClue,
-    acrossAnswers,
-    downAnswers,
+    answers,
     selectCell,
     selectClue,
     enterLetter,

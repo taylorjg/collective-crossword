@@ -5,11 +5,10 @@ import { noop, range, isSameCell } from "@app/utils";
 
 export const PuzzleGrid = ({
   crossword,
-  selectCell = noop,
   currentCell,
   selectedCells = [],
-  acrossAnswers = [],
-  downAnswers = [],
+  answers = [],
+  selectCell = noop,
 }) => {
   const VIEWBOX_WIDTH = 100;
   const VIEWBOX_HEIGHT = 100;
@@ -223,30 +222,23 @@ export const PuzzleGrid = ({
     );
   };
 
-  const drawAcrossAnswers = () => {
-    return acrossAnswers.flatMap(({ clueNumber, answer }) => {
-      const { cells } = crossword.acrossCluesMap.get(clueNumber);
+  const drawAnswers = () => {
+    return answers.flatMap(({ clueNumber, clueType, answer }) => {
+      const cluesMap =
+        clueType === "across"
+          ? crossword.acrossCluesMap
+          : crossword.downCluesMap;
+      const { cells } = cluesMap.get(clueNumber);
       const letters = Array.from(answer);
       const indexes = range(letters.length);
       return indexes.flatMap((index) => {
         const cell = cells[index];
         const letter = letters[index];
-        if (letter === " ") return [];
-        return [drawLetter(cell, letter, "across")];
-      });
-    });
-  };
 
-  const drawDownAnswers = () => {
-    return downAnswers.flatMap(({ clueNumber, answer }) => {
-      const { cells } = crossword.downCluesMap.get(clueNumber);
-      const letters = Array.from(answer);
-      const indexes = range(letters.length);
-      return indexes.flatMap((index) => {
-        const cell = cells[index];
-        const letter = letters[index];
+        // Do we need this check ? Only for partial answers ?
         if (letter === " ") return [];
-        return [drawLetter(cell, letter, "down")];
+
+        return [drawLetter(cell, letter, clueType)];
       });
     });
   };
@@ -306,8 +298,7 @@ export const PuzzleGrid = ({
       {drawCells()}
       {drawSelectedCellsOutline()}
       {drawClueNumbers()}
-      {drawAcrossAnswers()}
-      {drawDownAnswers()}
+      {drawAnswers()}
       {drawHorizontalGridLines()}
       {drawVerticalGridLines()}
     </svg>
@@ -316,7 +307,6 @@ export const PuzzleGrid = ({
 
 PuzzleGrid.propTypes = {
   crossword: PropTypes.object.isRequired,
-  selectCell: PropTypes.func,
   currentCell: PropTypes.shape({
     row: PropTypes.number.isRequired,
     col: PropTypes.number.isRequired,
@@ -327,16 +317,12 @@ PuzzleGrid.propTypes = {
       col: PropTypes.number.isRequired,
     })
   ),
-  acrossAnswers: PropTypes.arrayOf(
+  answers: PropTypes.arrayOf(
     PropTypes.shape({
       clueNumber: PropTypes.number.isRequired,
+      clueType: PropTypes.string.isRequired,
       answer: PropTypes.string.isRequired,
     })
   ),
-  downAnswers: PropTypes.arrayOf(
-    PropTypes.shape({
-      clueNumber: PropTypes.number.isRequired,
-      answer: PropTypes.string.isRequired,
-    })
-  ),
+  selectCell: PropTypes.func,
 };
