@@ -8,7 +8,11 @@ const setLetterAtIndex = (letters, letter, index) => {
   return arr.join("");
 };
 
-export const useCrosswordState = (crossword, answers, isSignedIn) => {
+export const useCrosswordState = (
+  crossword,
+  answers = [],
+  isSignedIn = false
+) => {
   // External
   const [currentCell, setCurrentCell] = useState();
   const [selectedClue, setSelectedClue] = useState();
@@ -159,7 +163,7 @@ export const useCrosswordState = (crossword, answers, isSignedIn) => {
       }
       return " ";
     });
-    const answer = partialAnswerLetters.join(" ");
+    const answer = partialAnswerLetters.join("");
 
     return {
       clueNumber: selectedClue.clueNumber,
@@ -177,28 +181,43 @@ export const useCrosswordState = (crossword, answers, isSignedIn) => {
     return currentPartialAnswer ?? initCurrentPartialAnswer();
   };
 
+  const findCrossCheckingLetter = () => {
+    if (!currentCell) return;
+    if (!selectedClue) return;
+    const key = `${currentCell.row}:${currentCell.col}`;
+    const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key);
+    const otherClue =
+      selectedClue.clueType === "across" ? downClue : acrossClue;
+    if (otherClue) {
+      const answer = findAnswerForClue(otherClue);
+      if (answer) {
+        const index = findCellIndex(otherClue.cells, currentCell);
+        const letters = Array.from(answer.answer);
+        return letters[index];
+      }
+    }
+  };
+
   const enterLetter = (letter) => {
     if (!isSignedIn) return;
     if (!selectedClue) return;
     const index = findCurrentCellIndex();
     if (index < 0) return;
     const partialAnswer = getCurrentPartialAnswer();
-    const oldAnswer = partialAnswer.answer;
-    const newAnswer = setLetterAtIndex(oldAnswer, letter, index);
-    const newPartialAnswer = { ...partialAnswer, answer: newAnswer };
-    const isComplete = !newAnswer.includes(" ");
-    setPartialAnswers((currentPartialAnswers) => {
-      const otherPartialAnswers = currentPartialAnswers.filter(
-        (partialAnswer) =>
-          partialAnswer.clueNumber !== selectedClue.clueNumber ||
-          partialAnswer.clueType !== selectedClue.clueType
-      );
-      if (isComplete) return otherPartialAnswers;
-      return [...otherPartialAnswers, newPartialAnswer];
-    });
-
-    // if isComplete then fire a callback for outside code to save this new answer:
-    //   onSaveAnswer(newPartialAnswer);
+    const crossCheckingLetter = findCrossCheckingLetter(index);
+    if (!crossCheckingLetter || crossCheckingLetter === letter) {
+      const oldAnswer = partialAnswer.answer;
+      const newAnswer = setLetterAtIndex(oldAnswer, letter, index);
+      const newPartialAnswer = { ...partialAnswer, answer: newAnswer };
+      setPartialAnswers((currentPartialAnswers) => {
+        const otherPartialAnswers = currentPartialAnswers.filter(
+          (partialAnswer) =>
+            partialAnswer.clueNumber !== selectedClue.clueNumber ||
+            partialAnswer.clueType !== selectedClue.clueType
+        );
+        return [...otherPartialAnswers, newPartialAnswer];
+      });
+    }
 
     goToNextCell();
   };
@@ -206,9 +225,23 @@ export const useCrosswordState = (crossword, answers, isSignedIn) => {
   const deleteLetter = () => {
     if (!isSignedIn) return;
     if (!selectedClue) return;
-    const index = findSelectedClueIndex();
+    const index = findCurrentCellIndex();
     if (index < 0) return;
-    // TODO
+    const partialAnswer = getCurrentPartialAnswer();
+    const crossCheckingLetter = findCrossCheckingLetter(index);
+    if (!crossCheckingLetter) {
+      const oldAnswer = partialAnswer.answer;
+      const newAnswer = setLetterAtIndex(oldAnswer, " ", index);
+      const newPartialAnswer = { ...partialAnswer, answer: newAnswer };
+      setPartialAnswers((currentPartialAnswers) => {
+        const otherPartialAnswers = currentPartialAnswers.filter(
+          (partialAnswer) =>
+            partialAnswer.clueNumber !== selectedClue.clueNumber ||
+            partialAnswer.clueType !== selectedClue.clueType
+        );
+        return [...otherPartialAnswers, newPartialAnswer];
+      });
+    }
     goToPreviousCell();
   };
 

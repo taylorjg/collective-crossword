@@ -448,6 +448,9 @@ describe("useCrosswordState tests", () => {
       expect(crosswordState.currentCell).toBe(nextClue.cells[0]);
       expect(crosswordState.selectedClue).toBe(nextClue);
     });
+
+    // does nothing when new letter differs to existing cross checking letter
+    // prceeds as normal when new letter matches existing cross checking letter
   });
 
   describe("deleteLetter", () => {
@@ -506,5 +509,7 @@ describe("useCrosswordState tests", () => {
         clueType: "across",
       });
     });
+
+    // does not overwrite existing cross checking letter but does go to previous cell
   });
 });
