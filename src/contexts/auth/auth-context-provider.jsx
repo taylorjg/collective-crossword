@@ -31,6 +31,7 @@ export const AuthContextProvider = ({ children }) => {
           const user = docSnap.data();
           const userEnhanced = {
             ...user,
+            userId: userArg.uid,
             creationTime: userArg.metadata.creationTime,
             lastSignInTime: userArg.metadata.lastSignInTime,
           };
@@ -68,6 +69,7 @@ export const AuthContextProvider = ({ children }) => {
         await setDoc(docRef, user);
         const userEnhanced = {
           ...user,
+          userId: userCredential.user.uid,
           creationTime: userCredential.user.metadata.creationTime,
           lastSignInTime: userCredential.user.metadata.lastSignInTime,
         };

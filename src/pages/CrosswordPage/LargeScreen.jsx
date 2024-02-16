@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
+import { addAnswer } from "@app/firebase";
 import { PuzzleGrid } from "@app/components";
 import { formatDate } from "@app/utils";
+import { useAuth } from "@app/contexts";
 
 import {
   StyledPuzzle,
@@ -15,6 +17,8 @@ import {
 } from "./CrosswordPage.styles";
 
 export const LargeScreen = ({ crossword, crosswordState }) => {
+  const { user } = useAuth();
+
   useEffect(() => {
     const onKeyDown = (e) => {
       if (/^[a-zA-Z]$/.test(e.key)) {
@@ -52,6 +56,22 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
     };
   }, [crosswordState]);
 
+  const onAddAnswers = async () => {
+    if (!user) return;
+    for (const partialAnswer of crosswordState.partialAnswers) {
+      const isComplete = !partialAnswer.answer.includes(" ");
+      if (isComplete) {
+        await addAnswer(
+          crossword,
+          partialAnswer.clueNumber,
+          partialAnswer.clueType,
+          partialAnswer.answer,
+          user.userId
+        );
+      }
+    }
+  };
+
   return (
     <Grid container>
       <Grid item xs={12} md={10} sx={{ mx: { xs: 2, md: "auto" } }}>
@@ -59,6 +79,9 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
         <div>Publish Date: {formatDate(crossword.publishDate)}</div>
         <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
         <div>Title: {crossword.title}</div>
+        <Button variant="contained" onClick={onAddAnswers} sx={{ my: 1 }}>
+          Save Answers
+        </Button>
         {crossword.author && <div>Author: {crossword.author}</div>}
         <StyledPuzzle>
           <StyledPuzzleGrid>

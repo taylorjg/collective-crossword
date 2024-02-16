@@ -48,6 +48,29 @@ export const addCrossword = async (crossword) => {
   return addDoc(collectionRef, data);
 };
 
+export const addAnswer = async (
+  crossword,
+  clueNumber,
+  clueType,
+  answer,
+  userId
+) => {
+  const subcollectionRef = collection(
+    db,
+    "crosswords",
+    crossword.id,
+    "answers"
+  );
+  const data = {
+    clueNumber,
+    clueType,
+    answer,
+    userId,
+    timestamp: serverTimestamp(),
+  };
+  return addDoc(subcollectionRef, data);
+};
+
 export const getCrosswordById = async (id) => {
   const docRef = doc(db, "crosswords", id);
   return getDoc(docRef);
