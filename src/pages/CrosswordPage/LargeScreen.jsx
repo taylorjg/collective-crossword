@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Button, Grid, Typography } from "@mui/material";
 
@@ -17,6 +17,7 @@ import {
 } from "./CrosswordPage.styles";
 
 export const LargeScreen = ({ crossword, crosswordState }) => {
+  const [showSavingSpinner, setShowSavingSpinner] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -58,17 +59,24 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
 
   const onAddAnswers = async () => {
     if (!user) return;
-    for (const partialAnswer of crosswordState.partialAnswers) {
-      const isComplete = !partialAnswer.answer.includes(" ");
-      if (isComplete) {
-        await addAnswer(
-          crossword,
-          partialAnswer.clueNumber,
-          partialAnswer.clueType,
-          partialAnswer.answer,
-          user.userId
-        );
+    try {
+      setShowSavingSpinner(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      for (const partialAnswer of crosswordState.partialAnswers) {
+        const isComplete = !partialAnswer.answer.includes(" ");
+        if (isComplete) {
+          await addAnswer(
+            crossword,
+            partialAnswer.clueNumber,
+            partialAnswer.clueType,
+            partialAnswer.answer,
+            user.userId
+          );
+        }
       }
+      // TODO: call crosswordState function to remove complete partial answers
+    } finally {
+      setShowSavingSpinner(false);
     }
   };
 
@@ -79,7 +87,12 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
         <div>Publish Date: {formatDate(crossword.publishDate)}</div>
         <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
         <div>Title: {crossword.title}</div>
-        <Button variant="contained" onClick={onAddAnswers} sx={{ my: 1 }}>
+        <Button
+          variant="contained"
+          onClick={onAddAnswers}
+          sx={{ my: 1 }}
+          disabled={!user}
+        >
           Save Answers
         </Button>
         {crossword.author && <div>Author: {crossword.author}</div>}
@@ -92,6 +105,7 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
               answers={crosswordState.answers}
               partialAnswers={crosswordState.partialAnswers}
               selectCell={crosswordState.selectCell}
+              showSavingSpinner={showSavingSpinner}
             />
           </StyledPuzzleGrid>
           <StyledClues>

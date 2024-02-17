@@ -1,7 +1,14 @@
 import { useRef } from "react";
 import PropTypes from "prop-types";
+import { CircularProgress, useTheme } from "@mui/material";
 
 import { noop, range, isSameCell } from "@app/utils";
+
+import {
+  StyledPuzzleGridWrapper,
+  StyledPuzzleGrid,
+  StyledSavingSpinner,
+} from "./PuzzleGrid.styles";
 
 export const PuzzleGrid = ({
   crossword,
@@ -10,7 +17,10 @@ export const PuzzleGrid = ({
   answers = [],
   partialAnswers = [],
   selectCell = noop,
+  showSavingSpinner,
 }) => {
+  const theme = useTheme();
+
   const VIEWBOX_WIDTH = 100;
   const VIEWBOX_HEIGHT = 100;
   const GRID_LINE_FULL_THICKNESS = 1 / 4;
@@ -33,7 +43,8 @@ export const PuzzleGrid = ({
   const CLUE_NUMBER_COLOUR = "black";
   const CLUE_NUMBER_FONT_SIZE = SQUARE_WIDTH / 3.5;
 
-  const LETTER_COLOUR = "black";
+  const REGULAR_LETTER_COLOUR = "black";
+  const PARTIAL_ANSWER_LETTER_COLOUR = theme.palette.primary.dark;
   const LETTER_FONT_SIZE = SQUARE_WIDTH / 1.5;
 
   const calculateX = (col) => col * SQUARE_WIDTH + GRID_LINE_HALF_THICKNESS;
@@ -223,7 +234,7 @@ export const PuzzleGrid = ({
     );
   };
 
-  const drawAnswers = (answers) => {
+  const drawAnswers = (answers, overrideColour) => {
     return answers.flatMap(({ clueNumber, clueType, answer }) => {
       const cluesMap =
         clueType === "across"
@@ -239,22 +250,24 @@ export const PuzzleGrid = ({
         // Do we need this check ? Only for partial answers ?
         if (letter === " ") return [];
 
-        return [drawLetter(cell, letter, clueType)];
+        return [drawLetter(cell, letter, clueType, overrideColour)];
       });
     });
   };
 
-  const drawLetter = (cell, letter, clueType) => {
+  const drawLetter = (cell, letter, clueType, overrideColour) => {
     const { row, col } = cell;
     const cx = calculateX(col) + SQUARE_WIDTH / 2;
     const cy = calculateY(row) + SQUARE_HEIGHT / 2;
+
+    const letterColour = overrideColour ?? REGULAR_LETTER_COLOUR;
 
     return (
       <text
         key={`letter-${clueType}-${row}-${col}`}
         x={cx}
         y={cy}
-        fill={LETTER_COLOUR}
+        fill={letterColour}
         fontSize={LETTER_FONT_SIZE}
         textAnchor="middle"
         dominantBaseline="central"
@@ -277,33 +290,40 @@ export const PuzzleGrid = ({
   };
 
   return (
-    <svg
-      viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-      onClick={handleGridClick}
-      ref={svgRef}
-    >
-      <defs>
-        <pattern
-          id="current-cell-pattern"
-          patternUnits="userSpaceOnUse"
-          width="1"
-          height="1"
-          patternTransform="rotate(45)"
-        >
-          <line x1="0" y1="0" x2="0" y2="1" stroke={SELECTED_CELLS_COLOUR} />
-          <line x1="1" y1="0" x2="1" y2="1" stroke={CURRENT_CELL_COLOUR} />
-        </pattern>
-      </defs>
-      {drawBackground()}
-      {drawBlocks()}
-      {drawCells()}
-      {drawSelectedCellsOutline()}
-      {drawClueNumbers()}
-      {drawAnswers(answers)}
-      {drawAnswers(partialAnswers)}
-      {drawHorizontalGridLines()}
-      {drawVerticalGridLines()}
-    </svg>
+    <StyledPuzzleGridWrapper>
+      <StyledPuzzleGrid
+        viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+        onClick={handleGridClick}
+        ref={svgRef}
+      >
+        <defs>
+          <pattern
+            id="current-cell-pattern"
+            patternUnits="userSpaceOnUse"
+            width="1"
+            height="1"
+            patternTransform="rotate(45)"
+          >
+            <line x1="0" y1="0" x2="0" y2="1" stroke={SELECTED_CELLS_COLOUR} />
+            <line x1="1" y1="0" x2="1" y2="1" stroke={CURRENT_CELL_COLOUR} />
+          </pattern>
+        </defs>
+        {drawBackground()}
+        {drawBlocks()}
+        {drawCells()}
+        {drawSelectedCellsOutline()}
+        {drawClueNumbers()}
+        {drawAnswers(answers)}
+        {drawAnswers(partialAnswers, PARTIAL_ANSWER_LETTER_COLOUR)}
+        {drawHorizontalGridLines()}
+        {drawVerticalGridLines()}
+      </StyledPuzzleGrid>
+      {showSavingSpinner && (
+        <StyledSavingSpinner>
+          <CircularProgress size={"25%"} />
+        </StyledSavingSpinner>
+      )}
+    </StyledPuzzleGridWrapper>
   );
 };
 
@@ -334,4 +354,5 @@ PuzzleGrid.propTypes = {
     })
   ),
   selectCell: PropTypes.func,
+  showSavingSpinner: PropTypes.bool,
 };
