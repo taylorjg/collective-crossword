@@ -83,6 +83,22 @@ export const useCrosswordState = (
     setToggleableClues();
   }, []);
 
+  const clearPartialAnswer = (partialAnswerToClear) => {
+    setPartialAnswers((currentPartialAnswers) => {
+      return currentPartialAnswers.filter(
+        (partialAnswer) => partialAnswer !== partialAnswerToClear
+      );
+    });
+  };
+
+  const removeCompletePartialAnswers = () => {
+    setPartialAnswers((currentPartialAnswers) => {
+      return currentPartialAnswers.filter((partialAnswer) =>
+        partialAnswer.answer.includes(" ")
+      );
+    });
+  };
+
   const findCurrentCellIndex = () => {
     return findCellIndex(selectedClue.cells, currentCell);
   };
@@ -318,6 +334,8 @@ export const useCrosswordState = (
     selectedClue,
     answers,
     partialAnswers,
+    clearPartialAnswer,
+    removeCompletePartialAnswers,
     selectCell,
     selectClue,
     enterLetter,
