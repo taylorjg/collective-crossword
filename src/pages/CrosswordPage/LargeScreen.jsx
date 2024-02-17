@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { addAnswer } from "@app/firebase";
 import { PuzzleGrid } from "@app/components";
-import { formatDate } from "@app/utils";
-import { useAuth } from "@app/contexts";
+import { formatDate, minDuration } from "@app/utils";
+import { useAuth, useToast } from "@app/contexts";
 
 import {
   StyledPuzzle,
@@ -19,6 +20,7 @@ import {
 export const LargeScreen = ({ crossword, crosswordState }) => {
   const [showSavingSpinner, setShowSavingSpinner] = useState(false);
   const { user } = useAuth();
+  const { showError } = useToast();
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -59,22 +61,31 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
 
   const onAddAnswers = async () => {
     if (!user) return;
-    try {
-      setShowSavingSpinner(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    const saveAnswer = async (partialAnswer) => {
+      await addAnswer(
+        crossword,
+        partialAnswer.clueNumber,
+        partialAnswer.clueType,
+        partialAnswer.answer,
+        user.userId,
+        user.username,
+        user.displayName
+      );
+    };
+    const saveAnswers = async () => {
       for (const partialAnswer of crosswordState.partialAnswers) {
         const isComplete = !partialAnswer.answer.includes(" ");
         if (isComplete) {
-          await addAnswer(
-            crossword,
-            partialAnswer.clueNumber,
-            partialAnswer.clueType,
-            partialAnswer.answer,
-            user.userId
-          );
+          saveAnswer(partialAnswer);
         }
       }
+    };
+    try {
+      setShowSavingSpinner(true);
+      await minDuration(saveAnswers(), 1000);
       // TODO: call crosswordState function to remove complete partial answers
+    } catch (error) {
+      showError("Failed to save answers", error.message);
     } finally {
       setShowSavingSpinner(false);
     }
@@ -87,14 +98,15 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
         <div>Publish Date: {formatDate(crossword.publishDate)}</div>
         <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
         <div>Title: {crossword.title}</div>
-        <Button
+        <IconButton
           variant="contained"
+          title="Save answers"
           onClick={onAddAnswers}
           sx={{ my: 1 }}
           disabled={!user}
         >
-          Save Answers
-        </Button>
+          <CloudUploadIcon />
+        </IconButton>
         {crossword.author && <div>Author: {crossword.author}</div>}
         <StyledPuzzle>
           <StyledPuzzleGrid>

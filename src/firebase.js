@@ -53,7 +53,9 @@ export const addAnswer = async (
   clueNumber,
   clueType,
   answer,
-  userId
+  userId,
+  username,
+  displayName
 ) => {
   const subcollectionRef = collection(
     db,
@@ -66,6 +68,8 @@ export const addAnswer = async (
     clueType,
     answer,
     userId,
+    username,
+    displayName,
     timestamp: serverTimestamp(),
   };
   return addDoc(subcollectionRef, data);
