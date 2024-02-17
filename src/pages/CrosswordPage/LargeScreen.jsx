@@ -223,14 +223,16 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
         open={isDrawerOpen}
         onClose={closeDrawer}
         sx={{
-          "& .MuiDrawer-paper": { width: "30rem" },
+          "& .MuiDrawer-paper": { width: { xs: "100%", sm: "20rem" } },
         }}
       >
-        <AnswerDetailsPanel
-          clue={crosswordState.selectedClue}
-          answer={currentAnswer}
-          onClose={closeDrawer}
-        />
+        {currentAnswer && (
+          <AnswerDetailsPanel
+            clue={crosswordState.selectedClue}
+            answer={currentAnswer}
+            onClose={closeDrawer}
+          />
+        )}
       </Drawer>
     </>
   );
