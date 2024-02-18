@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PropTypes from "prop-types";
-import { Drawer, Grid, IconButton, Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { addAnswer } from "@app/firebase";
 import { PuzzleGrid } from "@app/components";
-import { formatDate, minDuration } from "@app/utils";
-import { useAuth, useToast } from "@app/contexts";
-
-import { AnswerDetailsPanel } from "./AnswerDetailsPanel";
+import { formatDate } from "@app/utils";
 
 import {
   StyledPuzzle,
@@ -21,11 +17,17 @@ import {
   StyledClueText,
 } from "./CrosswordPage.styles";
 
-export const LargeScreen = ({ crossword, crosswordState }) => {
-  const [showSavingSpinner, setShowSavingSpinner] = useState(false);
-  const { user } = useAuth();
-  const { showError } = useToast();
-
+export const LargeScreen = ({
+  crossword,
+  crosswordState,
+  onSaveAnswers,
+  onViewAnswerDetails,
+  onClearSelectedClue,
+  canSaveAnswers,
+  canViewAnswerDetails,
+  canClearSelectedClue,
+  showSavingSpinner,
+}) => {
   useEffect(() => {
     const onKeyDown = (e) => {
       if (/^[a-zA-Z]$/.test(e.key)) {
@@ -63,64 +65,6 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
     };
   }, [crosswordState]);
 
-  const onSaveAnswers = async () => {
-    if (!user) return;
-    const saveAnswer = async (answer) => {
-      await addAnswer(
-        crossword,
-        answer.clueNumber,
-        answer.clueType,
-        answer.answer,
-        user.userId,
-        user.username,
-        user.displayName
-      );
-    };
-    const saveAnswers = async () => {
-      for (const answer of answersReadyForSaving) {
-        saveAnswer(answer);
-      }
-    };
-    try {
-      setShowSavingSpinner(true);
-      await minDuration(saveAnswers(), 1000);
-    } catch (error) {
-      showError("Failed to save answers", error.message);
-    } finally {
-      setShowSavingSpinner(false);
-    }
-  };
-
-  const onViewAnswerDetails = () => {
-    openDrawer();
-  };
-
-  const onClearSelectedClue = () => {
-    crosswordState.clearEnteredLettersForSelectedClue();
-  };
-
-  const sc = crosswordState.selectedClue;
-  const currentAnswer = sc
-    ? crosswordState.answers.find(
-        (a) => a.clueNumber === sc.clueNumber && a.clueType === sc.clueType
-      )
-    : undefined;
-
-  const selectedClueIsClearable =
-    crosswordState.selectedClueHasEnteredLetters();
-
-  const answersReadyForSaving = crosswordState.getAnswersReadyForSaving();
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const openDrawer = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const closeDrawer = () => {
-    setIsDrawerOpen(false);
-  };
-
   return (
     <>
       <Grid container>
@@ -134,7 +78,7 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
             onClick={onSaveAnswers}
             sx={{ my: 1 }}
             color="primary"
-            disabled={!user || answersReadyForSaving.length === 0}
+            disabled={!canSaveAnswers}
           >
             <CloudUploadIcon />
           </IconButton>
@@ -142,7 +86,7 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
             title="View answer details"
             onClick={onViewAnswerDetails}
             sx={{ my: 1 }}
-            disabled={!currentAnswer}
+            disabled={!canViewAnswerDetails}
           >
             <SearchIcon />
           </IconButton>
@@ -150,7 +94,7 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
             title="Clear selected clue"
             onClick={onClearSelectedClue}
             sx={{ my: 1 }}
-            disabled={!selectedClueIsClearable}
+            disabled={!canClearSelectedClue}
           >
             <ClearIcon />
           </IconButton>
@@ -210,22 +154,6 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
           </StyledPuzzle>
         </Grid>
       </Grid>
-      <Drawer
-        anchor="left"
-        open={isDrawerOpen}
-        onClose={closeDrawer}
-        sx={{
-          "& .MuiDrawer-paper": { width: { xs: "100%", sm: "20rem" } },
-        }}
-      >
-        {currentAnswer && (
-          <AnswerDetailsPanel
-            clue={crosswordState.selectedClue}
-            answer={currentAnswer}
-            onClose={closeDrawer}
-          />
-        )}
-      </Drawer>
     </>
   );
 };
@@ -233,4 +161,11 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
 LargeScreen.propTypes = {
   crossword: PropTypes.object.isRequired,
   crosswordState: PropTypes.object.isRequired,
+  onSaveAnswers: PropTypes.func.isRequired,
+  onViewAnswerDetails: PropTypes.func.isRequired,
+  onClearSelectedClue: PropTypes.func.isRequired,
+  canSaveAnswers: PropTypes.bool.isRequired,
+  canViewAnswerDetails: PropTypes.bool.isRequired,
+  canClearSelectedClue: PropTypes.bool.isRequired,
+  showSavingSpinner: PropTypes.bool.isRequired,
 };

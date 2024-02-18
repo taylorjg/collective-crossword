@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useMediaQuery } from "@mui/material";
+import { Drawer, useMediaQuery } from "@mui/material";
 
-import { getCrosswordById, listenForCrosswordAnswers } from "@app/firebase";
+import {
+  getCrosswordById,
+  listenForCrosswordAnswers,
+  addAnswer,
+} from "@app/firebase";
 import { FullPageMessage } from "@app/components";
 import { enhance } from "@app/transforms";
-import { useAuth } from "@app/contexts";
+import { useAuth, useToast } from "@app/contexts";
+import { minDuration } from "@app/utils";
 
+import { AnswerDetailsPanel } from "./AnswerDetailsPanel";
 import { UnsupportedViewport } from "./UnsupportedViewport";
 import { SmallScreen } from "./SmallScreen";
 import { LargeScreen } from "./LargeScreen";
@@ -18,6 +24,8 @@ export const CrosswordPage = () => {
   const [errorMessage, setErrorMessage] = useState();
   const { user } = useAuth();
   const isSignedIn = Boolean(user);
+  const [showSavingSpinner, setShowSavingSpinner] = useState(false);
+  const { showError } = useToast();
 
   const crosswordState = useCrosswordState(crossword, answers, isSignedIn);
 
@@ -56,12 +64,101 @@ export const CrosswordPage = () => {
     return listenForCrosswordAnswers(id, onNext);
   }, [id]);
 
-  if (errorMessage) return <FullPageMessage message={errorMessage} />;
+  const onSaveAnswers = async () => {
+    if (!user) return;
+    const saveAnswer = async (answer) => {
+      await addAnswer(
+        crossword,
+        answer.clueNumber,
+        answer.clueType,
+        answer.answer,
+        user.userId,
+        user.username,
+        user.displayName
+      );
+    };
+    const saveAnswers = async () => {
+      for (const answer of answersReadyForSaving) {
+        saveAnswer(answer);
+      }
+    };
+    try {
+      setShowSavingSpinner(true);
+      await minDuration(saveAnswers(), 1000);
+    } catch (error) {
+      showError("Failed to save answers", error.message);
+    } finally {
+      setShowSavingSpinner(false);
+    }
+  };
+
+  const onViewAnswerDetails = () => {
+    openDrawer();
+  };
+
+  const onClearSelectedClue = () => {
+    crosswordState.clearEnteredLettersForSelectedClue();
+  };
+
+  const currentAnswer = crosswordState.selectedClue
+    ? crosswordState.answers.find(
+        (answer) =>
+          answer.clueNumber === crosswordState.selectedClue.clueNumber &&
+          answer.clueType === crosswordState.selectedClue.clueType
+      )
+    : undefined;
+
+  const answersReadyForSaving = crosswordState.getAnswersReadyForSaving();
+
+  const canSaveAnswers = isSignedIn && answersReadyForSaving.length > 0;
+  const canViewAnswerDetails = Boolean(currentAnswer);
+  const canClearSelectedClue = crosswordState.selectedClueHasEnteredLetters();
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
   if (!crossword) return <FullPageMessage message="Fetching crossword..." />;
-  if (isLargeScreen)
-    return (
-      <LargeScreen crossword={crossword} crosswordState={crosswordState} />
-    );
-  if (isLandscape) return <UnsupportedViewport />;
-  return <SmallScreen crossword={crossword} crosswordState={crosswordState} />;
+  if (errorMessage) return <FullPageMessage message={errorMessage} />;
+  if (!isLargeScreen && isLandscape) return <UnsupportedViewport />;
+
+  const Layout = isLargeScreen ? LargeScreen : SmallScreen;
+
+  return (
+    <>
+      <Layout
+        crossword={crossword}
+        crosswordState={crosswordState}
+        onSaveAnswers={onSaveAnswers}
+        onViewAnswerDetails={onViewAnswerDetails}
+        onClearSelectedClue={onClearSelectedClue}
+        canSaveAnswers={canSaveAnswers}
+        canViewAnswerDetails={canViewAnswerDetails}
+        canClearSelectedClue={canClearSelectedClue}
+        showSavingSpinner={showSavingSpinner}
+      />
+      <Drawer
+        anchor="left"
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        sx={{
+          "& .MuiDrawer-paper": { width: { xs: "100%", sm: "20rem" } },
+        }}
+      >
+        {currentAnswer && (
+          <AnswerDetailsPanel
+            clue={crosswordState.selectedClue}
+            answer={currentAnswer}
+            onClose={closeDrawer}
+          />
+        )}
+      </Drawer>
+    </>
+  );
 };
