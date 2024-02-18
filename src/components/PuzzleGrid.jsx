@@ -15,7 +15,8 @@ export const PuzzleGrid = ({
   currentCell,
   selectedCells = [],
   answers = [],
-  partialAnswers = [],
+  // partialAnswers = [],
+  enteredLettersMap,
   selectCell = noop,
   showSavingSpinner,
 }) => {
@@ -44,7 +45,7 @@ export const PuzzleGrid = ({
   const CLUE_NUMBER_FONT_SIZE = SQUARE_WIDTH / 3.5;
 
   const REGULAR_LETTER_COLOUR = "black";
-  const PARTIAL_ANSWER_LETTER_COLOUR = theme.palette.primary.dark;
+  const ENTERED_LETTER_COLOUR = theme.palette.primary.dark;
   const LETTER_FONT_SIZE = SQUARE_WIDTH / 1.5;
 
   const calculateX = (col) => col * SQUARE_WIDTH + GRID_LINE_HALF_THICKNESS;
@@ -234,7 +235,7 @@ export const PuzzleGrid = ({
     );
   };
 
-  const drawAnswers = (answers, overrideColour) => {
+  const drawAnswers = () => {
     return answers.flatMap(({ clueNumber, clueType, answer }) => {
       const cluesMap =
         clueType === "across"
@@ -243,24 +244,28 @@ export const PuzzleGrid = ({
       const { cells } = cluesMap.get(clueNumber);
       const letters = Array.from(answer);
       const indexes = range(letters.length);
-      return indexes.flatMap((index) => {
+      return indexes.map((index) => {
         const cell = cells[index];
         const letter = letters[index];
-
-        // Do we need this check ? Only for partial answers ?
-        if (letter === " ") return [];
-
-        return [drawLetter(cell, letter, clueType, overrideColour)];
+        return drawLetter(cell, letter, clueType, REGULAR_LETTER_COLOUR);
       });
     });
   };
 
-  const drawLetter = (cell, letter, clueType, overrideColour) => {
+  const drawEnteredLetters = () => {
+    const entries = Array.from(enteredLettersMap);
+    return entries.map((entry) => {
+      const [key, letter] = entry;
+      const [row, col] = key.split(":");
+      const cell = { row, col };
+      return drawLetter(cell, letter, "entered-letter", ENTERED_LETTER_COLOUR);
+    });
+  };
+
+  const drawLetter = (cell, letter, clueType, letterColour) => {
     const { row, col } = cell;
     const cx = calculateX(col) + SQUARE_WIDTH / 2;
     const cy = calculateY(row) + SQUARE_HEIGHT / 2;
-
-    const letterColour = overrideColour ?? REGULAR_LETTER_COLOUR;
 
     return (
       <text
@@ -313,8 +318,9 @@ export const PuzzleGrid = ({
         {drawCells()}
         {drawSelectedCellsOutline()}
         {drawClueNumbers()}
-        {drawAnswers(answers)}
-        {drawAnswers(partialAnswers, PARTIAL_ANSWER_LETTER_COLOUR)}
+        {drawAnswers()}
+        {/* {drawAnswers(partialAnswers, PARTIAL_ANSWER_LETTER_COLOUR)} */}
+        {drawEnteredLetters()}
         {drawHorizontalGridLines()}
         {drawVerticalGridLines()}
       </StyledPuzzleGrid>
@@ -346,13 +352,14 @@ PuzzleGrid.propTypes = {
       answer: PropTypes.string.isRequired,
     })
   ),
-  partialAnswers: PropTypes.arrayOf(
-    PropTypes.shape({
-      clueNumber: PropTypes.number.isRequired,
-      clueType: PropTypes.string.isRequired,
-      answer: PropTypes.string.isRequired,
-    })
-  ),
+  // partialAnswers: PropTypes.arrayOf(
+  //   PropTypes.shape({
+  //     clueNumber: PropTypes.number.isRequired,
+  //     clueType: PropTypes.string.isRequired,
+  //     answer: PropTypes.string.isRequired,
+  //   })
+  // ),
+  enteredLettersMap: PropTypes.object,
   selectCell: PropTypes.func,
   showSavingSpinner: PropTypes.bool,
 };

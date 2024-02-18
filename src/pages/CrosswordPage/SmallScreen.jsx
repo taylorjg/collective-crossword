@@ -25,6 +25,7 @@ export const SmallScreen = ({ crossword, crosswordState }) => {
           selectedCells={crosswordState.selectedClue?.cells}
           answers={crosswordState.answers}
           partialAnswers={crosswordState.partialAnswers}
+          enteredLettersMap={crosswordState.enteredLettersMap}
           selectCell={crosswordState.selectCell}
         />
       </StyledPuzzleGrid>
