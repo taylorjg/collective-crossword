@@ -15,7 +15,6 @@ export const PuzzleGrid = ({
   currentCell,
   selectedCells = [],
   answers = [],
-  // partialAnswers = [],
   enteredLettersMap,
   selectCell = noop,
   showSavingSpinner,
@@ -319,7 +318,6 @@ export const PuzzleGrid = ({
         {drawSelectedCellsOutline()}
         {drawClueNumbers()}
         {drawAnswers()}
-        {/* {drawAnswers(partialAnswers, PARTIAL_ANSWER_LETTER_COLOUR)} */}
         {drawEnteredLetters()}
         {drawHorizontalGridLines()}
         {drawVerticalGridLines()}
@@ -352,13 +350,6 @@ PuzzleGrid.propTypes = {
       answer: PropTypes.string.isRequired,
     })
   ),
-  // partialAnswers: PropTypes.arrayOf(
-  //   PropTypes.shape({
-  //     clueNumber: PropTypes.number.isRequired,
-  //     clueType: PropTypes.string.isRequired,
-  //     answer: PropTypes.string.isRequired,
-  //   })
-  // ),
   enteredLettersMap: PropTypes.object,
   selectCell: PropTypes.func,
   showSavingSpinner: PropTypes.bool,

@@ -24,7 +24,6 @@ export const SmallScreen = ({ crossword, crosswordState }) => {
           currentCell={crosswordState.currentCell}
           selectedCells={crosswordState.selectedClue?.cells}
           answers={crosswordState.answers}
-          partialAnswers={crosswordState.partialAnswers}
           enteredLettersMap={crosswordState.enteredLettersMap}
           selectCell={crosswordState.selectCell}
         />

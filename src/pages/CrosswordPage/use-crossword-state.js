@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { findCellIndex, isSameAsFirstCell, isSameCell } from "@app/utils";
-
-// const setLetterAtIndex = (letters, letter, index) => {
-//   const arr = Array.from(letters);
-//   arr[index] = letter;
-//   return arr.join("");
-// };
+import {
+  findCellIndex,
+  isSameAsFirstCell,
+  isSameCell,
+  range,
+} from "@app/utils";
 
 export const useCrosswordState = (
   crossword,
@@ -16,7 +15,6 @@ export const useCrosswordState = (
   // External
   const [currentCell, setCurrentCell] = useState();
   const [selectedClue, setSelectedClue] = useState();
-  const [partialAnswers, setPartialAnswers] = useState([]);
   const [enteredLettersMap, setEnteredLettersMap] = useState(new Map());
 
   // Internal
@@ -104,19 +102,64 @@ export const useCrosswordState = (
     setToggleableClues();
   }, []);
 
-  const clearPartialAnswer = (partialAnswerToClear) => {
-    setPartialAnswers((currentPartialAnswers) => {
-      return currentPartialAnswers.filter(
-        (partialAnswer) => partialAnswer !== partialAnswerToClear
-      );
-    });
+  const findCrossCheckingLetter = (clue, cell) => {
+    const key = `${cell.row}:${cell.col}`;
+    const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key);
+    const otherClue = clue.clueType === "across" ? downClue : acrossClue;
+    if (otherClue) {
+      const answer = findAnswerForClue(otherClue);
+      if (answer) {
+        const index = findCellIndex(otherClue.cells, cell);
+        const letters = Array.from(answer.answer);
+        return letters[index];
+      }
+    }
   };
 
-  const removeCompletePartialAnswers = () => {
-    setPartialAnswers((currentPartialAnswers) => {
-      return currentPartialAnswers.filter((partialAnswer) =>
-        partialAnswer.answer.includes(" ")
-      );
+  const getAnswersReadyForSaving = () => {
+    const answersReadyForSaving = [];
+    for (const clue of allCluesRef.current) {
+      if (findAnswerForClue(clue)) continue;
+      const cellCount = clue.cells.length;
+      const answerLetters = Array(cellCount).fill(" ");
+      for (const index of range(cellCount)) {
+        const cell = clue.cells[index];
+        const crossCheckingLetter = findCrossCheckingLetter(clue, cell);
+        const key = makeKey(cell);
+        const enteredLetter = enteredLettersMap.get(key);
+        const letter = crossCheckingLetter ?? enteredLetter;
+        if (letter) {
+          answerLetters[index] = letter;
+        }
+      }
+      if (!answerLetters.includes(" ")) {
+        const answer = {
+          clueNumber: clue.clueNumber,
+          clueType: clue.clueType,
+          answer: answerLetters.join(""),
+        };
+        answersReadyForSaving.push(answer);
+      }
+    }
+    return answersReadyForSaving;
+  };
+
+  const selectedClueHasEnteredLetters = () => {
+    if (!selectedClue) return false;
+    return selectedClue.cells.some((cell) =>
+      enteredLettersMap.has(makeKey(cell))
+    );
+  };
+
+  const clearEnteredLettersForSelectedClue = () => {
+    if (!selectedClue) return;
+    setEnteredLettersMap((currentMap) => {
+      const newMap = new Map(currentMap);
+      for (const cell of selectedClue.cells) {
+        const key = makeKey(cell);
+        newMap.delete(key);
+      }
+      return newMap;
     });
   };
 
@@ -135,7 +178,7 @@ export const useCrosswordState = (
     return index;
   };
 
-  const goToNextClue = () => {
+  const navigateToNextClue = () => {
     if (!selectedClue) return;
     const index = findSelectedClueIndex();
     if (index < 0) return;
@@ -145,7 +188,7 @@ export const useCrosswordState = (
     setCurrentCell(newClue.cells[0]);
   };
 
-  const goToPreviousClue = () => {
+  const navigateToPreviousClue = () => {
     if (!selectedClue) return;
     const index = findSelectedClueIndex();
     if (index < 0) return;
@@ -163,7 +206,7 @@ export const useCrosswordState = (
     if (index < lastIndex) {
       setCurrentCell(selectedClue.cells[index + 1]);
     } else {
-      goToNextClue();
+      navigateToNextClue();
     }
   };
 
@@ -176,13 +219,13 @@ export const useCrosswordState = (
     }
   };
 
-  // const findAnswerForClue = (clue) => {
-  //   return answers.find(
-  //     (answer) =>
-  //       answer.clueNumber === clue.clueNumber &&
-  //       answer.clueType === clue.clueType
-  //   );
-  // };
+  const findAnswerForClue = (clue) => {
+    return answers.find(
+      (answer) =>
+        answer.clueNumber === clue.clueNumber &&
+        answer.clueType === clue.clueType
+    );
+  };
 
   const findClueForAnswer = (answer) => {
     return allCluesRef.current.find(
@@ -191,57 +234,6 @@ export const useCrosswordState = (
         clue.clueType === answer.clueType
     );
   };
-
-  // const initCurrentPartialAnswer = () => {
-  //   const partialAnswerLetters = selectedClue.cells.map((cell) => {
-  //     const key = `${cell.row}:${cell.col}`;
-  //     const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key);
-  //     const otherClue =
-  //       selectedClue.clueType === "across" ? downClue : acrossClue;
-  //     if (otherClue) {
-  //       const answer = findAnswerForClue(otherClue);
-  //       if (answer) {
-  //         const index = findCellIndex(otherClue.cells, cell);
-  //         const letters = Array.from(answer.answer);
-  //         return letters[index];
-  //       }
-  //     }
-  //     return " ";
-  //   });
-  //   const answer = partialAnswerLetters.join("");
-
-  //   return {
-  //     clueNumber: selectedClue.clueNumber,
-  //     clueType: selectedClue.clueType,
-  //     answer,
-  //   };
-  // };
-
-  // const getCurrentPartialAnswer = () => {
-  //   const currentPartialAnswer = partialAnswers.find(
-  //     (partialAnswer) =>
-  //       partialAnswer.clueNumber === selectedClue.clueNumber &&
-  //       partialAnswer.clueType === selectedClue.clueType
-  //   );
-  //   return currentPartialAnswer ?? initCurrentPartialAnswer();
-  // };
-
-  // const findCrossCheckingLetter = () => {
-  //   if (!currentCell) return;
-  //   if (!selectedClue) return;
-  //   const key = `${currentCell.row}:${currentCell.col}`;
-  //   const { acrossClue, downClue } = crossword.cellsToCluesMap.get(key);
-  //   const otherClue =
-  //     selectedClue.clueType === "across" ? downClue : acrossClue;
-  //   if (otherClue) {
-  //     const answer = findAnswerForClue(otherClue);
-  //     if (answer) {
-  //       const index = findCellIndex(otherClue.cells, currentCell);
-  //       const letters = Array.from(answer.answer);
-  //       return letters[index];
-  //     }
-  //   }
-  // };
 
   const enterLetter = (letter) => {
     if (!isSignedIn) return;
@@ -349,16 +341,16 @@ export const useCrosswordState = (
     currentCell,
     selectedClue,
     answers,
-    partialAnswers,
     enteredLettersMap,
-    clearPartialAnswer,
-    removeCompletePartialAnswers,
+    getAnswersReadyForSaving,
+    selectedClueHasEnteredLetters,
+    clearEnteredLettersForSelectedClue,
     selectCell,
     selectClue,
     enterLetter,
     deleteLetter,
-    navigateToNextClue: goToNextClue,
-    navigateToPreviousClue: goToPreviousClue,
+    navigateToNextClue,
+    navigateToPreviousClue,
     navigateLeft,
     navigateRight,
     navigateUp,

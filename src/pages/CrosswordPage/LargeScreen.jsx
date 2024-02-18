@@ -63,31 +63,27 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
     };
   }, [crosswordState]);
 
-  const onAddAnswers = async () => {
+  const onSaveAnswers = async () => {
     if (!user) return;
-    const saveAnswer = async (partialAnswer) => {
+    const saveAnswer = async (answer) => {
       await addAnswer(
         crossword,
-        partialAnswer.clueNumber,
-        partialAnswer.clueType,
-        partialAnswer.answer,
+        answer.clueNumber,
+        answer.clueType,
+        answer.answer,
         user.userId,
         user.username,
         user.displayName
       );
     };
     const saveAnswers = async () => {
-      for (const partialAnswer of crosswordState.partialAnswers) {
-        const isComplete = !partialAnswer.answer.includes(" ");
-        if (isComplete) {
-          saveAnswer(partialAnswer);
-        }
+      for (const answer of answersReadyForSaving) {
+        saveAnswer(answer);
       }
     };
     try {
       setShowSavingSpinner(true);
       await minDuration(saveAnswers(), 1000);
-      crosswordState.removeCompletePartialAnswers();
     } catch (error) {
       showError("Failed to save answers", error.message);
     } finally {
@@ -95,12 +91,12 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
     }
   };
 
-  const onShowAnswerDetails = () => {
+  const onViewAnswerDetails = () => {
     openDrawer();
   };
 
-  const onClearPartialAnswer = () => {
-    crosswordState.clearPartialAnswer(currentPartialAnswer);
+  const onClearSelectedClue = () => {
+    crosswordState.clearEnteredLettersForSelectedClue();
   };
 
   const sc = crosswordState.selectedClue;
@@ -110,15 +106,10 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
       )
     : undefined;
 
-  const currentPartialAnswer = sc
-    ? crosswordState.partialAnswers.find(
-        (pa) => pa.clueNumber === sc.clueNumber && pa.clueType === sc.clueType
-      )
-    : undefined;
+  const selectedClueIsClearable =
+    crosswordState.selectedClueHasEnteredLetters();
 
-  const somePartialAnswersAreReadyToSave = crosswordState.partialAnswers.some(
-    (pa) => !pa.answer.includes(" ")
-  );
+  const answersReadyForSaving = crosswordState.getAnswersReadyForSaving();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -140,25 +131,26 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
           <div>Title: {crossword.title}</div>
           <IconButton
             title="Save answers"
-            onClick={onAddAnswers}
+            onClick={onSaveAnswers}
             sx={{ my: 1 }}
-            disabled={!user || !somePartialAnswersAreReadyToSave}
+            color="primary"
+            disabled={!user || answersReadyForSaving.length === 0}
           >
             <CloudUploadIcon />
           </IconButton>
           <IconButton
             title="View answer details"
-            onClick={onShowAnswerDetails}
+            onClick={onViewAnswerDetails}
             sx={{ my: 1 }}
             disabled={!currentAnswer}
           >
             <SearchIcon />
           </IconButton>
           <IconButton
-            title="Clear partial answer"
-            onClick={onClearPartialAnswer}
+            title="Clear selected clue"
+            onClick={onClearSelectedClue}
             sx={{ my: 1 }}
-            disabled={!currentPartialAnswer}
+            disabled={!selectedClueIsClearable}
           >
             <ClearIcon />
           </IconButton>
@@ -170,7 +162,6 @@ export const LargeScreen = ({ crossword, crosswordState }) => {
                 currentCell={crosswordState.currentCell}
                 selectedCells={crosswordState.selectedClue?.cells}
                 answers={crosswordState.answers}
-                partialAnswers={crosswordState.partialAnswers}
                 enteredLettersMap={crosswordState.enteredLettersMap}
                 selectCell={crosswordState.selectCell}
                 showSavingSpinner={showSavingSpinner}
