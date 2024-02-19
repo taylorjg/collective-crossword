@@ -12,10 +12,9 @@ import { enhance } from "@app/transforms";
 import { useAuth, useToast } from "@app/contexts";
 import { minDuration } from "@app/utils";
 
-import { AnswerDetailsPanel } from "./AnswerDetailsPanel";
-import { UnsupportedViewport } from "./UnsupportedViewport";
-import { SmallScreen } from "./SmallScreen";
-import { LargeScreen } from "./LargeScreen";
+import { AnswerDetailsPanel } from "./components/AnswerDetailsPanel";
+import { SmallScreen, UnsupportedViewport } from "./layouts/small-screen";
+import { LargeScreen } from "./layouts/large-screen/LargeScreen";
 import { useCrosswordState } from "./use-crossword-state";
 
 export const CrosswordPage = () => {

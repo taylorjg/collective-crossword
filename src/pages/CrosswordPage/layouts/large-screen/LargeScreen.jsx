@@ -15,7 +15,7 @@ import {
   StyledClue,
   StyledClueNumber,
   StyledClueText,
-} from "./CrosswordPage.styles";
+} from "../../CrosswordPage.styles";
 
 export const LargeScreen = ({
   crossword,

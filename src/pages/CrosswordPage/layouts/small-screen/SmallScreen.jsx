@@ -4,7 +4,7 @@ import { Toolbar } from "@mui/material";
 import { PuzzleGrid } from "@app/components";
 
 import { MiniClues } from "./MiniClues";
-import { MiniKeyboard } from "./MiniKeyboard";
+import { MiniKeyboard } from "../../components/MiniKeyboard";
 
 import {
   StyledContent,
