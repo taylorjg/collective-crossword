@@ -9,13 +9,15 @@ import { PuzzleGrid } from "@app/components";
 import { formatDate } from "@app/utils";
 
 import {
-  StyledPuzzle,
+  StyledPuzzleAndClues,
   StyledPuzzleGrid,
   StyledClues,
   StyledClue,
   StyledClueNumber,
   StyledClueText,
 } from "../../CrosswordPage.styles";
+
+import { StyledControls } from "./LargeScreen.styles";
 
 export const LargeScreen = ({
   crossword,
@@ -73,33 +75,34 @@ export const LargeScreen = ({
           <div>Publish Date: {formatDate(crossword.publishDate)}</div>
           <div>Creation Date: {formatDate(crossword.timestamp.seconds)}</div>
           <div>Title: {crossword.title}</div>
-          <IconButton
-            title="Save answers"
-            onClick={onSaveAnswers}
-            sx={{ my: 1 }}
-            color="primary"
-            disabled={!canSaveAnswers}
-          >
-            <CloudUploadIcon />
-          </IconButton>
-          <IconButton
-            title="View answer details"
-            onClick={onViewAnswerDetails}
-            sx={{ my: 1 }}
-            disabled={!canViewAnswerDetails}
-          >
-            <SearchIcon />
-          </IconButton>
-          <IconButton
-            title="Clear selected clue"
-            onClick={onClearSelectedClue}
-            sx={{ my: 1 }}
-            disabled={!canClearSelectedClue}
-          >
-            <ClearIcon />
-          </IconButton>
           {crossword.author && <div>Author: {crossword.author}</div>}
-          <StyledPuzzle>
+
+          <StyledControls>
+            <IconButton
+              onClick={onSaveAnswers}
+              disabled={!canSaveAnswers}
+              title="Save answers"
+              color="primary"
+            >
+              <CloudUploadIcon />
+            </IconButton>
+            <IconButton
+              onClick={onViewAnswerDetails}
+              disabled={!canViewAnswerDetails}
+              title="View answer details"
+            >
+              <SearchIcon />
+            </IconButton>
+            <IconButton
+              onClick={onClearSelectedClue}
+              disabled={!canClearSelectedClue}
+              title="Clear selected clue"
+            >
+              <ClearIcon />
+            </IconButton>
+          </StyledControls>
+
+          <StyledPuzzleAndClues>
             <StyledPuzzleGrid>
               <PuzzleGrid
                 crossword={crossword}
@@ -111,6 +114,7 @@ export const LargeScreen = ({
                 showSavingSpinner={showSavingSpinner}
               />
             </StyledPuzzleGrid>
+
             <StyledClues>
               <Typography variant="h6">Across</Typography>
               {crossword.acrossClues.map((clue) => {
@@ -131,6 +135,7 @@ export const LargeScreen = ({
                 );
               })}
             </StyledClues>
+
             <StyledClues>
               <Typography variant="h6">Down</Typography>
               {crossword.downClues.map((clue) => {
@@ -151,7 +156,7 @@ export const LargeScreen = ({
                 );
               })}
             </StyledClues>
-          </StyledPuzzle>
+          </StyledPuzzleAndClues>
         </Grid>
       </Grid>
     </>

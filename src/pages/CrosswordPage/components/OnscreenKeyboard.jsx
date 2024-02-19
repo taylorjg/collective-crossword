@@ -6,7 +6,7 @@ import {
   StyledLetterKey,
   StyledDeleteKey,
   StyledKeyInner,
-} from "./MiniKeyboard.styles";
+} from "./OnscreenKeyboard.styles";
 
 // eslint-disable-next-line prettier/prettier
 const KEYBOARD_ROWS = [
@@ -15,7 +15,7 @@ const KEYBOARD_ROWS = [
   "ZXCVBNM."
 ];
 
-export const MiniKeyboard = ({ onLetterEntered, onDeleteLetter }) => {
+export const OnscreenKeyboard = ({ onLetterEntered, onDeleteLetter }) => {
   return (
     <StyledMiniKeyboard>
       {KEYBOARD_ROWS.flatMap((keyboardRow) => {
@@ -41,7 +41,7 @@ export const MiniKeyboard = ({ onLetterEntered, onDeleteLetter }) => {
   );
 };
 
-MiniKeyboard.propTypes = {
+OnscreenKeyboard.propTypes = {
   onLetterEntered: PropTypes.func.isRequired,
   onDeleteLetter: PropTypes.func.isRequired,
 };

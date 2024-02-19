@@ -1,19 +1,38 @@
 import PropTypes from "prop-types";
-import { Toolbar } from "@mui/material";
+import { IconButton, Toolbar } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import SearchIcon from "@mui/icons-material/Search";
 
 import { PuzzleGrid } from "@app/components";
 
 import { MiniClues } from "./MiniClues";
-import { MiniKeyboard } from "../../components/MiniKeyboard";
+import { OnscreenKeyboard } from "../../components/OnscreenKeyboard";
 
 import {
   StyledContent,
   StyledPuzzleGrid,
   StyledBottomArea,
+  StyledControls,
+  StyledControlsLeft,
+  StyledControlsRight,
 } from "./SmallScreen.styles";
 
-export const SmallScreen = ({ crossword, crosswordState }) => {
+export const SmallScreen = ({
+  crossword,
+  crosswordState,
+  onSaveAnswers,
+  onViewAnswerDetails,
+  onClearSelectedClue,
+  canSaveAnswers,
+  canViewAnswerDetails,
+  canClearSelectedClue,
+  showSavingSpinner,
+}) => {
   const showMiniKeyboard = "ontouchstart" in document.documentElement;
+  const clueNumberAndType = crosswordState.selectedClue
+    ? `${crosswordState.selectedClue.clueNumber} ${crosswordState.selectedClue.clueType}`
+    : undefined;
 
   return (
     <StyledContent>
@@ -26,16 +45,44 @@ export const SmallScreen = ({ crossword, crosswordState }) => {
           answers={crosswordState.answers}
           enteredLettersMap={crosswordState.enteredLettersMap}
           selectCell={crosswordState.selectCell}
+          showSavingSpinner={showSavingSpinner}
         />
       </StyledPuzzleGrid>
       <StyledBottomArea>
+        <StyledControls>
+          <StyledControlsLeft>{clueNumberAndType}</StyledControlsLeft>
+          <StyledControlsRight>
+            <IconButton
+              onClick={onSaveAnswers}
+              disabled={!canSaveAnswers}
+              title="Save answers"
+              color="primary"
+            >
+              <CloudUploadIcon />
+            </IconButton>
+            <IconButton
+              onClick={onViewAnswerDetails}
+              disabled={!canViewAnswerDetails}
+              title="View answer details"
+            >
+              <SearchIcon />
+            </IconButton>
+            <IconButton
+              onClick={onClearSelectedClue}
+              disabled={!canClearSelectedClue}
+              title="Clear selected clue"
+            >
+              <ClearIcon />
+            </IconButton>
+          </StyledControlsRight>
+        </StyledControls>
         <MiniClues
           selectedClue={crosswordState.selectedClue}
           onNextClue={crosswordState.navigateToNextClue}
           onPreviousClue={crosswordState.navigateToPreviousClue}
         />
         {showMiniKeyboard && (
-          <MiniKeyboard
+          <OnscreenKeyboard
             onLetterEntered={crosswordState.enterLetter}
             onDeleteLetter={crosswordState.deleteLetter}
           />
@@ -48,4 +95,11 @@ export const SmallScreen = ({ crossword, crosswordState }) => {
 SmallScreen.propTypes = {
   crossword: PropTypes.object.isRequired,
   crosswordState: PropTypes.object.isRequired,
+  onSaveAnswers: PropTypes.func.isRequired,
+  onViewAnswerDetails: PropTypes.func.isRequired,
+  onClearSelectedClue: PropTypes.func.isRequired,
+  canSaveAnswers: PropTypes.bool.isRequired,
+  canViewAnswerDetails: PropTypes.bool.isRequired,
+  canClearSelectedClue: PropTypes.bool.isRequired,
+  showSavingSpinner: PropTypes.bool.isRequired,
 };

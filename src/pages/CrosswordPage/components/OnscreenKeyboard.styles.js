@@ -8,7 +8,7 @@ export const StyledKeyboardRow = styled.div`
   display: flex;
   justify-content: center;
   column-gap: 0.4rem;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
 `;
 
 export const StyledLetterKey = styled.div`
@@ -19,8 +19,8 @@ export const StyledLetterKey = styled.div`
   border-radius: 0.5rem;
   text-align: center;
   font-weight: 700;
-  font-size: 2rem;
-  line-height: 2.2rem;
+  font-size: 1.8rem;
+  line-height: 2rem;
 `;
 
 export const StyledDeleteKey = styled.div`

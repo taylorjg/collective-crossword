@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const StyledPuzzle = styled.div`
+export const StyledPuzzleAndClues = styled.div`
   display: grid;
   grid-template-columns: 50fr 25fr 25fr;
   gap: 1rem;

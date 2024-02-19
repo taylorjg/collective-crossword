@@ -22,6 +22,22 @@ export const StyledBottomArea = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: center; */
+`;
+
+export const StyledControls = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.5rem;
+`;
+
+export const StyledControlsLeft = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+export const StyledControlsRight = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;

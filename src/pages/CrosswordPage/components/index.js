@@ -1,2 +1,2 @@
 export * from "./AnswerDetailsPanel";
-export * from "./MiniKeyboard";
+export * from "./OnscreenKeyboard";
