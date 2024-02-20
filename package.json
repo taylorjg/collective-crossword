@@ -2,7 +2,7 @@
   "name": "collective-crossword",
   "description": "Collectively solve cryptic crosswords",
   "private": true,
-  "version": "0.0.58",
+  "version": "0.0.59",
   "type": "module",
   "scripts": {
     "dev": "vite",
