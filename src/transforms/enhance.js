@@ -1,4 +1,4 @@
-import { range } from "@app/utils";
+import { isSameCell, range } from "@app/utils";
 
 const findAcrossCells = (grid, row, col) => {
   const numCols = grid[0].length;
@@ -87,6 +87,36 @@ export const enhance = (crossword) => {
     downCluesEnhanced.map((clue) => [clue.clueNumber, clue])
   );
 
+  // clue to [{ cell, cellIndex, otherClue, otherCellIndex }, ...]
+  const cluesToCrossCheckingDetailsMap = new Map();
+
+  for (const clue of [...acrossCluesEnhanced, ...downCluesEnhanced]) {
+    for (const cellIndex of range(clue.cells.length)) {
+      const cell = clue.cells[cellIndex];
+      const otherClues =
+        clue.clueType === "across" ? downCluesEnhanced : acrossCluesEnhanced;
+      const otherClue = otherClues.find(({ cells }) =>
+        cells.some((otherCell) => isSameCell(cell, otherCell))
+      );
+      if (otherClue) {
+        const otherCellIndex = otherClue.cells.findIndex((otherCell) =>
+          isSameCell(cell, otherCell)
+        );
+        if (otherCellIndex >= 0) {
+          const newItem = {
+            cell,
+            cellIndex,
+            otherClue,
+            otherCellIndex,
+          };
+          const oldItems = cluesToCrossCheckingDetailsMap.get(clue) ?? [];
+          const newItems = [...oldItems, newItem];
+          cluesToCrossCheckingDetailsMap.set(clue, newItems);
+        }
+      }
+    }
+  }
+
   return {
     ...crossword,
     acrossClues: acrossCluesEnhanced,
@@ -94,5 +124,6 @@ export const enhance = (crossword) => {
     acrossCluesMap,
     downCluesMap,
     cellsToCluesMap,
+    cluesToCrossCheckingDetailsMap,
   };
 };

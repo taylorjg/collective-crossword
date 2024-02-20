@@ -134,8 +134,8 @@ export const useCrosswordState = (
     }
   };
 
-  const getAnswersReadyForSaving = () => {
-    const answersReadyForSaving = [];
+  const getUnsavedCompleteAnswers = () => {
+    const unsavedCompleteAnswers = [];
     for (const clue of allCluesRef.current) {
       if (findAnswerForClue(clue)) continue;
       const cellCount = clue.cells.length;
@@ -150,16 +150,60 @@ export const useCrosswordState = (
           answerLetters[index] = letter;
         }
       }
-      if (!answerLetters.includes(" ")) {
+      const isComplete = !answerLetters.includes(" ");
+      if (isComplete) {
         const answer = {
           clueNumber: clue.clueNumber,
           clueType: clue.clueType,
           answer: answerLetters.join(""),
         };
-        answersReadyForSaving.push(answer);
+        unsavedCompleteAnswers.push(answer);
       }
     }
-    return answersReadyForSaving;
+    return unsavedCompleteAnswers;
+  };
+
+  const getAnswersReadyForSaving = () => {
+    const unsavedCompleteAnswers = getUnsavedCompleteAnswers();
+
+    // If we have any incomplete clue with entered letters that are not part
+    // of a cross checking unsaved complete clue then we can't save
+    for (const clue of allCluesRef.current) {
+      if (findAnswerForClue(clue)) continue;
+      const unsavedCompleteAnswer = unsavedCompleteAnswers.find(
+        ({ clueNumber, clueType }) =>
+          clueNumber === clue.clueNumber && clueType === clue.clueType
+      );
+      if (unsavedCompleteAnswer) continue;
+      const crossCheckingDetails =
+        crossword.cluesToCrossCheckingDetailsMap.get(clue);
+      if (crossCheckingDetails) {
+        for (const index of range(clue.cells.length)) {
+          const cell = clue.cells[index];
+          const key = makeKey(cell);
+          if (enteredLettersMap.has(key)) {
+            const crossCheckingDetailsForThisIndex = crossCheckingDetails.find(
+              ({ cellIndex }) => cellIndex === index
+            );
+            if (crossCheckingDetailsForThisIndex) {
+              const { otherClue } = crossCheckingDetailsForThisIndex;
+              const otherUnsavedCompleteAnswer = unsavedCompleteAnswers.find(
+                ({ clueNumber, clueType }) =>
+                  clueNumber === otherClue.clueNumber &&
+                  clueType === otherClue.clueType
+              );
+              if (!otherUnsavedCompleteAnswer) {
+                return [];
+              }
+            } else {
+              return [];
+            }
+          }
+        }
+      }
+    }
+
+    return unsavedCompleteAnswers;
   };
 
   const selectedClueHasEnteredLetters = () => {
