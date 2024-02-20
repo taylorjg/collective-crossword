@@ -12,12 +12,12 @@ import {
 
 export const PuzzleGrid = ({
   crossword,
-  currentCell,
+  currentCell = null,
   selectedCells = [],
   answers = [],
-  enteredLettersMap,
+  enteredLettersMap = new Map(),
   selectCell = noop,
-  showSavingSpinner,
+  showSavingSpinner = false,
 }) => {
   const theme = useTheme();
 
