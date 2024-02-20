@@ -9,13 +9,14 @@ import {
 
 export const useCrosswordState = (
   crossword,
-  answers = [],
+  allAnswers = [],
   isSignedIn = false
 ) => {
   // External
   const [currentCell, setCurrentCell] = useState();
   const [selectedClue, setSelectedClue] = useState();
   const [enteredLettersMap, setEnteredLettersMap] = useState(new Map());
+  const [answers, setAnswers] = useState([]);
 
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
@@ -37,13 +38,30 @@ export const useCrosswordState = (
     }
   }, [crossword]);
 
+  const getMostRecentAnswers = (allAnswers) => {
+    const map = new Map();
+    const nowSeconds = new Date().valueOf() / 1000;
+    for (const answer of allAnswers) {
+      const key = `${answer.clueNumber}:${answer.clueType}`;
+      if (map.has(key)) {
+        const oldValue = map.get(key);
+        const oldValueSeconds = oldValue.timestamp?.seconds ?? nowSeconds;
+        const answerSeconds = answer.timestamp?.seconds ?? nowSeconds;
+        const newValue = answerSeconds > oldValueSeconds ? answer : oldValue;
+        map.set(key, newValue);
+      } else {
+        map.set(key, answer);
+      }
+    }
+    return Array.from(map.values());
+  };
+
   useEffect(() => {
+    setAnswers(getMostRecentAnswers(allAnswers));
     setEnteredLettersMap((currentMap) => {
       const newMap = new Map(currentMap);
-      for (const a of answers) {
-        const clue = allCluesRef.current.find(
-          (c) => c.clueNumber === a.clueNumber && c.clueType === a.clueType
-        );
+      for (const answer of allAnswers) {
+        const clue = findClueForAnswer(answer);
         if (clue) {
           for (const cell of clue.cells) {
             const key = makeKey(cell);
@@ -53,7 +71,7 @@ export const useCrosswordState = (
       }
       return newMap;
     });
-  }, [answers]);
+  }, [allAnswers]);
 
   const selectCell = useCallback(
     (cell) => {
@@ -161,6 +179,25 @@ export const useCrosswordState = (
       }
       return newMap;
     });
+  };
+
+  const unlockAnswer = (answer) => {
+    const clue = findClueForAnswer(answer);
+    if (clue) {
+      const cellCount = clue.cells.length;
+      const answerLetters = Array.from(answer.answer);
+      for (const index of range(cellCount)) {
+        const cell = clue.cells[index];
+        if (!findCrossCheckingLetter(clue, cell)) {
+          const key = makeKey(cell);
+          const letter = answerLetters[index];
+          enteredLettersMap.set(key, letter);
+        }
+      }
+      setAnswers((currentAnswers) =>
+        currentAnswers.filter((currentAnswer) => currentAnswer !== answer)
+      );
+    }
   };
 
   const findCurrentCellIndex = () => {
@@ -340,11 +377,13 @@ export const useCrosswordState = (
   return {
     currentCell,
     selectedClue,
+    allAnswers,
     answers,
     enteredLettersMap,
     getAnswersReadyForSaving,
     selectedClueHasEnteredLetters,
     clearEnteredLettersForSelectedClue,
+    unlockAnswer,
     selectCell,
     selectClue,
     enterLetter,

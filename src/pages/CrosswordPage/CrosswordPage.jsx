@@ -99,6 +99,10 @@ export const CrosswordPage = () => {
     crosswordState.clearEnteredLettersForSelectedClue();
   };
 
+  const onUnlockAnswer = () => {
+    crosswordState.unlockAnswer(currentAnswer);
+  };
+
   const currentAnswer = crosswordState.selectedClue
     ? crosswordState.answers.find(
         (answer) =>
@@ -112,6 +116,7 @@ export const CrosswordPage = () => {
   const canSaveAnswers = isSignedIn && answersReadyForSaving.length > 0;
   const canViewAnswerDetails = Boolean(currentAnswer);
   const canClearSelectedClue = crosswordState.selectedClueHasEnteredLetters();
+  const canUnlockAnswer = Boolean(currentAnswer);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -137,9 +142,11 @@ export const CrosswordPage = () => {
         onSaveAnswers={onSaveAnswers}
         onViewAnswerDetails={onViewAnswerDetails}
         onClearSelectedClue={onClearSelectedClue}
+        onUnlockAnswer={onUnlockAnswer}
         canSaveAnswers={canSaveAnswers}
         canViewAnswerDetails={canViewAnswerDetails}
         canClearSelectedClue={canClearSelectedClue}
+        canUnlockAnswer={canUnlockAnswer}
         showSavingSpinner={showSavingSpinner}
       />
       <Drawer

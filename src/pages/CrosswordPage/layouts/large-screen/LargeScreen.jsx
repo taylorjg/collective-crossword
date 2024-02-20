@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Grid, IconButton, Typography } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { PuzzleGrid } from "@app/components";
@@ -25,9 +26,11 @@ export const LargeScreen = ({
   onSaveAnswers,
   onViewAnswerDetails,
   onClearSelectedClue,
+  onUnlockAnswer,
   canSaveAnswers,
   canViewAnswerDetails,
   canClearSelectedClue,
+  canUnlockAnswer,
   showSavingSpinner,
 }) => {
   useEffect(() => {
@@ -100,6 +103,13 @@ export const LargeScreen = ({
             >
               <ClearIcon />
             </IconButton>
+            <IconButton
+              onClick={onUnlockAnswer}
+              disabled={!canUnlockAnswer}
+              title="Unlock answer"
+            >
+              <LockOpenIcon />
+            </IconButton>
           </StyledControls>
 
           <StyledPuzzleAndClues>
@@ -169,8 +179,10 @@ LargeScreen.propTypes = {
   onSaveAnswers: PropTypes.func.isRequired,
   onViewAnswerDetails: PropTypes.func.isRequired,
   onClearSelectedClue: PropTypes.func.isRequired,
+  onUnlockAnswer: PropTypes.func.isRequired,
   canSaveAnswers: PropTypes.bool.isRequired,
   canViewAnswerDetails: PropTypes.bool.isRequired,
   canClearSelectedClue: PropTypes.bool.isRequired,
+  canUnlockAnswer: PropTypes.bool.isRequired,
   showSavingSpinner: PropTypes.bool.isRequired,
 };
