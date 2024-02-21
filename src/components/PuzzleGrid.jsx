@@ -2,7 +2,7 @@ import { useRef } from "react";
 import PropTypes from "prop-types";
 import { CircularProgress, useTheme } from "@mui/material";
 
-import { noop, range, isSameCell } from "@app/utils";
+import { noop, range, sum, isSameCell } from "@app/utils";
 
 import {
   StyledPuzzleGridWrapper,
@@ -19,6 +19,7 @@ export const PuzzleGrid = ({
   selectCell = noop,
   showSavingSpinner = false,
 }) => {
+  const clues = [...crossword.acrossClues, ...crossword.downClues];
   const theme = useTheme();
 
   const VIEWBOX_WIDTH = 100;
@@ -46,6 +47,8 @@ export const PuzzleGrid = ({
   const REGULAR_LETTER_COLOUR = "black";
   const ENTERED_LETTER_COLOUR = theme.palette.primary.dark;
   const LETTER_FONT_SIZE = SQUARE_WIDTH / 1.5;
+
+  const WORD_BREAK_COLOUR = theme.palette.primary.dark;
 
   const calculateX = (col) => col * SQUARE_WIDTH + GRID_LINE_HALF_THICKNESS;
   const calculateY = (row) => row * SQUARE_HEIGHT + GRID_LINE_HALF_THICKNESS;
@@ -281,6 +284,77 @@ export const PuzzleGrid = ({
     );
   };
 
+  const drawWordBreaks = () => {
+    // If not an enhanced crossword then bail
+    if (!crossword.cellsToCluesMap) return [];
+
+    return clues.flatMap((clue) => {
+      const text = clue.clue;
+      const m = text.replace(/\s/g, "").match(/\(([1-9,-]+)\)$/);
+      if (!m) return [];
+      const bits = m[1];
+      const numbers = bits.split(/,|-/).map(Number);
+      if (!sum(numbers) === clue.cells.length) return [];
+      const seps = Array.from(bits.replace(/\d/g, ""));
+      return seps.flatMap((sep, index) => {
+        const cellIndex = sum(numbers.slice(0, index + 1)) - 1;
+        const cell = clue.cells[cellIndex];
+        if (sep === ",") {
+          return [drawWordBreakBar(cell, clue.clueType)];
+        }
+        if (sep === "-") {
+          return [drawWordBreakDash(cell, clue.clueType)];
+        }
+        return [];
+      });
+    });
+  };
+
+  const drawWordBreakBar = (cell, clueType) => {
+    const { row, col } = cell;
+    const [x1, y1] =
+      clueType === "across"
+        ? [calculateX(col + 1), calculateY(row)]
+        : [calculateX(col), calculateY(row + 1)];
+    const [x2, y2] = [calculateX(col + 1), calculateY(row + 1)];
+
+    return (
+      <line
+        key={`word-break-bar-${row}-${col}-${clueType}`}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        strokeWidth={GRID_LINE_FULL_THICKNESS * 4}
+        stroke={WORD_BREAK_COLOUR}
+      />
+    );
+  };
+
+  const drawWordBreakDash = (cell, clueType) => {
+    const { row, col } = cell;
+    const [x1, y1] =
+      clueType === "across"
+        ? [calculateX(col + 0.85), calculateY(row + 0.5)]
+        : [calculateX(col + 0.5), calculateY(row + 0.85)];
+    const [x2, y2] =
+      clueType === "across"
+        ? [calculateX(col + 1.15), calculateY(row + 0.5)]
+        : [calculateX(col + 0.5), calculateY(row + 1.15)];
+
+    return (
+      <line
+        key={`word-break-bar-${row}-${col}-${clueType}`}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        strokeWidth={GRID_LINE_FULL_THICKNESS * 4}
+        stroke={WORD_BREAK_COLOUR}
+      />
+    );
+  };
+
   const handleGridClick = (e) => {
     const boundingClientRect = svgRef.current.getBoundingClientRect();
     const { clientX, clientY } = e;
@@ -321,6 +395,7 @@ export const PuzzleGrid = ({
         {drawEnteredLetters()}
         {drawHorizontalGridLines()}
         {drawVerticalGridLines()}
+        {drawWordBreaks()}
       </StyledPuzzleGrid>
       {showSavingSpinner && (
         <StyledSavingSpinner>
