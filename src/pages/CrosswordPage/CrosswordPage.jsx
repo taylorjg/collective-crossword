@@ -154,7 +154,7 @@ export const CrosswordPage = () => {
         open={isDrawerOpen}
         onClose={closeDrawer}
         sx={{
-          "& .MuiDrawer-paper": { width: { xs: "100%", sm: "20rem" } },
+          "& .MuiDrawer-paper": { width: { xs: "100%", sm: "25rem" } },
         }}
       >
         {currentAnswer && (

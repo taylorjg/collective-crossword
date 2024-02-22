@@ -8,27 +8,47 @@ import {
   StyledPanel,
   StyledPanelHeader,
   StyledPanelBody,
+  StyledClue,
+  StyledClueNumberAndType,
+  StyledAnswer,
+  StyledAnswerLabel,
+  StyledAnswerValue,
 } from "./AnswerDetailsPanel.styles";
 
 export const AnswerDetailsPanel = ({ clue, answer, onClose }) => {
   return (
     <StyledPanel>
       <StyledPanelHeader>
-        <Typography variant="h6">Answer Details</Typography>
+        <Typography variant="h6">Answer History</Typography>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </StyledPanelHeader>
       <Divider />
       <StyledPanelBody>
-        <div>
-          {clue.clueNumber} {clue.clueType}
-        </div>
-        <Typography sx={{ fontStyle: "italic" }}>{clue.clue}</Typography>
-        <div>{answer.answer}</div>
-        <div>{answer.username}</div>
-        <div>{answer.displayName}</div>
-        <div>{formatDateTime(answer.timestamp.seconds)}</div>
+        <StyledClue>
+          <StyledClueNumberAndType>
+            {clue.clueNumber} {clue.clueType}
+          </StyledClueNumberAndType>
+          <Typography dangerouslySetInnerHTML={{ __html: clue.clue ?? "" }} />
+        </StyledClue>
+
+        <Divider />
+
+        <StyledAnswer>
+          <StyledAnswerLabel>Answer:</StyledAnswerLabel>
+          <StyledAnswerValue primary>{answer.answer}</StyledAnswerValue>
+
+          <StyledAnswerLabel>Added By:</StyledAnswerLabel>
+          <StyledAnswerValue>
+            {answer.displayName ?? answer.answer}
+          </StyledAnswerValue>
+
+          <StyledAnswerLabel>Added At:</StyledAnswerLabel>
+          <StyledAnswerValue>
+            {formatDateTime(answer.timestamp.seconds)}
+          </StyledAnswerValue>
+        </StyledAnswer>
       </StyledPanelBody>
     </StyledPanel>
   );
