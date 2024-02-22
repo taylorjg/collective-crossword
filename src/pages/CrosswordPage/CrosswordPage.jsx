@@ -12,7 +12,7 @@ import { enhance } from "@app/transforms";
 import { useAuth, useToast } from "@app/contexts";
 import { minDuration } from "@app/utils";
 
-import { AnswerDetailsPanel } from "./components/AnswerDetailsPanel";
+import { AnswerHistoryPanel } from "./components";
 import { SmallScreen, UnsupportedViewport } from "./layouts/small-screen";
 import { LargeScreen } from "./layouts/large-screen/LargeScreen";
 import { useCrosswordState } from "./use-crossword-state";
@@ -91,7 +91,7 @@ export const CrosswordPage = () => {
     }
   };
 
-  const onViewAnswerDetails = () => {
+  const onViewAnswerHistory = () => {
     openDrawer();
   };
 
@@ -114,7 +114,7 @@ export const CrosswordPage = () => {
   const answersReadyForSaving = crosswordState.getAnswersReadyForSaving();
 
   const canSaveAnswers = isSignedIn && answersReadyForSaving.length > 0;
-  const canViewAnswerDetails = Boolean(currentAnswer);
+  const canViewAnswerHistory = Boolean(currentAnswer);
   const canClearSelectedClue = crosswordState.selectedClueHasEnteredLetters();
   const canUnlockAnswer = Boolean(currentAnswer);
 
@@ -140,11 +140,11 @@ export const CrosswordPage = () => {
         crossword={crossword}
         crosswordState={crosswordState}
         onSaveAnswers={onSaveAnswers}
-        onViewAnswerDetails={onViewAnswerDetails}
+        onViewAnswerHistory={onViewAnswerHistory}
         onClearSelectedClue={onClearSelectedClue}
         onUnlockAnswer={onUnlockAnswer}
         canSaveAnswers={canSaveAnswers}
-        canViewAnswerDetails={canViewAnswerDetails}
+        canViewAnswerHistory={canViewAnswerHistory}
         canClearSelectedClue={canClearSelectedClue}
         canUnlockAnswer={canUnlockAnswer}
         showSavingSpinner={showSavingSpinner}
@@ -158,7 +158,7 @@ export const CrosswordPage = () => {
         }}
       >
         {currentAnswer && (
-          <AnswerDetailsPanel
+          <AnswerHistoryPanel
             clue={crosswordState.selectedClue}
             allAnswers={answers}
             onClose={closeDrawer}

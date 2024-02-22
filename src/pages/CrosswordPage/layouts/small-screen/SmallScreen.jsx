@@ -23,11 +23,11 @@ export const SmallScreen = ({
   crossword,
   crosswordState,
   onSaveAnswers,
-  onViewAnswerDetails,
+  onViewAnswerHistory,
   onClearSelectedClue,
   onUnlockAnswer,
   canSaveAnswers,
-  canViewAnswerDetails,
+  canViewAnswerHistory,
   canClearSelectedClue,
   canUnlockAnswer,
   showSavingSpinner,
@@ -64,9 +64,9 @@ export const SmallScreen = ({
               <CloudUploadIcon />
             </IconButton>
             <IconButton
-              onClick={onViewAnswerDetails}
-              disabled={!canViewAnswerDetails}
-              title="View answer details"
+              onClick={onViewAnswerHistory}
+              disabled={!canViewAnswerHistory}
+              title="View answer history"
             >
               <SearchIcon />
             </IconButton>
@@ -106,11 +106,11 @@ SmallScreen.propTypes = {
   crossword: PropTypes.object.isRequired,
   crosswordState: PropTypes.object.isRequired,
   onSaveAnswers: PropTypes.func.isRequired,
-  onViewAnswerDetails: PropTypes.func.isRequired,
+  onViewAnswerHistory: PropTypes.func.isRequired,
   onClearSelectedClue: PropTypes.func.isRequired,
   onUnlockAnswer: PropTypes.func.isRequired,
   canSaveAnswers: PropTypes.bool.isRequired,
-  canViewAnswerDetails: PropTypes.bool.isRequired,
+  canViewAnswerHistory: PropTypes.bool.isRequired,
   canClearSelectedClue: PropTypes.bool.isRequired,
   canUnlockAnswer: PropTypes.bool.isRequired,
   showSavingSpinner: PropTypes.bool.isRequired,

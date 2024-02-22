@@ -19,7 +19,7 @@ import {
   StyledPanel,
   StyledPanelHeader,
   StyledPanelBody,
-} from "./AnswerDetailsPanel.styles";
+} from "./AnswerHistoryPanel.styles";
 
 const AnswerTimelineItem = ({ answer }) => {
   const deleted = answer.deleted;
@@ -56,7 +56,7 @@ AnswerTimelineItem.propTypes = {
   answer: PropTypes.object.isRequired,
 };
 
-export const AnswerDetailsPanel = ({ clue, allAnswers, onClose }) => {
+export const AnswerHistoryPanel = ({ clue, allAnswers, onClose }) => {
   const nowSeconds = new Date().valueOf() / 1000;
   const answersToThisClue = allAnswers
     .filter(
@@ -99,7 +99,7 @@ export const AnswerDetailsPanel = ({ clue, allAnswers, onClose }) => {
   );
 };
 
-AnswerDetailsPanel.propTypes = {
+AnswerHistoryPanel.propTypes = {
   clue: PropTypes.object.isRequired,
   allAnswers: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClose: PropTypes.func.isRequired,
