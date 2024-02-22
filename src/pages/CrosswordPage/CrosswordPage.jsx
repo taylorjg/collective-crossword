@@ -160,7 +160,7 @@ export const CrosswordPage = () => {
         {currentAnswer && (
           <AnswerDetailsPanel
             clue={crosswordState.selectedClue}
-            answer={currentAnswer}
+            allAnswers={answers}
             onClose={closeDrawer}
           />
         )}
