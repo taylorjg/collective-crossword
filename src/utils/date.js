@@ -5,5 +5,5 @@ export const formatDate = (unixTimestamp) => {
 };
 
 export const formatDateTime = (unixTimestamp) => {
-  return moment.unix(unixTimestamp).format("ddd, Do MMM YYYY HH:mm:ss");
+  return moment.unix(unixTimestamp).format("Do MMM HH:mm:ss");
 };

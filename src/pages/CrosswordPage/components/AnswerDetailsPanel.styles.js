@@ -21,28 +21,3 @@ export const StyledPanelBody = styled.div`
     margin-bottom: 1.5rem;
   }
 `;
-
-export const StyledClue = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const StyledClueNumberAndType = styled.div`
-  opacity: 0.6;
-  margin-bottom: 0.5rem;
-`;
-
-export const StyledAnswer = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 2rem;
-`;
-
-export const StyledAnswerLabel = styled.div`
-  font-weight: bold;
-`;
-
-export const StyledAnswerValue = styled.div`
-  color: ${({ primary, theme }) =>
-    primary ? theme.palette.primary.dark : "unset"};
-`;
