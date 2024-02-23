@@ -28,23 +28,24 @@ const AnswerTimelineItem = ({ answer }) => {
 
   return (
     <TimelineItem>
-      <TimelineOppositeContent color="text.secondary" variant="body2">
+      <TimelineOppositeContent color="text.secondary" variant="caption">
         <Typography>{answer.displayName ?? answer.username}</Typography>
         {formatDateTime(answer.timestamp.seconds)}
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineDot color={colour} variant="outlined">
           {deleted ? (
-            <DeleteOutlineIcon color={colour} />
+            <DeleteOutlineIcon color={colour} fontSize="small" />
           ) : (
-            <EditIcon color={colour} />
+            <EditIcon color={colour} fontSize="small" />
           )}
         </TimelineDot>
         <TimelineConnector sx={{ height: "3rem" }} />
       </TimelineSeparator>
       <TimelineContent
         color={colour}
-        sx={{ textDecoration: textDecoration, py: 2 }}
+        sx={{ textDecoration: textDecoration, py: 2, pl: 1, pr: 0, mr: 0 }}
+        variant="body2"
       >
         {answer.answer}
       </TimelineContent>
@@ -89,7 +90,7 @@ export const AnswerHistoryPanel = ({ clue, allAnswers, onClose }) => {
 
         <Divider />
 
-        <Timeline>
+        <Timeline sx={{ mx: 0, px: 0 }}>
           {answersToThisClue.map((answer, index) => (
             <AnswerTimelineItem key={index} answer={answer} />
           ))}
