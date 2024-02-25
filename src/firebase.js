@@ -48,15 +48,7 @@ export const addCrossword = async (crossword) => {
   return addDoc(collectionRef, data);
 };
 
-export const addAnswer = async (
-  crossword,
-  clueNumber,
-  clueType,
-  answer,
-  userId,
-  username,
-  displayName
-) => {
+export const addAnswer = async (crossword, answer) => {
   const subcollectionRef = collection(
     db,
     "crosswords",
@@ -64,12 +56,7 @@ export const addAnswer = async (
     "answers"
   );
   const data = {
-    clueNumber,
-    clueType,
-    answer,
-    userId,
-    username,
-    displayName,
+    ...answer,
     timestamp: serverTimestamp(),
   };
   return addDoc(subcollectionRef, data);

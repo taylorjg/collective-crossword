@@ -17,6 +17,7 @@ export const useCrosswordState = (
   const [selectedClue, setSelectedClue] = useState();
   const [enteredLettersMap, setEnteredLettersMap] = useState(new Map());
   const [answers, setAnswers] = useState([]);
+  const [deletedAnswers, setDeletedAnswers] = useState([]);
 
   // Internal
   const [toggleableClues, setToggleableClues] = useState();
@@ -57,10 +58,13 @@ export const useCrosswordState = (
   };
 
   useEffect(() => {
-    setAnswers(getMostRecentAnswers(allAnswers));
+    const mostRecentAnswers = getMostRecentAnswers(allAnswers);
+    const currentAnswers = mostRecentAnswers.filter(({ deleted }) => !deleted);
+    setAnswers(currentAnswers);
+    setDeletedAnswers([]);
     setEnteredLettersMap((currentMap) => {
       const newMap = new Map(currentMap);
-      for (const answer of allAnswers) {
+      for (const answer of currentAnswers) {
         const clue = findClueForAnswer(answer);
         if (clue) {
           for (const cell of clue.cells) {
@@ -163,7 +167,7 @@ export const useCrosswordState = (
     return unsavedCompleteAnswers;
   };
 
-  const getAnswersReadyForSaving = () => {
+  const getUnsavedChanges = () => {
     const unsavedCompleteAnswers = getUnsavedCompleteAnswers();
 
     // If we have any incomplete clue with entered letters that are not part
@@ -193,17 +197,17 @@ export const useCrosswordState = (
                   clueType === otherClue.clueType
               );
               if (!otherUnsavedCompleteAnswer) {
-                return [];
+                return { unsavedCompleteAnswers: [], deletedAnswers: [] };
               }
             } else {
-              return [];
+              return { unsavedCompleteAnswers: [], deletedAnswers: [] };
             }
           }
         }
       }
     }
 
-    return unsavedCompleteAnswers;
+    return { unsavedCompleteAnswers, deletedAnswers };
   };
 
   const selectedClueHasEnteredLetters = () => {
@@ -242,6 +246,22 @@ export const useCrosswordState = (
         currentAnswers.filter((currentAnswer) => currentAnswer !== answer)
       );
     }
+  };
+
+  const deleteAnswer = (answer) => {
+    setAnswers((currentAnswers) =>
+      currentAnswers.filter((currentAnswer) => currentAnswer !== answer)
+    );
+    setDeletedAnswers((currentDeletedAnswers) => {
+      const alreadyExists = currentDeletedAnswers.find(
+        (deletedAnswer) =>
+          deletedAnswer.clueNumber === answer.clueNumber &&
+          deletedAnswer.clueType === answer.clueType
+      );
+      return alreadyExists
+        ? currentDeletedAnswers
+        : [...currentDeletedAnswers, { ...answer, deleted: true }];
+    });
   };
 
   const findCurrentCellIndex = () => {
@@ -424,10 +444,11 @@ export const useCrosswordState = (
     allAnswers,
     answers,
     enteredLettersMap,
-    getAnswersReadyForSaving,
+    getUnsavedChanges,
     selectedClueHasEnteredLetters,
     clearEnteredLettersForSelectedClue,
     unlockAnswer,
+    deleteAnswer,
     selectCell,
     selectClue,
     enterLetter,

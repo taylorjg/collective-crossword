@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { IconButton, Toolbar } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { PuzzleGrid } from "@app/components";
@@ -25,11 +25,11 @@ export const SmallScreen = ({
   onSaveAnswers,
   onViewAnswerHistory,
   onClearSelectedClue,
-  onUnlockAnswer,
+  onDeleteAnswer,
   canSaveAnswers,
   canViewAnswerHistory,
   canClearSelectedClue,
-  canUnlockAnswer,
+  canDeleteAnswer,
   showSavingSpinner,
 }) => {
   const showMiniKeyboard = "ontouchstart" in document.documentElement;
@@ -78,11 +78,12 @@ export const SmallScreen = ({
               <ClearIcon />
             </IconButton>
             <IconButton
-              onClick={onUnlockAnswer}
-              disabled={!canUnlockAnswer}
-              title="Unlock answer"
+              onClick={onDeleteAnswer}
+              disabled={!canDeleteAnswer}
+              title="Delete answer"
+              color="error"
             >
-              <LockOpenIcon />
+              <DeleteIcon />
             </IconButton>
           </StyledControlsRight>
         </StyledControls>
@@ -108,10 +109,10 @@ SmallScreen.propTypes = {
   onSaveAnswers: PropTypes.func.isRequired,
   onViewAnswerHistory: PropTypes.func.isRequired,
   onClearSelectedClue: PropTypes.func.isRequired,
-  onUnlockAnswer: PropTypes.func.isRequired,
+  onDeleteAnswer: PropTypes.func.isRequired,
   canSaveAnswers: PropTypes.bool.isRequired,
   canViewAnswerHistory: PropTypes.bool.isRequired,
   canClearSelectedClue: PropTypes.bool.isRequired,
-  canUnlockAnswer: PropTypes.bool.isRequired,
+  canDeleteAnswer: PropTypes.bool.isRequired,
   showSavingSpinner: PropTypes.bool.isRequired,
 };

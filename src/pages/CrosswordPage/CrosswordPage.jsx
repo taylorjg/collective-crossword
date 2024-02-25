@@ -66,19 +66,32 @@ export const CrosswordPage = () => {
   const onSaveAnswers = async () => {
     if (!user) return;
     const saveAnswer = async (answer) => {
-      await addAnswer(
-        crossword,
-        answer.clueNumber,
-        answer.clueType,
-        answer.answer,
-        user.userId,
-        user.username,
-        user.displayName
-      );
+      const maybeDeleted = answer.deleted ? { deleted: true } : undefined;
+
+      await addAnswer(crossword, {
+        clueNumber: answer.clueNumber,
+        clueType: answer.clueType,
+        answer: answer.answer,
+        ...maybeDeleted,
+        userId: user.userId,
+        username: user.username,
+        displayName: user.displayName,
+      });
     };
     const saveAnswers = async () => {
-      for (const answer of answersReadyForSaving) {
+      for (const answer of unsavedCompleteAnswers) {
         saveAnswer(answer);
+      }
+      for (const deletedAnswer of deletedAnswers) {
+        const answerHasBeenOverwritten = unsavedCompleteAnswers.some(
+          (uca) =>
+            uca.clueNumber === deletedAnswer.clueNumber &&
+            uca.clueType === deletedAnswer.clueType
+        );
+        // Only save the deletion if we haven't overwritten the answer.
+        if (!answerHasBeenOverwritten) {
+          saveAnswer(deletedAnswer);
+        }
       }
     };
     try {
@@ -103,6 +116,10 @@ export const CrosswordPage = () => {
     crosswordState.unlockAnswer(currentAnswer);
   };
 
+  const onDeleteAnswer = () => {
+    crosswordState.deleteAnswer(currentAnswer);
+  };
+
   const currentAnswer = crosswordState.selectedClue
     ? crosswordState.answers.find(
         (answer) =>
@@ -111,12 +128,16 @@ export const CrosswordPage = () => {
       )
     : undefined;
 
-  const answersReadyForSaving = crosswordState.getAnswersReadyForSaving();
+  const { unsavedCompleteAnswers, deletedAnswers } =
+    crosswordState.getUnsavedChanges();
+  const unsavedChangesExist =
+    unsavedCompleteAnswers.length > 0 || deletedAnswers.length > 0;
 
-  const canSaveAnswers = isSignedIn && answersReadyForSaving.length > 0;
+  const canSaveAnswers = isSignedIn && unsavedChangesExist;
   const canViewAnswerHistory = Boolean(currentAnswer);
   const canClearSelectedClue = crosswordState.selectedClueHasEnteredLetters();
   const canUnlockAnswer = Boolean(currentAnswer);
+  const canDeleteAnswer = Boolean(currentAnswer);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -143,10 +164,12 @@ export const CrosswordPage = () => {
         onViewAnswerHistory={onViewAnswerHistory}
         onClearSelectedClue={onClearSelectedClue}
         onUnlockAnswer={onUnlockAnswer}
+        onDeleteAnswer={onDeleteAnswer}
         canSaveAnswers={canSaveAnswers}
         canViewAnswerHistory={canViewAnswerHistory}
         canClearSelectedClue={canClearSelectedClue}
         canUnlockAnswer={canUnlockAnswer}
+        canDeleteAnswer={canDeleteAnswer}
         showSavingSpinner={showSavingSpinner}
       />
       <Drawer
