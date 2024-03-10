@@ -229,25 +229,6 @@ export const useCrosswordState = (
     });
   };
 
-  const unlockAnswer = (answer) => {
-    const clue = findClueForAnswer(answer);
-    if (clue) {
-      const cellCount = clue.cells.length;
-      const answerLetters = Array.from(answer.answer);
-      for (const index of range(cellCount)) {
-        const cell = clue.cells[index];
-        if (!findCrossCheckingLetter(clue, cell)) {
-          const key = makeKey(cell);
-          const letter = answerLetters[index];
-          enteredLettersMap.set(key, letter);
-        }
-      }
-      setAnswers((currentAnswers) =>
-        currentAnswers.filter((currentAnswer) => currentAnswer !== answer)
-      );
-    }
-  };
-
   const deleteAnswer = (answer) => {
     setAnswers((currentAnswers) =>
       currentAnswers.filter((currentAnswer) => currentAnswer !== answer)
@@ -354,6 +335,10 @@ export const useCrosswordState = (
       });
     }
 
+    // TODO: check whether selected clue is now complete
+    // if it is, check whether there is a matching entry in deletedAnswers
+    // if there is, remove it
+
     goToNextCell();
   };
 
@@ -447,7 +432,6 @@ export const useCrosswordState = (
     getUnsavedChanges,
     selectedClueHasEnteredLetters,
     clearEnteredLettersForSelectedClue,
-    unlockAnswer,
     deleteAnswer,
     selectCell,
     selectClue,

@@ -112,10 +112,6 @@ export const CrosswordPage = () => {
     crosswordState.clearEnteredLettersForSelectedClue();
   };
 
-  const onUnlockAnswer = () => {
-    crosswordState.unlockAnswer(currentAnswer);
-  };
-
   const onDeleteAnswer = () => {
     crosswordState.deleteAnswer(currentAnswer);
   };
@@ -136,7 +132,6 @@ export const CrosswordPage = () => {
   const canSaveAnswers = isSignedIn && unsavedChangesExist;
   const canViewAnswerHistory = Boolean(currentAnswer);
   const canClearSelectedClue = crosswordState.selectedClueHasEnteredLetters();
-  const canUnlockAnswer = Boolean(currentAnswer);
   const canDeleteAnswer = Boolean(currentAnswer);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -163,12 +158,10 @@ export const CrosswordPage = () => {
         onSaveAnswers={onSaveAnswers}
         onViewAnswerHistory={onViewAnswerHistory}
         onClearSelectedClue={onClearSelectedClue}
-        onUnlockAnswer={onUnlockAnswer}
         onDeleteAnswer={onDeleteAnswer}
         canSaveAnswers={canSaveAnswers}
         canViewAnswerHistory={canViewAnswerHistory}
         canClearSelectedClue={canClearSelectedClue}
-        canUnlockAnswer={canUnlockAnswer}
         canDeleteAnswer={canDeleteAnswer}
         showSavingSpinner={showSavingSpinner}
       />
