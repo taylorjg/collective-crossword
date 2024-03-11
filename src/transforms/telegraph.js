@@ -29,7 +29,7 @@ const makeAcrossClues = (puzData) => {
   return puzData.copy.clues[0].clues.map((clue) => {
     const word = findWord(puzData, clue.word);
     return {
-      clue: `${clue.clue} (${clue.length})`,
+      clue: clue.format ? `${clue.clue} (${clue.format})` : clue.clue,
       clueNumber: clue.number,
       rowIndex: Number(word.y) - 1,
       colIndex: Number(word.x.split("-")[0]) - 1,
@@ -41,7 +41,7 @@ const makeDownClues = (puzData) => {
   return puzData.copy.clues[1].clues.map((clue) => {
     const word = findWord(puzData, clue.word);
     return {
-      clue: `${clue.clue} (${clue.length})`,
+      clue: clue.format ? `${clue.clue} (${clue.format})` : clue.clue,
       clueNumber: clue.number,
       rowIndex: Number(word.y.split("-")[0]) - 1,
       colIndex: Number(word.x) - 1,

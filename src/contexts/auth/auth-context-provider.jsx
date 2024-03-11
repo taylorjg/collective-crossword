@@ -40,12 +40,14 @@ export const AuthContextProvider = ({ children }) => {
           });
           setUser(userEnhanced);
         }
+      } else {
+        setUser();
       }
       setIsCheckingAuthState(false);
     });
 
     return unsubscribe;
-  }, [setUser]);
+  }, []);
 
   const onSignIn = async () => {
     try {
@@ -86,7 +88,6 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const auth = getAuth();
       await signOut(auth);
-      setUser();
     } catch (error) {
       console.log("[AuthContextProvider#onSignOut]", error);
       showError("An error occurred signing out", error.message);
