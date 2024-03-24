@@ -58,8 +58,8 @@ export const useCrosswordState = (
 
   useEffect(() => {
     setAnswers(getMostRecentAnswers(allAnswers));
-    setEnteredLettersMap((currentMap) => {
-      const newMap = new Map(currentMap);
+    setEnteredLettersMap((prevEnteredLettersMap) => {
+      const newMap = new Map(prevEnteredLettersMap);
       for (const answer of allAnswers) {
         const clue = findClueForAnswer(answer);
         if (clue) {
@@ -215,8 +215,8 @@ export const useCrosswordState = (
 
   const clearEnteredLettersForSelectedClue = () => {
     if (!selectedClue) return;
-    setEnteredLettersMap((currentMap) => {
-      const newMap = new Map(currentMap);
+    setEnteredLettersMap((prevEnteredLettersMap) => {
+      const newMap = new Map(prevEnteredLettersMap);
       for (const cell of selectedClue.cells) {
         const key = makeKey(cell);
         newMap.delete(key);
@@ -238,8 +238,8 @@ export const useCrosswordState = (
           enteredLettersMap.set(key, letter);
         }
       }
-      setAnswers((currentAnswers) =>
-        currentAnswers.filter((currentAnswer) => currentAnswer !== answer)
+      setAnswers((prevAnswers) =>
+        prevAnswers.filter((prevAnswer) => prevAnswer !== answer)
       );
     }
   };
@@ -326,8 +326,8 @@ export const useCrosswordState = (
     });
 
     if (!isPartOfAcceptedAnswer) {
-      setEnteredLettersMap((currentMap) => {
-        const newMap = new Map(currentMap);
+      setEnteredLettersMap((prevEnteredLettersMap) => {
+        const newMap = new Map(prevEnteredLettersMap);
         const key = makeKey(currentCell);
         newMap.set(key, letter);
         return newMap;
@@ -340,10 +340,10 @@ export const useCrosswordState = (
   const deleteLetter = () => {
     if (!isSignedIn) return;
     if (!currentCell) return;
-    setEnteredLettersMap((currentMap) => {
+    setEnteredLettersMap((prevEnteredLettersMap) => {
       const key = makeKey(currentCell);
-      if (!currentMap.has(key)) return currentMap;
-      const newMap = new Map(currentMap);
+      if (!prevEnteredLettersMap.has(key)) return prevEnteredLettersMap;
+      const newMap = new Map(prevEnteredLettersMap);
       newMap.delete(key);
       return newMap;
     });

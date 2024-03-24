@@ -36,8 +36,8 @@ export const ToastContextProvider = ({ children }) => {
     showCommon(message, details, "error");
 
   const handleClose = () => {
-    setToastState((currentValue) => ({
-      ...currentValue,
+    setToastState((prevToastState) => ({
+      ...prevToastState,
       open: false,
     }));
   };

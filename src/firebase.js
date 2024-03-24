@@ -96,6 +96,18 @@ export const deleteCrossword = async (id) => {
   return deleteDoc(docRef);
 };
 
+export const listenForCrosswordChanges = (onNext, crosswordType) => {
+  const collectionRef = collection(db, "crosswords");
+  const q = crosswordType
+    ? query(
+        collectionRef,
+        where("crosswordType", "==", crosswordType),
+        orderBy("timestamp")
+      )
+    : query(collectionRef, orderBy("timestamp"));
+  return onSnapshot(q, onNext);
+};
+
 export const getCrosswords = async (crosswordType) => {
   const collectionRef = collection(db, "crosswords");
   const q = crosswordType

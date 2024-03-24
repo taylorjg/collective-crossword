@@ -6,7 +6,7 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
 
 import { useAuth } from "@app/contexts";
-import { getCrosswords, deleteCrossword } from "@app/firebase";
+import { listenForCrosswordChanges, deleteCrossword } from "@app/firebase";
 import { FullPageLoading } from "@app/components";
 import { CrosswordTypes } from "@app/constants";
 import { ConfirmationModal } from "@app/components";
@@ -15,8 +15,14 @@ import { CrosswordGrid } from "./CrosswordGrid";
 import { CrosswordList } from "./CrosswordList";
 import { StyledControls } from "./HomePage.styles";
 
+const Tabs = Object.freeze({
+  Cryptic: "Cryptic",
+  Quick: "Quick",
+  All: "All",
+});
+
 export const HomePage = () => {
-  const [currentTab, setCurrentTab] = useState("1");
+  const [currentTab, setCurrentTab] = useState(Tabs.Cryptic);
   const [crosswords, setCrosswords] = useState();
   const [gridMode, setGridMode] = useState(() =>
     Boolean(localStorage.getItem("grid-mode"))
@@ -27,12 +33,7 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getCrosswordsAsync = async () => {
-      let crosswordType;
-      if (currentTab === "1") crosswordType = CrosswordTypes.Cryptic;
-      if (currentTab === "2") crosswordType = CrosswordTypes.Quick;
-
-      const querySnapshot = await getCrosswords(crosswordType);
+    const onNext = (querySnapshot) => {
       const localCrosswords = [];
       querySnapshot.forEach((doc) => {
         localCrosswords.push({ id: doc.id, ...doc.data() });
@@ -40,7 +41,13 @@ export const HomePage = () => {
       setCrosswords(localCrosswords);
     };
 
-    getCrosswordsAsync();
+    let crosswordType;
+    if (currentTab === Tabs.Cryptic) crosswordType = CrosswordTypes.Cryptic;
+    if (currentTab === Tabs.Quick) crosswordType = CrosswordTypes.Quick;
+
+    setCrosswords((prevCrosswords) => (prevCrosswords ? [] : prevCrosswords));
+
+    return listenForCrosswordChanges(onNext, crosswordType);
   }, [currentTab]);
 
   const onChangeTab = (_, newValue) => {
@@ -84,11 +91,11 @@ export const HomePage = () => {
       </StyledControls>
       <TabContext value={currentTab}>
         <TabList onChange={onChangeTab} sx={{ mx: 2 }}>
-          <Tab label="Cryptic" value="1" />
-          <Tab label="Quick" value="2" />
-          <Tab label="All" value="3" />
+          <Tab label="Cryptic" value={Tabs.Cryptic} />
+          <Tab label="Quick" value={Tabs.Quick} />
+          <Tab label="All" value={Tabs.All} />
         </TabList>
-        <TabPanel value="1" sx={{ px: 0 }}>
+        <TabPanel value={Tabs.Cryptic} sx={{ px: 0 }}>
           <CrosswordLayoutType
             crosswords={crosswords}
             isAdmin={isAdmin}
@@ -96,7 +103,7 @@ export const HomePage = () => {
             onDelete={onDelete}
           />
         </TabPanel>
-        <TabPanel value="2" sx={{ px: 0 }}>
+        <TabPanel value={Tabs.Quick} sx={{ px: 0 }}>
           <CrosswordLayoutType
             crosswords={crosswords}
             isAdmin={isAdmin}
@@ -104,7 +111,7 @@ export const HomePage = () => {
             onDelete={onDelete}
           />
         </TabPanel>
-        <TabPanel value="3" sx={{ px: 0 }}>
+        <TabPanel value={Tabs.All} sx={{ px: 0 }}>
           <CrosswordLayoutType
             crosswords={crosswords}
             isAdmin={isAdmin}
