@@ -5,7 +5,6 @@ import {
   collection,
   doc,
   addDoc,
-  deleteDoc,
   getDoc,
   getDocs,
   query,
@@ -91,11 +90,6 @@ export const getExistingCrosswordIdByTitle = async (title) => {
   return ids.length > 0 ? ids[0] : undefined;
 };
 
-export const deleteCrossword = async (id) => {
-  const docRef = doc(db, "crosswords", id);
-  return deleteDoc(docRef);
-};
-
 export const listenForCrosswordChanges = (onNext, crosswordType) => {
   const collectionRef = collection(db, "crosswords");
   const q = crosswordType
@@ -142,3 +136,5 @@ export const getToughieCrossword = httpsCallable(
 export const getPrizeCryptic = httpsCallable(functions, "getPrizeCryptic");
 
 export const getPrizeToughie = httpsCallable(functions, "getPrizeToughie");
+
+export const deleteCrossword = httpsCallable(functions, "deleteCrossword");

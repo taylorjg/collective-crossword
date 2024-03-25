@@ -5,6 +5,7 @@ const { onRequest } = require("firebase-functions/v2/https");
 const axios = require("axios");
 
 const { initializeApp } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
 
 initializeApp();
 
@@ -73,4 +74,45 @@ exports.getPrizeToughie = onRequest(opts, async (req, res) => {
   const makeUrl = (id) =>
     `${PUZZLESDATA_URL}/puzzles/prize-toughie/prize-toughie-${id}.json`;
   await getCommon(req, res, fnName, label, makeUrl);
+});
+
+exports.deleteCrossword = onRequest(opts, async (req, res) => {
+  try {
+    const id = req.query.id ?? req.body.data.id;
+    const db = getFirestore();
+    const answersSubcollectionRef = db
+      .collection("crosswords")
+      .doc(id)
+      .collection("answers");
+    const snapshot = await answersSubcollectionRef.get();
+    const answers = [];
+    snapshot.forEach((answer) => {
+      answers.push(answer);
+    });
+
+    for (const answer of answers) {
+      const answerRef = answer.ref;
+      console.log(`[deleteCrossword] deleting ${answerRef.path}...`);
+      await answerRef.delete();
+    }
+
+    const crosswordRef = db.collection("crosswords").doc(id);
+    console.log(`[deleteCrossword] deleting ${crosswordRef.path}...`);
+    await crosswordRef.delete();
+
+    res.json({
+      data: {
+        result: true,
+        message: `Number of answers deleted: ${answers.length}`,
+      },
+    });
+  } catch (error) {
+    console.error("[deleteCrossword] ERROR:", error.message);
+    res.json({
+      data: {
+        result: false,
+        message: error.message,
+      },
+    });
+  }
 });

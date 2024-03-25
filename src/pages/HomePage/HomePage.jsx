@@ -7,7 +7,7 @@ import ListIcon from "@mui/icons-material/List";
 
 import { useAuth } from "@app/contexts";
 import { listenForCrosswordChanges, deleteCrossword } from "@app/firebase";
-import { FullPageLoading } from "@app/components";
+import { FullPageLoading, FullPageSpinner } from "@app/components";
 import { CrosswordTypes } from "@app/constants";
 import { ConfirmationModal } from "@app/components";
 
@@ -28,6 +28,7 @@ export const HomePage = () => {
     Boolean(localStorage.getItem("grid-mode"))
   );
   const [crosswordIdToDelete, setCrosswordIdToDelete] = useState();
+  const [showDeletingSpinner, setShowDeletingSpinner] = useState(false);
   const { user } = useAuth();
 
   const navigate = useNavigate();
@@ -62,8 +63,19 @@ export const HomePage = () => {
     setCrosswordIdToDelete(id);
   };
 
-  const onConfirmDelete = () => {
-    deleteCrossword(crosswordIdToDelete);
+  const onConfirmDelete = async () => {
+    try {
+      setShowDeletingSpinner(true);
+      console.log("crosswordIdToDelete:", crosswordIdToDelete);
+      const deleteCrosswordResult = await deleteCrossword({
+        id: crosswordIdToDelete,
+      });
+      console.log("deleteCrosswordResult:", deleteCrosswordResult);
+    } catch (error) {
+      // TODO: show error toast
+    } finally {
+      setShowDeletingSpinner(false);
+    }
   };
 
   const isAdmin = user?.isAdmin ?? false;
@@ -127,6 +139,7 @@ export const HomePage = () => {
         message="This will permanently delete the crossword."
         onOK={onConfirmDelete}
       />
+      {showDeletingSpinner && <FullPageSpinner />}
     </>
   );
 };
